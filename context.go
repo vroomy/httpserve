@@ -32,8 +32,11 @@ type Context struct {
 }
 
 func (c *Context) getResponse(hs []Handler) (resp Response) {
+	// Iterate through the provided handlers
 	for _, h := range hs {
+		// Call handler and pass Context
 		if resp = h(c); resp != nil {
+			// A non-nil response was provided, return
 			return
 		}
 	}
@@ -52,7 +55,6 @@ func (c *Context) respond(resp Response) {
 	if _, err := resp.WriteTo(c.Writer); err != nil {
 		// Write error to stderr
 		fmt.Fprintf(os.Stderr, "Error writing to http.ResponseWriter: %v\n", err)
-		// TODO: Figure out how we want to handle this error
 	}
 }
 
