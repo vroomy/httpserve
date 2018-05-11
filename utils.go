@@ -35,6 +35,18 @@ func newRouterHandler(hs []Handler) httprouter.Handle {
 	}
 }
 
+// newHTTPHandler will return a new http.Handler
+func newHTTPHandler(hs []Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Create context
+		ctx := newContext(w, r, httprouter.Params{})
+		// Get response from context by passing provided handlers
+		resp := ctx.getResponse(hs)
+		// Respond using context
+		ctx.respond(resp)
+	}
+}
+
 func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 	var srv http.Server
 	srv.Handler = h

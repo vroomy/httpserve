@@ -116,6 +116,11 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 	return s.s.Serve(l)
 }
 
+// Set404 will set the 404 handlers
+func (s *Serve) Set404(hs ...Handler) {
+	s.g.r.NotFound = newHTTPHandler(hs)
+}
+
 // Close will close an instance of Serve
 func (s *Serve) Close() (err error) {
 	if s.s == nil {
