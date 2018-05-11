@@ -24,8 +24,8 @@ func (t *TextResponse) ContentType() (contentType string) {
 	return "text/plain"
 }
 
-// Status returns the status
-func (t *TextResponse) Status() (code int) {
+// StatusCode returns the status code
+func (t *TextResponse) StatusCode() (code int) {
 	return t.code
 }
 

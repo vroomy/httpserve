@@ -25,8 +25,8 @@ func (j *JSONResponse) ContentType() (contentType string) {
 	return "application/json"
 }
 
-// Status returns the status
-func (j *JSONResponse) Status() (code int) {
+// StatusCode returns the status code
+func (j *JSONResponse) StatusCode() (code int) {
 	return j.code
 }
 
