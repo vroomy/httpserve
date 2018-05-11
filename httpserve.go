@@ -3,7 +3,9 @@ package httpserve
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"errors"
 	"net"
+	"net/http"
 	"time"
 
 	// TODO: See if this is still needed
@@ -13,6 +15,11 @@ import (
 
 const (
 	invalidTLSFmt = "invalid tls certification pair, neither key nor cert can be empty (%s): %#v"
+)
+
+var (
+	// ErrNotInitialized is returned when an action is performed on an uninitialized instance of Serve
+	ErrNotInitialized = errors.New("cannot perform action on uninitialized Serve")
 )
 
 var defaultConfig = Config{
@@ -30,6 +37,7 @@ func New() *Serve {
 
 // Serve will serve HTTP requests
 type Serve struct {
+	s *http.Server
 	g Group
 }
 
@@ -65,13 +73,13 @@ func (s *Serve) Listen(port uint16) (err error) {
 
 // ListenWithConfig will listen on a given port using the specified configuration
 func (s *Serve) ListenWithConfig(port uint16, c Config) (err error) {
-	srv := newHTTPServer(s.g.r, port, c)
+	s.s = newHTTPServer(s.g.r, port, c)
 	var l net.Listener
-	if l, err = net.Listen("tcp", srv.Addr); err != nil {
+	if l, err = net.Listen("tcp", s.s.Addr); err != nil {
 		return
 	}
 
-	return srv.Serve(l)
+	return s.s.Serve(l)
 }
 
 // ListenTLS will listen using the TLS procol on a given port
@@ -96,14 +104,23 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 
 	cfg.RootCAs = x509.NewCertPool()
 	cfg.BuildNameToCertificate()
-	srv := newHTTPServer(s.g.r, port, c)
-	srv.TLSConfig = &cfg
-	http2.ConfigureServer(&srv, &http2.Server{})
+	s.s = newHTTPServer(s.g.r, port, c)
+	s.s.TLSConfig = &cfg
+	http2.ConfigureServer(s.s, &http2.Server{})
 
 	var l net.Listener
-	if l, err = tls.Listen("tcp", srv.Addr, &cfg); err != nil {
+	if l, err = tls.Listen("tcp", s.s.Addr, &cfg); err != nil {
 		return
 	}
 
-	return srv.Serve(l)
+	return s.s.Serve(l)
+}
+
+// Close will close an instance of Serve
+func (s *Serve) Close() (err error) {
+	if s.s == nil {
+		return ErrNotInitialized
+	}
+
+	return s.s.Close()
 }

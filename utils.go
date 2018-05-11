@@ -35,11 +35,12 @@ func newRouterHandler(hs []Handler) httprouter.Handle {
 	}
 }
 
-func newHTTPServer(h http.Handler, port uint16, c Config) (srv http.Server) {
+func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
+	var srv http.Server
 	srv.Handler = h
 	srv.Addr = fmt.Sprintf(":%d", port)
 	srv.ReadTimeout = c.ReadTimeout
 	srv.WriteTimeout = c.WriteTimeout
 	srv.MaxHeaderBytes = c.MaxHeaderBytes
-	return
+	return &srv
 }
