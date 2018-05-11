@@ -6,8 +6,9 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func newGroup(route string, hs ...Handler) *Group {
+func newGroup(r *httprouter.Router, route string, hs ...Handler) *Group {
 	var g Group
+	g.r = r
 	g.route = route
 	g.hs = hs
 	return &g
@@ -82,5 +83,5 @@ func (g *Group) Group(route string, hs ...Handler) *Group {
 		hs = append(g.hs, hs...)
 	}
 
-	return newGroup(route, hs...)
+	return newGroup(g.r, route, hs...)
 }
