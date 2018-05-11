@@ -2,6 +2,11 @@
 
 HTTPServe is a simple and lightweight HTTP framework. It's intended to make HTTP controller setup fast and easy.
 
+## Features
+- Parameter routing (powered by [httprouter](https://github.com/julienschmidt/httprouter))
+- Middleware
+- Simple TLS configuration (http2 by default)
+
 ## Usage
 
 ```go
