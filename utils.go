@@ -1,6 +1,7 @@
 package httpserve
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 
@@ -32,4 +33,13 @@ func newRouterHandler(hs []Handler) httprouter.Handle {
 		// Respond using context
 		ctx.respond(resp)
 	}
+}
+
+func newHTTPServer(h http.Handler, port uint16, c Config) (srv http.Server) {
+	srv.Handler = h
+	srv.Addr = fmt.Sprintf(":%d", port)
+	srv.ReadTimeout = c.ReadTimeout
+	srv.WriteTimeout = c.WriteTimeout
+	srv.MaxHeaderBytes = c.MaxHeaderBytes
+	return
 }
