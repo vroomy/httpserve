@@ -18,6 +18,24 @@ BenchmarkJulianSchmidt-4      20000000      72.9 ns/op      32 B/op        1 all
 BenchmarkAPIServe-4            5000000       284 ns/op      64 B/op        2 allocs/op
 ```
 
+### String splitting
+```
+# httpserve.getParts
+BenchmarkGetPartsSmall-4        20000000                93.4 ns/op            48 B/op          1 allocs/op
+# Standard library
+BenchmarkStringsSpitSmall-4     10000000               120 ns/op              48 B/op          1 allocs/op
+
+# httpserve.getParts
+BenchmarkGetPartsMedium-4       20000000               104 ns/op              48 B/op          1 allocs/op
+# Standard library
+BenchmarkStringsSpitMedium-4    10000000               134 ns/op              64 B/op          1 allocs/op
+
+# httpserve.getParts
+BenchmarkGetPartsLarge-4        10000000               116 ns/op              48 B/op          1 allocs/op
+# Standard library
+BenchmarkStringsSpitLarge-4     10000000               156 ns/op              80 B/op          1 allocs/op
+```
+
 ## Usage
 
 ```go
