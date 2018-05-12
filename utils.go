@@ -56,3 +56,32 @@ func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 	srv.MaxHeaderBytes = c.MaxHeaderBytes
 	return &srv
 }
+
+// getParts is used to split URLs into parts
+func getParts(url string) (parts []string) {
+	var (
+		lastIndex int
+		lastSlash int
+	)
+
+	parts = make([]string, 0, 3)
+
+	for i := 0; i < len(url); i++ {
+		b := url[i]
+		switch b {
+		case ':':
+			if lastSlash != i-1 {
+				panic("parameters can only directly follow a forward slash")
+			}
+
+			part := url[lastIndex : i-1]
+			parts = append(parts, part)
+			lastIndex = i
+		case '/':
+			lastSlash = i
+		}
+	}
+
+	parts = append(parts, url[lastIndex:])
+	return
+}
