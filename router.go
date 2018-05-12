@@ -81,6 +81,7 @@ type route struct {
 	m method
 }
 
+// check will check a url for a match, it will also return any associated parameters
 func (r *route) check(url string) (p Params, ok bool) {
 	var lastIndex int
 	p = make(Params, 1)
