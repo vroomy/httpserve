@@ -23,6 +23,9 @@ type Response interface {
 // GC overhead. Additionally, avoiding type assertion would be fantastic.
 type Storage map[string]string
 
+// Params represent route parameters
+type Params map[string]string
+
 // newRouterHandler will return a new httprouter.Handle
 func newRouterHandler(hs []Handler) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {

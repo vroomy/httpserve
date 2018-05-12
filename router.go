@@ -109,6 +109,3 @@ func (r *route) check(url string) (p Params, ok bool) {
 	ok = true
 	return
 }
-
-// Params represent route params
-type Params map[string]string
