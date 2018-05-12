@@ -25,11 +25,12 @@ func newRouter() *Router {
 	return &r
 }
 
-// Router handle routes
+// Router handles routes
 type Router struct {
 	routes []*route
 }
 
+// check will check a url for a match, and return any associated route and it's parameters
 func (r *Router) check(url string) (match *route, p Params) {
 	var ok bool
 	for _, rt := range r.routes {
