@@ -1,12 +1,8 @@
 package httpserve
 
-import (
-	"path"
+import "path"
 
-	"github.com/julienschmidt/httprouter"
-)
-
-func newGroup(r *httprouter.Router, route string, hs ...Handler) *Group {
+func newGroup(r *Router, route string, hs ...Handler) *Group {
 	var g Group
 	g.r = r
 	g.route = route
@@ -16,7 +12,7 @@ func newGroup(r *httprouter.Router, route string, hs ...Handler) *Group {
 
 // Group represents a handler group
 type Group struct {
-	r     *httprouter.Router
+	r     *Router
 	route string
 	hs    []Handler
 }
@@ -31,7 +27,7 @@ func (g *Group) GET(route string, hs ...Handler) {
 		hs = append(g.hs, hs...)
 	}
 
-	g.r.GET(route, newRouterHandler(hs))
+	g.r.GET(route, newHandler(hs))
 }
 
 // PUT will set a PUT endpoint
@@ -44,7 +40,7 @@ func (g *Group) PUT(route string, hs ...Handler) {
 		hs = append(g.hs, hs...)
 	}
 
-	g.r.PUT(route, newRouterHandler(hs))
+	g.r.PUT(route, newHandler(hs))
 }
 
 // POST will set a POST endpoint
@@ -57,7 +53,7 @@ func (g *Group) POST(route string, hs ...Handler) {
 		hs = append(g.hs, hs...)
 	}
 
-	g.r.POST(route, newRouterHandler(hs))
+	g.r.POST(route, newHandler(hs))
 }
 
 // DELETE will set a DELETE endpoint
@@ -70,7 +66,7 @@ func (g *Group) DELETE(route string, hs ...Handler) {
 		hs = append(g.hs, hs...)
 	}
 
-	g.r.DELETE(route, newRouterHandler(hs))
+	g.r.DELETE(route, newHandler(hs))
 }
 
 // Group will return a new group

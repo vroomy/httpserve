@@ -9,12 +9,12 @@ import (
 )
 
 const (
-	basicRoute = "/hello/world/:name"
+	noParamRoute = "/hello/world"
 )
 
 var (
-	routeSink  *route
-	paramsSink Params
+	handlerSink Handler
+	paramsSink  Params
 
 	jsHandleSink httprouter.Handle
 	jsParamsSink httprouter.Params
@@ -27,24 +27,34 @@ var (
 
 func TestRouter(t *testing.T) {
 	r := newRouter()
-	r.GET(basicRoute, func(ctx *Context) Response { return nil })
+	r.GET(smallRouteNoParam, func(ctx *Context) Response { return nil })
+	r.GET(smallRoute, func(ctx *Context) Response { return nil })
 
-	rt, params := r.check("/hello/world/Josh")
-	if rt == nil {
+	_, params, ok := r.Match("/hello/world")
+	if !ok {
+		t.Fatal("expected match and none was found")
+	}
+
+	_, params, ok = r.Match("/hello/world/Josh")
+	if !ok {
 		t.Fatal("expected match and none was found")
 	}
 
 	if params["name"] != "Josh" {
 		t.Fatalf("invalid value, expected \"%s\" and received \"%s\"", "Josh", params["name"])
 	}
+
+	if !ok {
+		t.Fatalf("invalid OK value")
+	}
 }
 
 func BenchmarkRouter(b *testing.B) {
 	r := newRouter()
-	r.GET(basicRoute, func(ctx *Context) Response { return nil })
+	r.GET(smallRoute, func(ctx *Context) Response { return nil })
 
 	for i := 0; i < b.N; i++ {
-		routeSink, paramsSink = r.check("/hello/world/Josh")
+		handlerSink, paramsSink, boolSink = r.Match("/hello/world/Josh")
 	}
 
 	b.ReportAllocs()
@@ -52,7 +62,7 @@ func BenchmarkRouter(b *testing.B) {
 
 func BenchmarkJulianSchmidt(b *testing.B) {
 	r := httprouter.New()
-	r.GET(basicRoute, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {})
+	r.GET(smallRoute, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {})
 
 	for i := 0; i < b.N; i++ {
 		jsHandleSink, jsParamsSink, boolSink = r.Lookup("GET", "/hello/world/Josh")
@@ -64,7 +74,7 @@ func BenchmarkJulianSchmidt(b *testing.B) {
 func BenchmarkAPIServe(b *testing.B) {
 	r := as.New(nil)
 
-	r.GET(basicRoute, func(w http.ResponseWriter, r *http.Request, p as.Params) {})
+	r.GET(smallRoute, func(w http.ResponseWriter, r *http.Request, p as.Params) {})
 
 	for i := 0; i < b.N; i++ {
 		asHandlerSink, asParamsSink = r.Match("GET", "/hello/world/Josh")

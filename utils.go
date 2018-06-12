@@ -4,9 +4,15 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	"github.com/julienschmidt/httprouter"
 )
+
+// newHandler will return a new Handler
+func newHandler(hs []Handler) Handler {
+	return func(ctx *Context) Response {
+		// Get response from context by passing provided handlers
+		return ctx.getResponse(hs)
+	}
+}
 
 // Handler is the HTTP handler type
 type Handler func(ctx *Context) Response
@@ -26,30 +32,6 @@ type Storage map[string]string
 // Params represent route parameters
 type Params map[string]string
 
-// newRouterHandler will return a new httprouter.Handle
-func newRouterHandler(hs []Handler) httprouter.Handle {
-	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		// Create context
-		ctx := newContext(w, r, p)
-		// Get response from context by passing provided handlers
-		resp := ctx.getResponse(hs)
-		// Respond using context
-		ctx.respond(resp)
-	}
-}
-
-// newHTTPHandler will return a new http.Handler
-func newHTTPHandler(hs []Handler) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		// Create context
-		ctx := newContext(w, r, httprouter.Params{})
-		// Get response from context by passing provided handlers
-		resp := ctx.getResponse(hs)
-		// Respond using context
-		ctx.respond(resp)
-	}
-}
-
 func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 	var srv http.Server
 	srv.Handler = h
@@ -66,6 +48,8 @@ func getParts(url string) (parts []string) {
 		lastIndex int
 		lastSlash int
 	)
+
+	fmt.Println("Getting parts", url)
 
 	parts = make([]string, 0, 3)
 
@@ -85,6 +69,12 @@ func getParts(url string) (parts []string) {
 		}
 	}
 
+	fmt.Println("Before check", parts, lastIndex)
 	parts = append(parts, url[lastIndex:])
+	fmt.Println("Parts", parts)
 	return
+}
+
+func notFoundHandler(ctx *Context) Response {
+	return NewTextResponse(404, []byte("404, not found"))
 }

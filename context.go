@@ -4,12 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-
-	"github.com/julienschmidt/httprouter"
 )
 
 // newContext will initialize and return a new Context
-func newContext(w http.ResponseWriter, r *http.Request, p httprouter.Params) *Context {
+func newContext(w http.ResponseWriter, r *http.Request, p Params) *Context {
 	var c Context
 	// Initialize internal storage
 	c.s = make(Storage)
@@ -28,7 +26,7 @@ type Context struct {
 
 	Writer  http.ResponseWriter
 	Request *http.Request
-	Params  httprouter.Params
+	Params  Params
 }
 
 func (c *Context) getResponse(hs []Handler) (resp Response) {

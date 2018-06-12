@@ -7,9 +7,13 @@ import (
 )
 
 const (
-	getPartsSmall  = "/hello/world"
-	getPartsMedium = "/hello/world/:name"
-	getPartsLarge  = "/hello/world/:name/:age"
+	smallRoute  = "/hello/world/:name"
+	mediumRoute = "/hello/world/:name/:age"
+	largeRoute  = "/hello/world/:name/:age/:occupation"
+
+	smallRouteNoParam  = "/hello/world/name"
+	mediumRouteNoParam = "/hello/world/name/age"
+	largeRouteNoParam  = "/hello/world/name/age/occupation"
 )
 
 var (
@@ -17,14 +21,14 @@ var (
 )
 
 func TestGetParts(t *testing.T) {
-	fmt.Printf("small: %v\n", getParts(getPartsSmall))
-	fmt.Printf("medium: %v\n", getParts(getPartsMedium))
-	fmt.Printf("large: %v\n", getParts(getPartsLarge))
+	fmt.Printf("small: %v\n", getParts(smallRoute))
+	fmt.Printf("medium: %v\n", getParts(mediumRoute))
+	fmt.Printf("large: %v\n", getParts(largeRoute))
 }
 
 func BenchmarkGetPartsSmall(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		getPartsSink = getParts(getPartsSmall)
+		getPartsSink = getParts(smallRoute)
 	}
 
 	b.ReportAllocs()
@@ -32,7 +36,7 @@ func BenchmarkGetPartsSmall(b *testing.B) {
 
 func BenchmarkGetPartsMedium(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		getPartsSink = getParts(getPartsMedium)
+		getPartsSink = getParts(mediumRoute)
 	}
 
 	b.ReportAllocs()
@@ -40,7 +44,7 @@ func BenchmarkGetPartsMedium(b *testing.B) {
 
 func BenchmarkGetPartsLarge(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		getPartsSink = getParts(getPartsLarge)
+		getPartsSink = getParts(largeRoute)
 	}
 
 	b.ReportAllocs()
@@ -48,7 +52,7 @@ func BenchmarkGetPartsLarge(b *testing.B) {
 
 func BenchmarkStringsSpitSmall(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		getPartsSink = strings.Split(getPartsSmall, "/")
+		getPartsSink = strings.Split(smallRoute, "/")
 	}
 
 	b.ReportAllocs()
@@ -56,7 +60,7 @@ func BenchmarkStringsSpitSmall(b *testing.B) {
 
 func BenchmarkStringsSpitMedium(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		getPartsSink = strings.Split(getPartsMedium, "/")
+		getPartsSink = strings.Split(mediumRoute, "/")
 	}
 
 	b.ReportAllocs()
@@ -64,7 +68,7 @@ func BenchmarkStringsSpitMedium(b *testing.B) {
 
 func BenchmarkStringsSpitLarge(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		getPartsSink = strings.Split(getPartsLarge, "/")
+		getPartsSink = strings.Split(largeRoute, "/")
 	}
 
 	b.ReportAllocs()

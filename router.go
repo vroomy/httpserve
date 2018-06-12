@@ -1,7 +1,8 @@
 package httpserve
 
 import (
-	"strings"
+	"fmt"
+	"net/http"
 )
 
 const (
@@ -22,30 +23,41 @@ const (
 func newRouter() *Router {
 	var r Router
 	r.routes = make([]*route, 0)
+	r.notFound = notFoundHandler
 	return &r
 }
 
 // Router handles routes
 type Router struct {
-	routes []*route
+	routes   []*route
+	notFound Handler
 }
 
-// check will check a url for a match, and return any associated route and it's parameters
-func (r *Router) check(url string) (match *route, p Params) {
-	var ok bool
+// Match will check a url for a matching Handler, and return any associated handler and it's parameters
+func (r *Router) Match(url string) (h Handler, p Params, ok bool) {
+	fmt.Println("Matching", url)
 	for _, rt := range r.routes {
+		fmt.Println("Checking route..", rt.s)
 		if p, ok = rt.check(url); ok {
-			match = rt
+			h = rt.h
 			return
 		}
 	}
 
+	// No match was found, set handler as our not found handler
+	h = r.notFound
 	return
+}
+
+// SetNotFound will set the not found handler (404)
+func (r *Router) SetNotFound(h Handler) {
+	r.notFound = h
 }
 
 // GET will create a GET route
 func (r *Router) GET(url string, h Handler) {
 	r.routes = append(r.routes, newRoute(url, h, methodGET))
+	fmt.Println("GET:", url, r.routes)
 }
 
 // PUT will create a PUT route
@@ -63,51 +75,11 @@ func (r *Router) DELETE(url string, h Handler) {
 	r.routes = append(r.routes, newRoute(url, h, methodDELETE))
 }
 
-func newRoute(url string, h Handler, m method) *route {
-	if url[0] != '/' {
-		panic("invalid route, needs to start with a forward slash")
-	}
+func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	h, params, ok := r.Match(req.URL.Path)
+	fmt.Println("Hmm", req.URL.Path, ok)
 
-	var r route
-	r.s = strings.Split(url, forwardSlash)[1:]
-	r.m = m
-	r.h = h
-	return &r
-}
-
-type route struct {
-	s []string
-	h Handler
-
-	m method
-}
-
-// check will check a url for a match, it will also return any associated parameters
-func (r *route) check(url string) (p Params, ok bool) {
-	var lastIndex int
-	p = make(Params, 1)
-
-	for i, part := range r.s {
-		if part[0] == colon {
-			key := part[1:]
-			p[key] = part
-			lastIndex += len(part)
-			continue
-		}
-
-		if part[0] == '*' {
-			ok = true
-			return
-		}
-
-		if url[lastIndex:i] != part {
-			// We do not have  amatch, bail out
-			return
-		}
-
-		return
-	}
-
-	ok = true
-	return
+	ctx := newContext(rw, req, params)
+	resp := h(ctx)
+	ctx.respond(resp)
 }
