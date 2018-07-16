@@ -13,10 +13,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-const (
-	invalidTLSFmt = "invalid tls certification pair, neither key nor cert can be empty (%s): %#v"
-)
-
 var (
 	// ErrNotInitialized is returned when an action is performed on an uninitialized instance of Serve
 	ErrNotInitialized = errors.New("cannot perform action on uninitialized Serve")
