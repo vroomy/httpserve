@@ -36,6 +36,7 @@ func (j *JSONResponse) newValue() (value JSONValue, err error) {
 		value.Data = j.val
 		return
 	}
+
 	// Switch on associated value's type
 	switch v := j.val.(type) {
 	case error:
@@ -60,6 +61,7 @@ func (j *JSONResponse) WriteTo(w io.Writer) (n int64, err error) {
 		// Error encountered while initializing responder, return early
 		return
 	}
+
 	// Initialize a new JSON encoder
 	enc := json.NewEncoder(w)
 	// Encode the responder
