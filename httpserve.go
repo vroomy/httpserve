@@ -61,6 +61,11 @@ func (s *Serve) DELETE(route string, hs ...Handler) {
 	s.g.DELETE(route, hs...)
 }
 
+// OPTIONS will set a OPTIONS endpoint
+func (s *Serve) OPTIONS(route string, hs ...Handler) {
+	s.g.OPTIONS(route, hs...)
+}
+
 // Group will return a new group for a given route and handlers
 func (s *Serve) Group(route string, hs ...Handler) *Group {
 	return s.g.Group(route, hs...)
