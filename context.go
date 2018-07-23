@@ -79,6 +79,6 @@ func (c *Context) Get(key string) (value string) {
 }
 
 // Put will set a value for a provided key into the Context's internal storage
-func (c *Context) Put(key string) (value string) {
-	return c.s[key]
+func (c *Context) Put(key, value string) {
+	c.s[key] = value
 }
