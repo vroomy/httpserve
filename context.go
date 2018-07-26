@@ -1,6 +1,7 @@
 package httpserve
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -81,4 +82,10 @@ func (c *Context) Get(key string) (value string) {
 // Put will set a value for a provided key into the Context's internal storage
 func (c *Context) Put(key, value string) {
 	c.s[key] = value
+}
+
+// BindJSON is a helper function which binds the request body to a provided value to be parsed as JSON
+func (c *Context) BindJSON(value interface{}) (err error) {
+	defer c.Request.Body.Close()
+	return json.NewDecoder(c.Request.Body).Decode(value)
 }
