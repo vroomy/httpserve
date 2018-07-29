@@ -23,6 +23,9 @@ type Response interface {
 // GC overhead. Additionally, avoiding type assertion would be fantastic.
 type Storage map[string]string
 
+// Hook is a function called after the response has been completed to the requester
+type Hook func(statusCode int)
+
 // newRouterHandler will return a new httprouter.Handle
 func newRouterHandler(hs []Handler) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
@@ -32,6 +35,8 @@ func newRouterHandler(hs []Handler) httprouter.Handle {
 		resp := ctx.getResponse(hs)
 		// Respond using context
 		ctx.respond(resp)
+		// Process context hooks
+		ctx.processHooks(resp.StatusCode())
 	}
 }
 
@@ -44,6 +49,8 @@ func newHTTPHandler(hs []Handler) http.HandlerFunc {
 		resp := ctx.getResponse(hs)
 		// Respond using context
 		ctx.respond(resp)
+		// Process context hooks
+		ctx.processHooks(resp.StatusCode())
 	}
 }
 

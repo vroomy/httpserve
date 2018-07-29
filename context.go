@@ -25,7 +25,10 @@ func newContext(w http.ResponseWriter, r *http.Request, p httprouter.Params) *Co
 
 // Context is the request context
 type Context struct {
+	// Internal context storage, used by Context.Get and Context.Put
 	s Storage
+	// hooks are a list of hook functions added during the lifespam of the context
+	hooks []Hook
 
 	Writer  http.ResponseWriter
 	Request *http.Request
@@ -59,6 +62,12 @@ func (c *Context) respond(resp Response) {
 	}
 }
 
+func (c *Context) processHooks(statusCode int) {
+	for i := len(c.hooks) - 1; i > -1; i-- {
+		c.hooks[i](statusCode)
+	}
+}
+
 // Write will write a byteslice
 func (c *Context) Write(bs []byte) (n int, err error) {
 	return c.Writer.Write(bs)
@@ -88,4 +97,9 @@ func (c *Context) Put(key, value string) {
 func (c *Context) BindJSON(value interface{}) (err error) {
 	defer c.Request.Body.Close()
 	return json.NewDecoder(c.Request.Body).Decode(value)
+}
+
+// AddHook will add a hook function to be ran after the context has completed
+func (c *Context) AddHook(fn Hook) {
+	c.hooks = append(c.hooks, fn)
 }
