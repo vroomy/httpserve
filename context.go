@@ -53,8 +53,14 @@ func (c *Context) respond(resp Response) {
 	if resp == nil {
 		return
 	}
+
+	if c.redirect(resp) {
+		return
+	}
+
 	// Write status code to header
 	c.Writer.WriteHeader(resp.StatusCode())
+
 	// Write response to http.ResponseWriter
 	if _, err := resp.WriteTo(c.Writer); err != nil {
 		// Write error to stderr
@@ -62,9 +68,20 @@ func (c *Context) respond(resp Response) {
 	}
 }
 
+func (c *Context) redirect(resp Response) (ok bool) {
+	var redirect *RedirectResponse
+	if redirect, ok = resp.(*RedirectResponse); !ok {
+		return
+	}
+
+	c.Writer.Header().Add("Location", redirect.url)
+	c.Writer.WriteHeader(redirect.code)
+	return
+}
+
 func (c *Context) processHooks(statusCode int) {
 	for i := len(c.hooks) - 1; i > -1; i-- {
-		c.hooks[i](statusCode)
+		c.hooks[i](statusCode, c.s)
 	}
 }
 
@@ -80,7 +97,7 @@ func (c *Context) WriteString(str string) (n int, err error) {
 
 // Param will return the associated parameter value with the provided key
 func (c *Context) Param(key string) (value string) {
-	return c.Param(key)
+	return c.Params.ByName(key)
 }
 
 // Get will retrieve a value for a provided key from the Context's internal storage
