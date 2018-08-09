@@ -24,7 +24,7 @@ type Response interface {
 type Storage map[string]string
 
 // Hook is a function called after the response has been completed to the requester
-type Hook func(statusCode int)
+type Hook func(statusCode int, storage Storage)
 
 // newRouterHandler will return a new httprouter.Handle
 func newRouterHandler(hs []Handler) httprouter.Handle {
@@ -35,8 +35,12 @@ func newRouterHandler(hs []Handler) httprouter.Handle {
 		resp := ctx.getResponse(hs)
 		// Respond using context
 		ctx.respond(resp)
+		statusCode := 200
+		if resp != nil {
+			statusCode = resp.StatusCode()
+		}
 		// Process context hooks
-		ctx.processHooks(resp.StatusCode())
+		ctx.processHooks(statusCode)
 	}
 }
 
