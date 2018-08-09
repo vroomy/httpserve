@@ -25,7 +25,10 @@ func newContext(w http.ResponseWriter, r *http.Request, p httprouter.Params) *Co
 
 // Context is the request context
 type Context struct {
+	// Internal context storage, used by Context.Get and Context.Put
 	s Storage
+	// hooks are a list of hook functions added during the lifespam of the context
+	hooks []Hook
 
 	Writer  http.ResponseWriter
 	Request *http.Request
@@ -50,12 +53,35 @@ func (c *Context) respond(resp Response) {
 	if resp == nil {
 		return
 	}
+
+	if c.redirect(resp) {
+		return
+	}
+
 	// Write status code to header
 	c.Writer.WriteHeader(resp.StatusCode())
+
 	// Write response to http.ResponseWriter
 	if _, err := resp.WriteTo(c.Writer); err != nil {
 		// Write error to stderr
 		fmt.Fprintf(os.Stderr, "Error writing to http.ResponseWriter: %v\n", err)
+	}
+}
+
+func (c *Context) redirect(resp Response) (ok bool) {
+	var redirect *RedirectResponse
+	if redirect, ok = resp.(*RedirectResponse); !ok {
+		return
+	}
+
+	c.Writer.Header().Add("Location", redirect.url)
+	c.Writer.WriteHeader(redirect.code)
+	return
+}
+
+func (c *Context) processHooks(statusCode int) {
+	for i := len(c.hooks) - 1; i > -1; i-- {
+		c.hooks[i](statusCode, c.s)
 	}
 }
 
@@ -71,7 +97,7 @@ func (c *Context) WriteString(str string) (n int, err error) {
 
 // Param will return the associated parameter value with the provided key
 func (c *Context) Param(key string) (value string) {
-	return c.Param(key)
+	return c.Params.ByName(key)
 }
 
 // Get will retrieve a value for a provided key from the Context's internal storage
@@ -88,4 +114,9 @@ func (c *Context) Put(key, value string) {
 func (c *Context) BindJSON(value interface{}) (err error) {
 	defer c.Request.Body.Close()
 	return json.NewDecoder(c.Request.Body).Decode(value)
+}
+
+// AddHook will add a hook function to be ran after the context has completed
+func (c *Context) AddHook(fn Hook) {
+	c.hooks = append(c.hooks, fn)
 }
