@@ -103,6 +103,7 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 		return
 	}
 
+	cfg.PreferServerCipherSuites = true
 	cfg.RootCAs = x509.NewCertPool()
 	cfg.BuildNameToCertificate()
 	s.s = newHTTPServer(s.g.r, port, c)
