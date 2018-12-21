@@ -14,6 +14,7 @@ type Handler func(ctx *Context) Response
 // Response is a response interface
 type Response interface {
 	StatusCode() (code int)
+	ContentType() (contentType string)
 	WriteTo(w io.Writer) (n int64, err error)
 }
 
@@ -33,8 +34,14 @@ func newRouterHandler(hs []Handler) httprouter.Handle {
 		ctx := newContext(w, r, p)
 		// Get response from context by passing provided handlers
 		resp := ctx.getResponse(hs)
+		if ctx.wasAdopted(resp) {
+			return
+		}
+		defer r.Body.Close()
+
 		// Respond using context
 		ctx.respond(resp)
+
 		statusCode := 200
 		if resp != nil {
 			statusCode = resp.StatusCode()
@@ -51,6 +58,10 @@ func newHTTPHandler(hs []Handler) http.HandlerFunc {
 		ctx := newContext(w, r, httprouter.Params{})
 		// Get response from context by passing provided handlers
 		resp := ctx.getResponse(hs)
+		if ctx.wasAdopted(resp) {
+			return
+		}
+		defer r.Body.Close()
 		// Respond using context
 		ctx.respond(resp)
 		// Process context hooks
