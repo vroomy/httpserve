@@ -58,6 +58,9 @@ func (c *Context) respond(resp Response) {
 		return
 	}
 
+	// Write content type!
+	c.Writer.Header().Set("Content-Type", resp.ContentType())
+
 	// Write status code to header
 	c.Writer.WriteHeader(resp.StatusCode())
 
@@ -76,6 +79,14 @@ func (c *Context) redirect(resp Response) (ok bool) {
 
 	c.Writer.Header().Add("Location", redirect.url)
 	c.Writer.WriteHeader(redirect.code)
+	return
+}
+
+func (c *Context) wasAdopted(resp Response) (ok bool) {
+	if _, ok = resp.(*AdoptResponse); !ok {
+		return
+	}
+
 	return
 }
 
