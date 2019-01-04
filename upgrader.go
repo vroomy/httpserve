@@ -24,8 +24,8 @@ func (u *Upgrader) upgradeConn(ctx *Context) (res Response) {
 	newURL := *ctx.Request.URL
 	newURL.Scheme = "https"
 	newURL.Host = ctx.Request.Host
-	newURL.Path = strings.Split(newURL.Path, ":")[0]
-	newURL.Path += fmt.Sprintf(":%d", u.port)
+	newURL.Host = strings.Split(newURL.Host, ":")[0]
+	newURL.Host += fmt.Sprintf(":%d", u.port)
 	return NewRedirectResponse(301, newURL.String())
 }
 
