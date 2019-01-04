@@ -104,7 +104,7 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 	}
 
 	cfg.PreferServerCipherSuites = true
-	cfg.MaxVersion = tls.VersionTLS12
+	cfg.MinVersion = tls.VersionTLS12
 	cfg.RootCAs = x509.NewCertPool()
 	cfg.BuildNameToCertificate()
 	s.s = newHTTPServer(s.g.r, port, c)
