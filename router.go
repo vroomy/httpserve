@@ -93,7 +93,7 @@ func (r *Router) OPTIONS(url string, h Handler) {
 func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	h, params, ok := r.Match(req.URL.Path)
 	if !ok {
-		// TODO: Handle 404
+		h = r.notFound
 	}
 
 	ctx := newContext(rw, req, params)
