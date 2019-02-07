@@ -6,7 +6,8 @@ import (
 
 func TestRouteCheck(t *testing.T) {
 	r := newRoute(smallRoute, nil, methodGET)
-	params, ok := r.check(smallRouteNoParam)
+	params := Params{}
+	ok := r.check(smallRouteNoParam, params)
 	if !ok {
 		t.Fatal("Match not ok when it should be")
 	}
@@ -15,7 +16,7 @@ func TestRouteCheck(t *testing.T) {
 		t.Fatalf("Invalid value for key \"%s\", expected \"%s\" and received \"%s\"", key, key, value)
 	}
 
-	params, ok = r.check("test")
+	ok = r.check("test", params)
 	if ok {
 		t.Fatal("Match ok when it should not be")
 	}

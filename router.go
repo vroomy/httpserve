@@ -1,7 +1,6 @@
 package httpserve
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -36,13 +35,14 @@ type Router struct {
 
 // Match will check a url for a matching Handler, and return any associated handler and it's parameters
 func (r *Router) Match(url string) (h Handler, p Params, ok bool) {
-	fmt.Println("Matching", url)
+	p = make(Params, 0)
 	for _, rt := range r.routes {
-		fmt.Println("Checking route..", rt.s)
-		if p, ok = rt.check(url); ok {
+		if ok = rt.check(url, p); ok {
 			h = rt.h
 			return
 		}
+
+		p.clear()
 	}
 
 	// No match was found, set handler as our not found handler
@@ -58,7 +58,6 @@ func (r *Router) SetNotFound(h Handler) {
 // GET will create a GET route
 func (r *Router) GET(url string, h Handler) {
 	r.routes = append(r.routes, newRoute(url, h, methodGET))
-	fmt.Println("GET:", url, r.routes)
 }
 
 // PUT will create a PUT route
@@ -83,7 +82,9 @@ func (r *Router) OPTIONS(url string, h Handler) {
 
 func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	h, params, ok := r.Match(req.URL.Path)
-	fmt.Println("Hmm", req.URL.Path, ok)
+	if !ok {
+		// TODO: Handle 404
+	}
 
 	ctx := newContext(rw, req, params)
 	resp := h(ctx)

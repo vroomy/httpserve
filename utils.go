@@ -68,8 +68,6 @@ func getParts(url string) (parts []string) {
 		lastSlash int
 	)
 
-	fmt.Println("Getting parts", url)
-
 	parts = make([]string, 0, 3)
 
 	for i := 0; i < len(url); i++ {
@@ -88,9 +86,7 @@ func getParts(url string) (parts []string) {
 		}
 	}
 
-	fmt.Println("Before check", parts, lastIndex)
 	parts = append(parts, url[lastIndex:])
-	fmt.Println("Parts", parts)
 	return
 }
 

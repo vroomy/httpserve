@@ -24,43 +24,58 @@ type route struct {
 }
 
 // check will check a url for a match, it will also return any associated parameters
-func (r *route) check(url string) (p Params, ok bool) {
-	var lastIndex, urlIndex int
-	p = make(Params, 1)
+func (r *route) check(url string, p Params) (ok bool) {
+	for _, part := range r.s {
+		switch {
+		case len(url) == 0:
+			return
 
-	for i, part := range r.s {
-		if part[0] == colon {
-			key := part[1:]
-			urlIndex++
-			nextSlash := strings.IndexByte(url[urlIndex:], '/')
-			if nextSlash == -1 {
-				nextSlash = len(url)
-			}
+		case part[0] == colon:
+			key, value, n := getParamMatch(part, url)
+			p[key] = value
+			url = shiftStr(url, n+1)
 
-			p[key] = url[urlIndex:nextSlash]
-			lastIndex += len(part)
-			urlIndex += nextSlash
-			continue
-		}
-
-		if part[0] == '*' {
+		case part[0] == '*':
 			ok = true
 			return
-		}
 
-		if len(url[urlIndex:]) < len(part) {
+		case isPartMatch(url, part):
+			// Part matches, increment and move on
+			url = shiftStr(url, len(part)+1)
+
+		default:
+			// We do not have a match, return
 			return
 		}
-
-		if url[urlIndex:i+len(part)] != part {
-			// We do not have a match, bail out
-			return
-		}
-
-		lastIndex += len(part)
-		urlIndex += len(part)
 	}
 
-	ok = lastIndex == len(url)
+	ok = true
 	return
+}
+
+func isPartMatch(url, part string) (match bool) {
+	if len(url) < len(part) {
+		// Remaining URL is less than our part, return
+		return
+	}
+
+	return url[:len(part)] == part
+}
+
+func getParamMatch(part, url string) (key, value string, n int) {
+	if n = strings.IndexByte(url, '/'); n == -1 {
+		n = len(url)
+	}
+
+	key = part[1:]
+	value = url[:n]
+	return
+}
+
+func shiftStr(str string, n int) (out string) {
+	if len(str) > n {
+		return str[n:]
+	}
+
+	return str
 }
