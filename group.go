@@ -69,6 +69,19 @@ func (g *Group) DELETE(route string, hs ...Handler) {
 	g.r.DELETE(route, newHandler(hs))
 }
 
+// OPTIONS will set a OPTIONS endpoint
+func (g *Group) OPTIONS(route string, hs ...Handler) {
+	if g.route != "" {
+		route = path.Join(g.route, route)
+	}
+
+	if len(g.hs) > 0 {
+		hs = append(g.hs, hs...)
+	}
+
+	g.r.OPTIONS(route, newHandler(hs))
+}
+
 // Group will return a new group
 func (g *Group) Group(route string, hs ...Handler) *Group {
 	if g.route != "" {

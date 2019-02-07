@@ -18,6 +18,7 @@ const (
 	methodPUT
 	methodPOST
 	methodDELETE
+	methodOPTIONS
 )
 
 func newRouter() *Router {
@@ -73,6 +74,11 @@ func (r *Router) POST(url string, h Handler) {
 // DELETE will create a DELETE route
 func (r *Router) DELETE(url string, h Handler) {
 	r.routes = append(r.routes, newRoute(url, h, methodDELETE))
+}
+
+// OPTIONS will create an OPTIONS route
+func (r *Router) OPTIONS(url string, h Handler) {
+	r.routes = append(r.routes, newRoute(url, h, methodOPTIONS))
 }
 
 func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {

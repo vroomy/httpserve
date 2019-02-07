@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"testing"
 	"time"
-
-	"fmt"
 )
 
 func TestServeText(t *testing.T) {
@@ -35,7 +33,6 @@ func TestServeText(t *testing.T) {
 	// Listen within a new goroutine
 	go func() {
 		if err := serve.Listen(8080); err != nil && err != http.ErrServerClosed {
-			fmt.Println("Uhh ", err.Error())
 			t.Fatal(err)
 		}
 	}()

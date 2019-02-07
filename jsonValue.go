@@ -27,7 +27,11 @@ func UnmarshalJSONValue(bs []byte, val interface{}) (err error) {
 		return
 	}
 
-	return jv.Errors.Err()
+	if err = jv.Errors.Err(); err != nil {
+		return
+	}
+
+	return
 }
 
 // JSONValue represents a basic JSON value

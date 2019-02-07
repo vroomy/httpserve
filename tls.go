@@ -7,6 +7,10 @@ import (
 	"path/filepath"
 )
 
+const (
+	invalidTLSFmt = "invalid tls certification pair, neither key nor cert can be empty (%s): %#v"
+)
+
 func newTLSCerts(dir string) (tc tlsCerts, err error) {
 	tc = make(tlsCerts)
 	err = filepath.Walk(dir, tc.walk)

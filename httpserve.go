@@ -12,10 +12,6 @@ import (
 	"github.com/bradfitz/http2"
 )
 
-const (
-	invalidTLSFmt = "invalid tls certification pair, neither key nor cert can be empty (%s): %#v"
-)
-
 var (
 	// ErrNotInitialized is returned when an action is performed on an uninitialized instance of Serve
 	ErrNotInitialized = errors.New("cannot perform action on uninitialized Serve")
@@ -60,6 +56,11 @@ func (s *Serve) DELETE(route string, hs ...Handler) {
 	s.g.DELETE(route, hs...)
 }
 
+// OPTIONS will set a OPTIONS endpoint
+func (s *Serve) OPTIONS(route string, hs ...Handler) {
+	s.g.OPTIONS(route, hs...)
+}
+
 // Group will return a new group for a given route and handlers
 func (s *Serve) Group(route string, hs ...Handler) *Group {
 	return s.g.Group(route, hs...)
@@ -101,6 +102,8 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 		return
 	}
 
+	cfg.PreferServerCipherSuites = true
+	cfg.MinVersion = tls.VersionTLS12
 	cfg.RootCAs = x509.NewCertPool()
 	cfg.BuildNameToCertificate()
 	s.s = newHTTPServer(s.g.r, port, c)
