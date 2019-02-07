@@ -1,9 +1,5 @@
 package httpserve
 
-import (
-	"strings"
-)
-
 func newRoute(url string, h Handler, m method) *route {
 	if url[0] != '/' {
 		panic("invalid route, needs to start with a forward slash")
@@ -23,17 +19,31 @@ type route struct {
 	m method
 }
 
+func (r *route) numParams() (n int) {
+	for _, part := range r.s {
+		if part[0] != colon {
+			continue
+		}
+
+		n++
+	}
+
+	return
+}
+
 // check will check a url for a match, it will also return any associated parameters
-func (r *route) check(url string, p Params) (ok bool) {
+func (r *route) check(p Params, url string) (out Params, ok bool) {
+	out = p
+
 	for _, part := range r.s {
 		switch {
 		case len(url) == 0:
 			return
 
 		case part[0] == colon:
-			key, value, n := getParamMatch(part, url)
-			p[key] = value
-			url = shiftStr(url, n+1)
+			param, n := newParam(part, url)
+			out = append(out, param)
+			url = shiftStr(url, n)
 
 		case part[0] == '*':
 			ok = true
@@ -41,7 +51,7 @@ func (r *route) check(url string, p Params) (ok bool) {
 
 		case isPartMatch(url, part):
 			// Part matches, increment and move on
-			url = shiftStr(url, len(part)+1)
+			url = shiftStr(url, len(part))
 
 		default:
 			// We do not have a match, return
@@ -49,7 +59,7 @@ func (r *route) check(url string, p Params) (ok bool) {
 		}
 	}
 
-	ok = true
+	ok = len(url) == 0
 	return
 }
 
@@ -62,20 +72,15 @@ func isPartMatch(url, part string) (match bool) {
 	return url[:len(part)] == part
 }
 
-func getParamMatch(part, url string) (key, value string, n int) {
-	if n = strings.IndexByte(url, '/'); n == -1 {
-		n = len(url)
-	}
-
-	key = part[1:]
-	value = url[:n]
-	return
-}
-
 func shiftStr(str string, n int) (out string) {
-	if len(str) > n {
+	switch {
+	case len(str) >= n+1:
+		return str[n+1:]
+	case len(str) >= n:
 		return str[n:]
-	}
 
-	return str
+	default:
+		return str
+
+	}
 }

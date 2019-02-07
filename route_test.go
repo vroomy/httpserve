@@ -6,17 +6,16 @@ import (
 
 func TestRouteCheck(t *testing.T) {
 	r := newRoute(smallRoute, nil, methodGET)
-	params := Params{}
-	ok := r.check(smallRouteNoParam, params)
+	params, ok := r.check(nil, smallRouteNoParam)
 	if !ok {
 		t.Fatal("Match not ok when it should be")
 	}
 
-	if key, value := "name", params["name"]; value != "name" {
-		t.Fatalf("Invalid value for key \"%s\", expected \"%s\" and received \"%s\"", key, key, value)
+	if value := params.ByName("name"); value != "name" {
+		t.Fatalf("Invalid value for key \"%s\", expected \"%s\" and received \"%s\"", "name", "name", value)
 	}
 
-	ok = r.check("test", params)
+	params, ok = r.check(params, "test")
 	if ok {
 		t.Fatal("Match ok when it should not be")
 	}
