@@ -34,7 +34,6 @@ func (r *route) numParams() (n int) {
 // check will check a url for a match, it will also return any associated parameters
 func (r *route) check(p Params, url string) (out Params, ok bool) {
 	out = p
-
 	for _, part := range r.s {
 		switch {
 		case len(url) == 0:
