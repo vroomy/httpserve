@@ -62,25 +62,3 @@ func (r *route) check(p Params, url string) (out Params, ok bool) {
 	ok = len(url) == 0
 	return
 }
-
-func isPartMatch(url, part string) (match bool) {
-	if len(url) < len(part) {
-		// Remaining URL is less than our part, return
-		return
-	}
-
-	return url[:len(part)] == part
-}
-
-func shiftStr(str string, n int) (out string) {
-	switch {
-	case len(str) >= n+1:
-		return str[n+1:]
-	case len(str) >= n:
-		return str[n:]
-
-	default:
-		return str
-
-	}
-}
