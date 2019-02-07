@@ -78,12 +78,32 @@ func getParts(url string) (parts []string) {
 				panic("parameters can only directly follow a forward slash")
 			}
 
-			part := url[lastIndex : i-1]
-			parts = append(parts, part)
+			if part := url[lastIndex : i-1]; len(part) > 0 {
+				parts = append(parts, part)
+			}
+
 			lastIndex = i
+		case '*':
+			if lastSlash != i-1 {
+				panic("parameters can only directly follow a forward slash")
+			}
+
+			if part := url[lastIndex : i-1]; len(part) > 0 {
+				parts = append(parts, part)
+			}
+
+			lastIndex = i
+
+			if len(url)-1 > i {
+				panic("wildcard values")
+			}
 		case '/':
 			lastSlash = i
 		}
+	}
+
+	if len(url) <= lastIndex {
+		return
 	}
 
 	parts = append(parts, url[lastIndex:])
