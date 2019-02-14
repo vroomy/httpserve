@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 // newHandler will return a new Handler
@@ -116,7 +117,12 @@ func isPartMatch(url, part string) (match bool) {
 		return
 	}
 
-	return url[:len(part)] == part
+	if url[:len(part)] != part {
+		return
+	}
+
+	nextSlash := strings.Index(url[len(part):], "/")
+	return nextSlash <= 0
 }
 
 func shiftStr(str string, n int) (out string) {
