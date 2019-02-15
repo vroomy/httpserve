@@ -41,7 +41,7 @@ func TestRouter(t *testing.T) {
 		return nil
 	})
 
-	fn, params, ok := r.Match(smallRouteNoParam)
+	fn, params, ok := r.Match("GET", smallRouteNoParam)
 	if !ok {
 		t.Fatal("expected match and none was found")
 	}
@@ -52,7 +52,7 @@ func TestRouter(t *testing.T) {
 		t.Fatalf("invalid value, expected \"%s\" and received \"%s\"", val, "small")
 	}
 
-	fn, params, ok = r.Match(mediumRouteNoParam)
+	fn, params, ok = r.Match("GET", mediumRouteNoParam)
 	if !ok {
 		t.Fatal("expected match and none was found")
 	}
@@ -63,7 +63,7 @@ func TestRouter(t *testing.T) {
 		t.Fatalf("invalid value, expected \"%s\" and received \"%s\"", val, "small")
 	}
 
-	fn, params, ok = r.Match(largeRouteNoParam)
+	fn, params, ok = r.Match("GET", largeRouteNoParam)
 	if !ok {
 		t.Fatal("expected match and none was found")
 	}
@@ -86,7 +86,7 @@ func BenchmarkRouter_small(b *testing.B) {
 	r.GET(largeRoute, func(ctx *Context) Response { return nil })
 
 	for i := 0; i < b.N; i++ {
-		handlerSink, paramsSink, boolSink = r.Match(smallRouteNoParam)
+		handlerSink, paramsSink, boolSink = r.Match("GET", smallRouteNoParam)
 	}
 
 	b.ReportAllocs()
@@ -99,7 +99,7 @@ func BenchmarkRouter_medium(b *testing.B) {
 	r.GET(largeRoute, func(ctx *Context) Response { return nil })
 
 	for i := 0; i < b.N; i++ {
-		handlerSink, paramsSink, boolSink = r.Match(mediumRouteNoParam)
+		handlerSink, paramsSink, boolSink = r.Match("GET", mediumRouteNoParam)
 	}
 
 	b.ReportAllocs()
@@ -112,7 +112,7 @@ func BenchmarkRouter_large(b *testing.B) {
 	r.GET(largeRoute, func(ctx *Context) Response { return nil })
 
 	for i := 0; i < b.N; i++ {
-		handlerSink, paramsSink, boolSink = r.Match(largeRouteNoParam)
+		handlerSink, paramsSink, boolSink = r.Match("GET", largeRouteNoParam)
 	}
 
 	b.ReportAllocs()

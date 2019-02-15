@@ -1,13 +1,13 @@
 package httpserve
 
-func newRoute(url string, h Handler, m method) *route {
+func newRoute(url string, h Handler, method string) *route {
 	if url[0] != '/' {
 		panic("invalid route, needs to start with a forward slash")
 	}
 
 	var r route
 	r.s = getParts(url)
-	r.m = m
+	r.method = method
 	r.h = h
 	return &r
 }
@@ -16,7 +16,7 @@ type route struct {
 	s []string
 	h Handler
 
-	m method
+	method string
 }
 
 func (r *route) numParams() (n int) {
@@ -61,3 +61,7 @@ func (r *route) check(p Params, url string) (out Params, ok bool) {
 	ok = len(url) == 0
 	return
 }
+
+type routes []*route
+
+type routesMap map[string]routes

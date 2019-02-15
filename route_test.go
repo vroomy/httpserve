@@ -5,7 +5,7 @@ import (
 )
 
 func TestRouteCheck(t *testing.T) {
-	r := newRoute(smallRoute, nil, methodGET)
+	r := newRoute(smallRoute, nil, "GET")
 	params, ok := r.check(nil, smallRouteNoParam)
 	if !ok {
 		t.Fatal("Match not ok when it should be")
