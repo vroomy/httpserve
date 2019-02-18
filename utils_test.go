@@ -20,31 +20,61 @@ var (
 	getPartsSink []string
 )
 
-func TestGetParts(t *testing.T) {
-	fmt.Printf("small: %v\n", getParts(smallRoute))
-	fmt.Printf("medium: %v\n", getParts(mediumRoute))
-	fmt.Printf("large: %v\n", getParts(largeRoute))
+func TestGetParts_small(t *testing.T) {
+	ps, err := getParts(smallRoute)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Printf("Parts: %v\n", ps)
+}
+
+func TestGetParts_medium(t *testing.T) {
+	ps, err := getParts(mediumRoute)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Printf("Parts: %v\n", ps)
+}
+
+func TestGetParts_large(t *testing.T) {
+	ps, err := getParts(largeRoute)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Printf("Parts: %v\n", ps)
 }
 
 func BenchmarkGetPartsSmall(b *testing.B) {
+	var err error
 	for i := 0; i < b.N; i++ {
-		getPartsSink = getParts(smallRoute)
+		if getPartsSink, err = getParts(smallRoute); err != nil {
+			b.Fatal(err)
+		}
 	}
 
 	b.ReportAllocs()
 }
 
 func BenchmarkGetPartsMedium(b *testing.B) {
+	var err error
 	for i := 0; i < b.N; i++ {
-		getPartsSink = getParts(mediumRoute)
+		if getPartsSink, err = getParts(mediumRoute); err != nil {
+			b.Fatal(err)
+		}
 	}
 
 	b.ReportAllocs()
 }
 
 func BenchmarkGetPartsLarge(b *testing.B) {
+	var err error
 	for i := 0; i < b.N; i++ {
-		getPartsSink = getParts(largeRoute)
+		if getPartsSink, err = getParts(largeRoute); err != nil {
+			b.Fatal(err)
+		}
 	}
 
 	b.ReportAllocs()

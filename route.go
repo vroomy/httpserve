@@ -1,15 +1,20 @@
 package httpserve
 
-func newRoute(url string, h Handler, method string) *route {
+func newRoute(url string, h Handler, method string) (rp *route, err error) {
 	if url[0] != '/' {
-		panic("invalid route, needs to start with a forward slash")
+		err = ErrMissingLeadSlash
+		return
 	}
 
 	var r route
-	r.s = getParts(url)
+	if r.s, err = getParts(url); err != nil {
+		return
+	}
+
 	r.method = method
 	r.h = h
-	return &r
+	rp = &r
+	return
 }
 
 type route struct {

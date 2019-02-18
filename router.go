@@ -1,6 +1,7 @@
 package httpserve
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -52,8 +53,11 @@ func (r *Router) SetNotFound(h Handler) {
 }
 
 // Handle will create a route for any method
-func (r *Router) Handle(method, url string, h Handler) {
-	route := newRoute(url, h, method)
+func (r *Router) Handle(method, url string, h Handler) (err error) {
+	var route *route
+	if route, err = newRoute(url, h, method); err != nil {
+		return fmt.Errorf("error creating route for [%s] \"%s\": %v", method, url, err)
+	}
 
 	if n := route.numParams(); n > r.maxParams {
 		r.maxParams = n
@@ -62,31 +66,32 @@ func (r *Router) Handle(method, url string, h Handler) {
 	rs := r.rm[method]
 	rs = append(rs, route)
 	r.rm[method] = rs
+	return
 }
 
 // GET will create a GET route
-func (r *Router) GET(url string, h Handler) {
-	r.Handle("GET", url, h)
+func (r *Router) GET(url string, h Handler) error {
+	return r.Handle("GET", url, h)
 }
 
 // PUT will create a PUT route
-func (r *Router) PUT(url string, h Handler) {
-	r.Handle("PUT", url, h)
+func (r *Router) PUT(url string, h Handler) error {
+	return r.Handle("PUT", url, h)
 }
 
 // POST will create a POST route
-func (r *Router) POST(url string, h Handler) {
-	r.Handle("POST", url, h)
+func (r *Router) POST(url string, h Handler) error {
+	return r.Handle("POST", url, h)
 }
 
 // DELETE will create a DELETE route
-func (r *Router) DELETE(url string, h Handler) {
-	r.Handle("DELETE", url, h)
+func (r *Router) DELETE(url string, h Handler) error {
+	return r.Handle("DELETE", url, h)
 }
 
 // OPTIONS will create an OPTIONS route
-func (r *Router) OPTIONS(url string, h Handler) {
-	r.Handle("OPTIONS", url, h)
+func (r *Router) OPTIONS(url string, h Handler) error {
+	return r.Handle("OPTIONS", url, h)
 }
 
 func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {

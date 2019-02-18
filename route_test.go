@@ -5,7 +5,15 @@ import (
 )
 
 func TestRouteCheck(t *testing.T) {
-	r := newRoute(smallRoute, nil, "GET")
+	var (
+		r   *route
+		err error
+	)
+
+	if r, err = newRoute(smallRoute, nil, "GET"); err != nil {
+		t.Fatal(err)
+	}
+
 	params, ok := r.check(nil, smallRouteNoParam)
 	if !ok {
 		t.Fatal("Match not ok when it should be")

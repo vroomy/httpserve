@@ -26,20 +26,29 @@ var (
 )
 
 func TestRouter(t *testing.T) {
+	var err error
 	cc := make(chan string, 3)
 	r := newRouter()
-	r.GET(smallRoute, func(ctx *Context) Response {
+	if err = r.GET(smallRoute, func(ctx *Context) Response {
 		cc <- "small"
 		return nil
-	})
-	r.GET(mediumRoute, func(ctx *Context) Response {
+	}); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = r.GET(mediumRoute, func(ctx *Context) Response {
 		cc <- "medium"
 		return nil
-	})
-	r.GET(largeRoute, func(ctx *Context) Response {
+	}); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = r.GET(largeRoute, func(ctx *Context) Response {
 		cc <- "large"
 		return nil
-	})
+	}); err != nil {
+		t.Fatal(err)
+	}
 
 	fn, params, ok := r.Match("GET", smallRouteNoParam)
 	if !ok {

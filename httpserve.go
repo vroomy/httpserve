@@ -3,18 +3,27 @@ package httpserve
 import (
 	"crypto/tls"
 	"crypto/x509"
-	"errors"
 	"net"
 	"net/http"
 	"time"
+
+	"github.com/Hatch1fy/errors"
 
 	// TODO: See if this is still needed
 	"github.com/bradfitz/http2"
 )
 
-var (
+const (
 	// ErrNotInitialized is returned when an action is performed on an uninitialized instance of Serve
-	ErrNotInitialized = errors.New("cannot perform action on uninitialized Serve")
+	ErrNotInitialized = errors.Error("cannot perform action on uninitialized Serve")
+	// ErrInvalidWildcardRoute is returned when an invalid wildcard route is encountered
+	ErrInvalidWildcardRoute = errors.Error("wildcard routes cannot have any additional characters following the asterisk")
+	// ErrMissingLeadSlash is returned when a route does not begin with "/"
+	ErrMissingLeadSlash = errors.Error("invalid route, needs to start with a forward slash")
+	// ErrInvalidParamLocation is returned when a parameter follows a character other than "/"
+	ErrInvalidParamLocation = errors.Error("parameters can only directly follow a forward slash")
+	// ErrInvalidWildcardLocation is returned when a wildcard follows a character other than "/"
+	ErrInvalidWildcardLocation = errors.Error("wildcards can only directly follow a forward slash")
 )
 
 var defaultConfig = Config{

@@ -63,7 +63,7 @@ func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 }
 
 // getParts is used to split URLs into parts
-func getParts(url string) (parts []string) {
+func getParts(url string) (parts []string, err error) {
 	var (
 		lastIndex int
 		lastSlash int
@@ -76,7 +76,8 @@ func getParts(url string) (parts []string) {
 		switch b {
 		case ':':
 			if lastSlash != i-1 {
-				panic("parameters can only directly follow a forward slash")
+				err = ErrInvalidParamLocation
+				return
 			}
 
 			if part := url[lastIndex : i-1]; len(part) > 0 {
@@ -86,7 +87,10 @@ func getParts(url string) (parts []string) {
 			lastIndex = i
 		case '*':
 			if lastSlash != i-1 {
-				panic("parameters can only directly follow a forward slash")
+				// Note: We may want to disable this check if we want to support things like "*.jpg"
+				// TODO: Research if we want to support more extendable wildcards
+				err = ErrInvalidWildcardLocation
+				return
 			}
 
 			if part := url[lastIndex : i-1]; len(part) > 0 {
@@ -96,7 +100,8 @@ func getParts(url string) (parts []string) {
 			lastIndex = i
 
 			if len(url)-1 > i {
-				panic("wildcard values")
+				err = ErrInvalidWildcardRoute
+				return
 			}
 		case '/':
 			lastSlash = i
