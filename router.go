@@ -24,7 +24,7 @@ type Router struct {
 	maxParams int
 }
 
-// Match will check a url for a matching Handler, and return any associated handler and it's parameters
+// Match will check a url for a matching Handler, and return any associated handler and its parameters
 func (r *Router) Match(method, url string) (h Handler, p Params, ok bool) {
 	var rs routes
 	if rs, ok = r.rm[method]; !ok {
