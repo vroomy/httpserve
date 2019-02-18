@@ -9,7 +9,7 @@ import (
 func NewUpgrader(port uint16) *Upgrader {
 	var u Upgrader
 	u.s = New()
-	u.s.GET("/*x", u.upgradeConn)
+	u.s.GET("/*", u.upgradeConn)
 	u.port = port
 	return &u
 }

@@ -3,19 +3,27 @@ package httpserve
 import (
 	"crypto/tls"
 	"crypto/x509"
-	"errors"
 	"net"
 	"net/http"
 	"time"
 
+	"github.com/Hatch1fy/errors"
+
 	// TODO: See if this is still needed
 	"github.com/bradfitz/http2"
-	"github.com/julienschmidt/httprouter"
 )
 
-var (
+const (
 	// ErrNotInitialized is returned when an action is performed on an uninitialized instance of Serve
-	ErrNotInitialized = errors.New("cannot perform action on uninitialized Serve")
+	ErrNotInitialized = errors.Error("cannot perform action on uninitialized Serve")
+	// ErrInvalidWildcardRoute is returned when an invalid wildcard route is encountered
+	ErrInvalidWildcardRoute = errors.Error("wildcard routes cannot have any additional characters following the asterisk")
+	// ErrMissingLeadSlash is returned when a route does not begin with "/"
+	ErrMissingLeadSlash = errors.Error("invalid route, needs to start with a forward slash")
+	// ErrInvalidParamLocation is returned when a parameter follows a character other than "/"
+	ErrInvalidParamLocation = errors.Error("parameters can only directly follow a forward slash")
+	// ErrInvalidWildcardLocation is returned when a wildcard follows a character other than "/"
+	ErrInvalidWildcardLocation = errors.Error("wildcards can only directly follow a forward slash")
 )
 
 var defaultConfig = Config{
@@ -27,7 +35,7 @@ var defaultConfig = Config{
 // New will return a new instance of Serve
 func New() *Serve {
 	var s Serve
-	s.g.r = httprouter.New()
+	s.g.r = newRouter()
 	return &s
 }
 
@@ -119,9 +127,9 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 	return s.s.Serve(l)
 }
 
-// Set404 will set the 404 handlers
-func (s *Serve) Set404(hs ...Handler) {
-	s.g.r.NotFound = newHTTPHandler(hs)
+// Set404 will set the 404 handler
+func (s *Serve) Set404(h Handler) {
+	s.g.r.SetNotFound(h)
 }
 
 // Close will close an instance of Serve
