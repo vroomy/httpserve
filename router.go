@@ -96,6 +96,5 @@ func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	ctx := newContext(rw, req, params)
-	resp := h(ctx)
-	ctx.respond(resp)
+	h(ctx)
 }
