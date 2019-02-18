@@ -9,9 +9,27 @@ import (
 
 // newHandler will return a new Handler
 func newHandler(hs []Handler) Handler {
-	return func(ctx *Context) Response {
+	return func(ctx *Context) (resp Response) {
 		// Get response from context by passing provided handlers
-		return ctx.getResponse(hs)
+		resp = ctx.getResponse(hs)
+
+		// Check to see if the context was adopted
+		if ctx.wasAdopted(resp) {
+			return
+		}
+		defer ctx.Request.Body.Close()
+
+		// Respond using context
+		ctx.respond(resp)
+
+		sc := 200
+		if resp != nil {
+			sc = resp.StatusCode()
+		}
+
+		// Process context hooks
+		ctx.processHooks(sc)
+		return
 	}
 }
 
@@ -33,24 +51,6 @@ type Storage map[string]string
 
 // Hook is a function called after the response has been completed to the requester
 type Hook func(statusCode int, storage Storage)
-
-// newHTTPHandler will return a new http.Handler
-func newHTTPHandler(hs []Handler) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		// Create context
-		ctx := newContext(w, r, Params{})
-		// Get response from context by passing provided handlers
-		resp := ctx.getResponse(hs)
-		if ctx.wasAdopted(resp) {
-			return
-		}
-		defer r.Body.Close()
-		// Respond using context
-		ctx.respond(resp)
-		// Process context hooks
-		ctx.processHooks(resp.StatusCode())
-	}
-}
 
 func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 	var srv http.Server
