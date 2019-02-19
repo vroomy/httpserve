@@ -13,7 +13,7 @@ const (
 func newRouter() *Router {
 	var r Router
 	r.rm = make(routesMap, 3)
-	r.notFound = notFoundHandler
+	r.SetNotFound(notFoundHandler)
 	return &r
 }
 
@@ -48,8 +48,8 @@ func (r *Router) Match(method, url string) (h Handler, p Params, ok bool) {
 }
 
 // SetNotFound will set the not found handler (404)
-func (r *Router) SetNotFound(h Handler) {
-	r.notFound = h
+func (r *Router) SetNotFound(hs ...Handler) {
+	r.notFound = newHandler(hs)
 }
 
 // Handle will create a route for any method
