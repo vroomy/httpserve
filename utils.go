@@ -112,7 +112,17 @@ func getParts(url string) (parts []string, err error) {
 		return
 	}
 
-	parts = append(parts, url[lastIndex:])
+	part := url[lastIndex:]
+	if len(part) == 0 {
+		return
+	}
+
+	if i := strings.Index(part, "/"); i > -1 {
+		parts = append(parts, part[:i])
+		part = part[i+1:]
+	}
+
+	parts = append(parts, part)
 	return
 }
 

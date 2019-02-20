@@ -47,6 +47,15 @@ func TestGetParts_large(t *testing.T) {
 	fmt.Printf("Parts: %v\n", ps)
 }
 
+func TestGetParts_param(t *testing.T) {
+	ps, err := getParts("/api/releases/hatch/:platform/:environment/latest")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Printf("Parts: %v\n", ps)
+}
+
 func BenchmarkGetPartsSmall(b *testing.B) {
 	var err error
 	for i := 0; i < b.N; i++ {
