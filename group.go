@@ -2,8 +2,8 @@ package httpserve
 
 import "path"
 
-func newGroup(r *Router, route string, hs ...Handler) *Group {
-	var g Group
+func newGroup(r *Router, route string, hs ...Handler) *group {
+	var g group
 	g.r = r
 	g.route = route
 	g.hs = hs
@@ -11,14 +11,14 @@ func newGroup(r *Router, route string, hs ...Handler) *Group {
 }
 
 // Group represents a handler group
-type Group struct {
+type group struct {
 	r     *Router
 	route string
 	hs    []Handler
 }
 
 // GET will set a GET endpoint
-func (g *Group) GET(route string, hs ...Handler) {
+func (g *group) GET(route string, hs ...Handler) {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -31,7 +31,7 @@ func (g *Group) GET(route string, hs ...Handler) {
 }
 
 // PUT will set a PUT endpoint
-func (g *Group) PUT(route string, hs ...Handler) {
+func (g *group) PUT(route string, hs ...Handler) {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -44,7 +44,7 @@ func (g *Group) PUT(route string, hs ...Handler) {
 }
 
 // POST will set a POST endpoint
-func (g *Group) POST(route string, hs ...Handler) {
+func (g *group) POST(route string, hs ...Handler) {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -57,7 +57,7 @@ func (g *Group) POST(route string, hs ...Handler) {
 }
 
 // DELETE will set a DELETE endpoint
-func (g *Group) DELETE(route string, hs ...Handler) {
+func (g *group) DELETE(route string, hs ...Handler) {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -70,7 +70,7 @@ func (g *Group) DELETE(route string, hs ...Handler) {
 }
 
 // OPTIONS will set a OPTIONS endpoint
-func (g *Group) OPTIONS(route string, hs ...Handler) {
+func (g *group) OPTIONS(route string, hs ...Handler) {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -83,7 +83,7 @@ func (g *Group) OPTIONS(route string, hs ...Handler) {
 }
 
 // Group will return a new group
-func (g *Group) Group(route string, hs ...Handler) *Group {
+func (g *group) Group(route string, hs ...Handler) Group {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -93,4 +93,15 @@ func (g *Group) Group(route string, hs ...Handler) *Group {
 	}
 
 	return newGroup(g.r, route, hs...)
+}
+
+// Group is a grouping interface
+type Group interface {
+	GET(route string, hs ...Handler)
+	POST(route string, hs ...Handler)
+	PUT(route string, hs ...Handler)
+	DELETE(route string, hs ...Handler)
+	OPTIONS(route string, hs ...Handler)
+
+	Group(route string, hs ...Handler) Group
 }

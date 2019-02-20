@@ -42,7 +42,7 @@ func New() *Serve {
 // Serve will serve HTTP requests
 type Serve struct {
 	s *http.Server
-	g Group
+	g group
 }
 
 // GET will set a GET endpoint
@@ -71,7 +71,7 @@ func (s *Serve) OPTIONS(route string, hs ...Handler) {
 }
 
 // Group will return a new group for a given route and handlers
-func (s *Serve) Group(route string, hs ...Handler) *Group {
+func (s *Serve) Group(route string, hs ...Handler) Group {
 	return s.g.Group(route, hs...)
 }
 
