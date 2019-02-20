@@ -1,6 +1,8 @@
 package httpserve
 
-import "strings"
+import (
+	"strings"
+)
 
 func newParam(part, url string) (param Param, n int) {
 	if n = strings.IndexByte(url, '/'); n == -1 {

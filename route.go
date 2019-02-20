@@ -45,7 +45,10 @@ func (r *route) check(p Params, url string) (out Params, ok bool) {
 			return
 
 		case part[0] == colon:
-			param, n := newParam(part, url)
+			// Skip forward to avoid slash
+			param, n := newParam(part, url[1:])
+			// Increment N to account for skipping
+			n++
 			out = append(out, param)
 			url = shiftStr(url, n)
 

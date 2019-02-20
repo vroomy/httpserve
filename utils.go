@@ -64,65 +64,36 @@ func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 
 // getParts is used to split URLs into parts
 func getParts(url string) (parts []string, err error) {
-	var (
-		lastIndex int
-		lastSlash int
-	)
-
-	parts = make([]string, 0, 3)
-
-	for i := 0; i < len(url); i++ {
-		b := url[i]
-		switch b {
-		case ':':
-			if lastSlash != i-1 {
-				err = ErrInvalidParamLocation
-				return
-			}
-
-			if part := url[lastIndex : i-1]; len(part) > 0 {
-				parts = append(parts, part)
-			}
-
-			lastIndex = i
-		case '*':
-			if lastSlash != i-1 {
-				// Note: We may want to disable this check if we want to support things like "*.jpg"
-				// TODO: Research if we want to support more extendable wildcards
-				err = ErrInvalidWildcardLocation
-				return
-			}
-
-			if part := url[lastIndex : i-1]; len(part) > 0 {
-				parts = append(parts, part)
-			}
-
-			lastIndex = i
-
-			if len(url)-1 > i {
-				err = ErrInvalidWildcardRoute
-				return
-			}
-		case '/':
-			lastSlash = i
+	var buf []byte
+	for _, part := range strings.Split(url, "/") {
+		if len(part) == 0 {
+			continue
 		}
+
+		switch part[0] {
+		case ':':
+		case '*':
+
+		default:
+			buf = append(buf, '/')
+			buf = append(buf, part...)
+			continue
+		}
+
+		if len(buf) > 0 {
+			parts = append(parts, string(buf))
+			buf = buf[:0]
+		}
+
+		parts = append(parts, part)
 	}
 
-	if len(url) <= lastIndex {
+	if len(buf) == 0 {
 		return
 	}
 
-	part := url[lastIndex:]
-	if len(part) == 0 {
-		return
-	}
+	parts = append(parts, string(buf))
 
-	if i := strings.Index(part, "/"); i > -1 {
-		parts = append(parts, part[:i])
-		part = part[i+1:]
-	}
-
-	parts = append(parts, part)
 	return
 }
 
@@ -142,8 +113,8 @@ func isPartMatch(url, part string) (match bool) {
 
 func shiftStr(str string, n int) (out string) {
 	switch {
-	case len(str) >= n+1:
-		return str[n+1:]
+	case len(str) >= n:
+		return str[n:]
 	case len(str) >= n:
 		return str[n:]
 
