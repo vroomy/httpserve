@@ -5,6 +5,7 @@ import (
 	"crypto/x509"
 	"net"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/Hatch1fy/errors"
@@ -102,6 +103,10 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 		tc  tlsCerts
 		cfg tls.Config
 	)
+
+	if _, err = os.Stat(certificateDir); err != nil {
+		return
+	}
 
 	if tc, err = newTLSCerts(certificateDir); err != nil {
 		return
