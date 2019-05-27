@@ -2,6 +2,7 @@ package httpserve
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -14,6 +15,7 @@ func newRouter() *Router {
 	var r Router
 	r.rm = make(routesMap, 3)
 	r.SetNotFound(notFoundHandler)
+	r.SetPanic(r.onPanic)
 	return &r
 }
 
@@ -21,8 +23,14 @@ func newRouter() *Router {
 type Router struct {
 	rm routesMap
 
-	notFound  Handler
+	notFound Handler
+	panic    PanicHandler
+
 	maxParams int
+}
+
+func (r *Router) onPanic(v interface{}) {
+	log.Println("Panic encountered", v)
 }
 
 // Match will check a url for a matching Handler, and return any associated handler and its parameters
@@ -50,6 +58,11 @@ func (r *Router) Match(method, url string) (h Handler, p Params, ok bool) {
 // SetNotFound will set the not found handler (404)
 func (r *Router) SetNotFound(hs ...Handler) {
 	r.notFound = newHandler(hs)
+}
+
+// SetPanic will set panic handler
+func (r *Router) SetPanic(h PanicHandler) {
+	r.panic = h
 }
 
 // Handle will create a route for any method
@@ -101,5 +114,12 @@ func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	ctx := newContext(rw, req, params)
+
+	defer func() {
+		if p := recover(); p != nil && r.panic != nil {
+			r.panic(p)
+		}
+	}()
+
 	h(ctx)
 }

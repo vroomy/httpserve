@@ -127,3 +127,6 @@ func shiftStr(str string, n int) (out string) {
 func notFoundHandler(ctx *Context) Response {
 	return NewTextResponse(404, []byte("404, not found"))
 }
+
+// PanicHandler is a panic handler
+type PanicHandler func(v interface{})
