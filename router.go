@@ -119,6 +119,8 @@ func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		if p := recover(); p != nil && r.panic != nil {
 			r.panic(p)
 		}
+
+		rw.WriteHeader(500)
 	}()
 
 	h(ctx)
