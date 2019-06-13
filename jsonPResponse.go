@@ -1,9 +1,12 @@
 package httpserve
 
 import (
+	"bytes"
 	"encoding/json"
 	"io"
 )
+
+var jsonPEnding = []byte(");\n")
 
 // NewJSONPResponse will return a new text response
 func NewJSONPResponse(callback string, value interface{}) *JSONPResponse {
@@ -47,19 +50,21 @@ func (j *JSONPResponse) newValue() (value JSONValue) {
 
 // WriteTo will write to a given io.Writer
 func (j *JSONPResponse) WriteTo(w io.Writer) (n int64, err error) {
-	if _, err = w.Write([]byte(j.callback + "(")); err != nil {
-		return
-	}
-
+	// Initialize buffer
+	buf := bytes.NewBuffer(nil)
+	// Write callback func
+	buf.WriteString(j.callback + "(")
 	// Initialize a new JSON value
 	value := j.newValue()
 	// Initialize a new JSON encoder
-	enc := json.NewEncoder(w)
+	enc := json.NewEncoder(buf)
 	// Encode the responder
 	err = enc.Encode(value)
-
-	if _, err = w.Write([]byte{')', ';'}); err != nil {
-		return
-	}
+	// Remove the trailing newline
+	buf.Truncate(buf.Len() - 1)
+	// Write jsonP ending
+	buf.Write(jsonPEnding)
+	// Flush buffer to writer
+	_, err = w.Write(buf.Bytes())
 	return
 }
