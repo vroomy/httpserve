@@ -10,8 +10,7 @@ import (
 
 	"github.com/Hatch1fy/errors"
 
-	// TODO: See if this is still needed
-	"github.com/bradfitz/http2"
+	"golang.org/x/net/http2"
 )
 
 const (
