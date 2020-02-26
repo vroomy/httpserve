@@ -1,11 +1,7 @@
 package httpserve
 
 import (
-	"net/http"
 	"testing"
-
-	"github.com/julienschmidt/httprouter"
-	as "github.com/missionMeteora/apiserv/router"
 )
 
 const (
@@ -15,12 +11,6 @@ const (
 var (
 	handlerSink Handler
 	paramsSink  Params
-
-	jsHandleSink httprouter.Handle
-	jsParamsSink httprouter.Params
-
-	asHandlerSink as.Handler
-	asParamsSink  as.Params
 
 	boolSink bool
 )
@@ -127,80 +117,4 @@ func BenchmarkRouter_large(b *testing.B) {
 	b.ReportAllocs()
 }
 
-func BenchmarkJulianSchmidt_small(b *testing.B) {
-	r := httprouter.New()
-	r.GET(smallRoute, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {})
-	r.GET(mediumRoute, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {})
-	r.GET(largeRoute, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {})
 
-	for i := 0; i < b.N; i++ {
-		jsHandleSink, jsParamsSink, boolSink = r.Lookup("GET", smallRouteNoParam)
-	}
-
-	b.ReportAllocs()
-}
-
-func BenchmarkJulianSchmidt_medium(b *testing.B) {
-	r := httprouter.New()
-	r.GET(smallRoute, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {})
-	r.GET(mediumRoute, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {})
-	r.GET(largeRoute, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {})
-
-	for i := 0; i < b.N; i++ {
-		jsHandleSink, jsParamsSink, boolSink = r.Lookup("GET", mediumRouteNoParam)
-	}
-
-	b.ReportAllocs()
-}
-
-func BenchmarkJulianSchmidt_large(b *testing.B) {
-	r := httprouter.New()
-	r.GET(smallRoute, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {})
-	r.GET(mediumRoute, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {})
-	r.GET(largeRoute, func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {})
-
-	for i := 0; i < b.N; i++ {
-		jsHandleSink, jsParamsSink, boolSink = r.Lookup("GET", largeRouteNoParam)
-	}
-
-	b.ReportAllocs()
-}
-
-func BenchmarkAPIServe_small(b *testing.B) {
-	r := as.New(nil)
-	r.GET(smallRoute, func(w http.ResponseWriter, r *http.Request, p as.Params) {})
-	r.GET(mediumRoute, func(w http.ResponseWriter, r *http.Request, p as.Params) {})
-	r.GET(largeRoute, func(w http.ResponseWriter, r *http.Request, p as.Params) {})
-
-	for i := 0; i < b.N; i++ {
-		asHandlerSink, asParamsSink = r.Match("GET", smallRouteNoParam)
-	}
-
-	b.ReportAllocs()
-}
-
-func BenchmarkAPIServe_medium(b *testing.B) {
-	r := as.New(nil)
-	r.GET(smallRoute, func(w http.ResponseWriter, r *http.Request, p as.Params) {})
-	r.GET(mediumRoute, func(w http.ResponseWriter, r *http.Request, p as.Params) {})
-	r.GET(largeRoute, func(w http.ResponseWriter, r *http.Request, p as.Params) {})
-
-	for i := 0; i < b.N; i++ {
-		asHandlerSink, asParamsSink = r.Match("GET", mediumRouteNoParam)
-	}
-
-	b.ReportAllocs()
-}
-
-func BenchmarkAPIServe_large(b *testing.B) {
-	r := as.New(nil)
-	r.GET(smallRoute, func(w http.ResponseWriter, r *http.Request, p as.Params) {})
-	r.GET(mediumRoute, func(w http.ResponseWriter, r *http.Request, p as.Params) {})
-	r.GET(largeRoute, func(w http.ResponseWriter, r *http.Request, p as.Params) {})
-
-	for i := 0; i < b.N; i++ {
-		asHandlerSink, asParamsSink = r.Match("GET", largeRouteNoParam)
-	}
-
-	b.ReportAllocs()
-}
