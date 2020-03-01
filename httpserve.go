@@ -9,8 +9,6 @@ import (
 	"time"
 
 	"github.com/Hatch1fy/errors"
-
-	"golang.org/x/net/http2"
 )
 
 const (
@@ -121,7 +119,6 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 	cfg.BuildNameToCertificate()
 	s.s = newHTTPServer(s.g.r, port, c)
 	s.s.TLSConfig = &cfg
-	http2.ConfigureServer(s.s, &http2.Server{})
 
 	var l net.Listener
 	if l, err = tls.Listen("tcp", s.s.Addr, &cfg); err != nil {
