@@ -66,7 +66,8 @@ func main() {
 	})
 
 	if err = srv.Listen(8080); err != nil {
-		log.Fatal(err)
+		out.Errorf("error during Init: %v", err)
+        return
 	}
 }
 
@@ -96,7 +97,8 @@ func main() {
 	srv.Set404(svc.NotFound)
 
 	if err = srv.Listen(8080); err != nil {
-		log.Fatal(err)
+		out.Errorf("error during Init: %v", err)
+        return
 	}
 }
 
