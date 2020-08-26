@@ -30,7 +30,6 @@ type VirtualHost struct {
 	Port int
 }
 
-
 func (u *Upgrader) upgradeConn(ctx *Context) (res Response) {
 	newURL := *ctx.Request.URL
 	newURL.Scheme = "https"
@@ -39,7 +38,7 @@ func (u *Upgrader) upgradeConn(ctx *Context) (res Response) {
 
 	var port = u.port
 	for virtualHost := range u.proxies {
-		if newURL.Host = virtualHost.Domain {
+		if newURL.Host == virtualHost.Domain {
 			// Redirect to localhost:port for virtual host proxy
 			port = virtualHost.port
 			break
