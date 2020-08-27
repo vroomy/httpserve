@@ -6,11 +6,12 @@ import (
 )
 
 // NewUpgrader will return an upgrader
-func NewUpgrader(port uint16, virtualHosts ...Pair) *Upgrader {
+func NewUpgrader(port uint16, virtualHosts ...VirtualHost) *Upgrader {
 	var u Upgrader
 	u.s = New()
 	u.s.GET("/*", u.upgradeConn)
 	u.port = port
+	u.proxies = virtualHosts
 	return &u
 }
 
@@ -27,7 +28,7 @@ type VirtualHost struct {
 	// Domain is the Host to parse for the redirect
 	Domain string
 	// Port is the localhost port forwarded to when Domain is parsed
-	Port int
+	Port uint16
 }
 
 func (u *Upgrader) upgradeConn(ctx *Context) (res Response) {
@@ -37,10 +38,10 @@ func (u *Upgrader) upgradeConn(ctx *Context) (res Response) {
 	newURL.Host = strings.Split(newURL.Host, ":")[0]
 
 	var port = u.port
-	for virtualHost := range u.proxies {
-		if newURL.Host == virtualHost.Domain {
+	for _, virtualHost := range u.proxies {
+		if virtualHost.Port != u.port && newURL.Host == virtualHost.Domain {
 			// Redirect to localhost:port for virtual host proxy
-			port = virtualHost.port
+			port = virtualHost.Port
 			break
 		}
 	}
