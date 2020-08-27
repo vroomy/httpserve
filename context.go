@@ -139,3 +139,38 @@ func (c *Context) BindJSON(value interface{}) (err error) {
 func (c *Context) AddHook(fn Hook) {
 	c.hooks = append(c.hooks, fn)
 }
+
+// NewAdoptResponse will return an adopt response object
+func (c *Context) NewAdoptResponse() (resp *AdoptResponse) {
+	return NewAdoptResponse()
+}
+
+// NewNoContentResponse will return a no content response object
+func (c *Context) NewNoContentResponse() (resp *NoContentResponse) {
+	return NewNoContentResponse()
+}
+
+// NewRedirectResponse will return a redirect response object
+func (c *Context) NewRedirectResponse(code int, url string) (resp *RedirectResponse) {
+	return NewRedirectResponse(code, url)
+}
+
+// NewJSONResponse will return a json response object
+func (c *Context) NewJSONResponse(code int, value interface{}) (resp *JSONResponse) {
+	return NewJSONResponse(code, value)
+}
+
+// NewJSONPResponse will return a json response object with callback
+func (c *Context) NewJSONPResponse(callback string, value interface{}) (resp *JSONPResponse) {
+	return NewJSONPResponse(callback, value)
+}
+
+// NewTextResponse will return a text response object
+func (c *Context) NewTextResponse(code int, body []byte) (resp *TextResponse) {
+	return NewTextResponse(code, body)
+}
+
+// NewXMLResponse will return an xml response object
+func (c *Context) NewXMLResponse(code int, body []byte) (resp *XMLResponse) {
+	return NewXMLResponse(code, body)
+}

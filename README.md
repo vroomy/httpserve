@@ -54,15 +54,15 @@ func main() {
 		err error
 	)
 
-	srv = httpserve.New()
+	srv = ctx.New()
 	defer srv.Close()
 
 	srv.GET("/ping", func(ctx *httpserve.Context) (res vroomy.Response) {
-		return httpserve.NewTextResponse(200, []byte("pong"))
+		return ctx.NewTextResponse(200, []byte("pong"))
 	})
 
 	srv.Set404(func(ctx *httpserve.Context) (res vroomy.Response) {
-		return httpserve.NewTextResponse(404, []byte("Oh shoot, this page doesn't exist"))
+		return ctx.NewTextResponse(404, []byte("Oh shoot, this page doesn't exist"))
 	})
 
 	if err = srv.Listen(8080); err != nil {
@@ -90,7 +90,7 @@ func main() {
 		err error
 	)
 
-	srv = httpserve.New()
+	srv = ctx.New()
 	defer srv.Close()
 
 	srv.GET("/ping", svc.Ping)
@@ -107,12 +107,12 @@ type Service struct{}
 
 // Ping is the ping endpoint handler
 func (s *Service) Ping(ctx *httpserve.Context) (res vroomy.Response) {
-	return httpserve.NewTextResponse(200, []byte("pong"))
+	return ctx.NewTextResponse(200, []byte("pong"))
 }
 
 // NotFound is the 404 handler
 func (s *Service) NotFound(ctx *httpserve.Context) (res vroomy.Response) {
-	return httpserve.NewTextResponse(404, []byte("Oh shoot, this page doesn't exist"))
+	return ctx.NewTextResponse(404, []byte("Oh shoot, this page doesn't exist"))
 }
 
 ```
