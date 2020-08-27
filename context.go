@@ -119,6 +119,16 @@ func (c *Context) Put(key, value string) {
 	c.s[key] = value
 }
 
+// GetRequest will return http.Request
+func (c *Context) GetRequest() (req *http.Request) {
+	return c.Request
+}
+
+// GetHeader will return http.Request.Header
+func (c *Context) GetHeader() (req http.Header) {
+	return c.Request.Header
+}
+
 // BindJSON is a helper function which binds the request body to a provided value to be parsed as JSON
 func (c *Context) BindJSON(value interface{}) (err error) {
 	defer c.Request.Body.Close()
