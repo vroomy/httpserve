@@ -119,6 +119,16 @@ func (c *Context) Put(key, value string) {
 	c.s[key] = value
 }
 
+// GetRequest will return http.Request
+func (c *Context) GetRequest() (req *http.Request) {
+	return c.Request
+}
+
+// GetHeader will return http.Request.Header
+func (c *Context) GetHeader() (req http.Header) {
+	return c.Request.Header
+}
+
 // BindJSON is a helper function which binds the request body to a provided value to be parsed as JSON
 func (c *Context) BindJSON(value interface{}) (err error) {
 	defer c.Request.Body.Close()
@@ -128,4 +138,39 @@ func (c *Context) BindJSON(value interface{}) (err error) {
 // AddHook will add a hook function to be ran after the context has completed
 func (c *Context) AddHook(fn Hook) {
 	c.hooks = append(c.hooks, fn)
+}
+
+// NewAdoptResponse will return an adopt response object
+func (c *Context) NewAdoptResponse() (resp *AdoptResponse) {
+	return NewAdoptResponse()
+}
+
+// NewNoContentResponse will return a no content response object
+func (c *Context) NewNoContentResponse() (resp *NoContentResponse) {
+	return NewNoContentResponse()
+}
+
+// NewRedirectResponse will return a redirect response object
+func (c *Context) NewRedirectResponse(code int, url string) (resp *RedirectResponse) {
+	return NewRedirectResponse(code, url)
+}
+
+// NewJSONResponse will return a json response object
+func (c *Context) NewJSONResponse(code int, value interface{}) (resp *JSONResponse) {
+	return NewJSONResponse(code, value)
+}
+
+// NewJSONPResponse will return a json response object with callback
+func (c *Context) NewJSONPResponse(callback string, value interface{}) (resp *JSONPResponse) {
+	return NewJSONPResponse(callback, value)
+}
+
+// NewTextResponse will return a text response object
+func (c *Context) NewTextResponse(code int, body []byte) (resp *TextResponse) {
+	return NewTextResponse(code, body)
+}
+
+// NewXMLResponse will return an xml response object
+func (c *Context) NewXMLResponse(code int, body []byte) (resp *XMLResponse) {
+	return NewXMLResponse(code, body)
 }
