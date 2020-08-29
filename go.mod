@@ -1,4 +1,4 @@
-module github.com/Hatch1fy/httpserve
+module github.com/vroomy/httpserve
 
 go 1.14
 

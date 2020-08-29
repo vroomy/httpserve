@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Hatch1fy/httpserve"
+	"github.com/vroomy/httpserve"
 )
 
 func main() {
