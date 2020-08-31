@@ -3,7 +3,6 @@ package httpserve
 import (
 	"path"
 
-	"github.com/hatchify/scribe"
 	"github.com/vroomy/common"
 )
 
@@ -57,8 +56,6 @@ func (g *group) POST(route string, hs ...common.Handler) {
 	if len(g.hs) > 0 {
 		hs = append(g.hs, hs...)
 	}
-
-	scribe.New("httpserve").Notificationf("Setting handlers for route %s:%v", route, hs)
 
 	g.r.POST(route, newHandler(hs))
 }

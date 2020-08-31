@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/hatchify/scribe"
 	"github.com/vroomy/common"
 )
 
@@ -39,9 +38,6 @@ type Context struct {
 func (c *Context) getResponse(hs []common.Handler) (resp common.Response) {
 	// Iterate through the provided handlers
 	for _, h := range hs {
-		if h == nil {
-			scribe.New("httpserve").Errorf("nil handler for route: %s", c.GetRequest().URL.Path)
-		}
 		// Call handler and pass Context
 		if resp = h(c); resp != nil {
 			// A non-nil response was provided, return
