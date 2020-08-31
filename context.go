@@ -5,13 +5,16 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+
+	"github.com/hatchify/scribe"
+	"github.com/vroomy/common"
 )
 
 // newContext will initialize and return a new Context
 func newContext(w http.ResponseWriter, r *http.Request, p Params) *Context {
 	var c Context
 	// Initialize internal storage
-	c.s = make(Storage)
+	c.s = make(common.Storage)
 	// Associate provided http.ResponseWriter
 	c.Writer = w
 	// Associate provided *http.Request
@@ -24,18 +27,21 @@ func newContext(w http.ResponseWriter, r *http.Request, p Params) *Context {
 // Context is the request context
 type Context struct {
 	// Internal context storage, used by Context.Get and Context.Put
-	s Storage
+	s common.Storage
 	// hooks are a list of hook functions added during the lifespam of the context
-	hooks []Hook
+	hooks []common.Hook
 
 	Writer  http.ResponseWriter
 	Request *http.Request
 	Params  Params
 }
 
-func (c *Context) getResponse(hs []Handler) (resp Response) {
+func (c *Context) getResponse(hs []common.Handler) (resp common.Response) {
 	// Iterate through the provided handlers
 	for _, h := range hs {
+		if h == nil {
+			scribe.New("httpserve").Errorf("nil handler for route: %s", c.GetRequest().URL.Path)
+		}
 		// Call handler and pass Context
 		if resp = h(c); resp != nil {
 			// A non-nil response was provided, return
@@ -46,7 +52,7 @@ func (c *Context) getResponse(hs []Handler) (resp Response) {
 	return
 }
 
-func (c *Context) respond(resp Response) {
+func (c *Context) respond(resp common.Response) {
 	// Response is nil, no further action is needed
 	if resp == nil {
 		return
@@ -69,7 +75,7 @@ func (c *Context) respond(resp Response) {
 	}
 }
 
-func (c *Context) redirect(resp Response) (ok bool) {
+func (c *Context) redirect(resp common.Response) (ok bool) {
 	var redirect *RedirectResponse
 	if redirect, ok = resp.(*RedirectResponse); !ok {
 		return
@@ -80,7 +86,7 @@ func (c *Context) redirect(resp Response) (ok bool) {
 	return
 }
 
-func (c *Context) wasAdopted(resp Response) (ok bool) {
+func (c *Context) wasAdopted(resp common.Response) (ok bool) {
 	if _, ok = resp.(*AdoptResponse); !ok {
 		return
 	}
@@ -124,9 +130,9 @@ func (c *Context) GetRequest() (req *http.Request) {
 	return c.Request
 }
 
-// GetHeader will return http.Request.Header
-func (c *Context) GetHeader() (req http.Header) {
-	return c.Request.Header
+// GetWriter will return http.Writer
+func (c *Context) GetWriter() (writer http.ResponseWriter) {
+	return c.Writer
 }
 
 // BindJSON is a helper function which binds the request body to a provided value to be parsed as JSON
@@ -136,41 +142,41 @@ func (c *Context) BindJSON(value interface{}) (err error) {
 }
 
 // AddHook will add a hook function to be ran after the context has completed
-func (c *Context) AddHook(fn Hook) {
+func (c *Context) AddHook(fn common.Hook) {
 	c.hooks = append(c.hooks, fn)
 }
 
 // NewAdoptResponse will return an adopt response object
-func (c *Context) NewAdoptResponse() (resp *AdoptResponse) {
+func (c *Context) NewAdoptResponse() (resp common.Response) {
 	return NewAdoptResponse()
 }
 
 // NewNoContentResponse will return a no content response object
-func (c *Context) NewNoContentResponse() (resp *NoContentResponse) {
+func (c *Context) NewNoContentResponse() (resp common.Response) {
 	return NewNoContentResponse()
 }
 
 // NewRedirectResponse will return a redirect response object
-func (c *Context) NewRedirectResponse(code int, url string) (resp *RedirectResponse) {
+func (c *Context) NewRedirectResponse(code int, url string) (resp common.Response) {
 	return NewRedirectResponse(code, url)
 }
 
 // NewJSONResponse will return a json response object
-func (c *Context) NewJSONResponse(code int, value interface{}) (resp *JSONResponse) {
+func (c *Context) NewJSONResponse(code int, value interface{}) (resp common.Response) {
 	return NewJSONResponse(code, value)
 }
 
 // NewJSONPResponse will return a json response object with callback
-func (c *Context) NewJSONPResponse(callback string, value interface{}) (resp *JSONPResponse) {
+func (c *Context) NewJSONPResponse(callback string, value interface{}) (resp common.Response) {
 	return NewJSONPResponse(callback, value)
 }
 
 // NewTextResponse will return a text response object
-func (c *Context) NewTextResponse(code int, body []byte) (resp *TextResponse) {
+func (c *Context) NewTextResponse(code int, body []byte) (resp common.Response) {
 	return NewTextResponse(code, body)
 }
 
 // NewXMLResponse will return an xml response object
-func (c *Context) NewXMLResponse(code int, body []byte) (resp *XMLResponse) {
+func (c *Context) NewXMLResponse(code int, body []byte) (resp common.Response) {
 	return NewXMLResponse(code, body)
 }

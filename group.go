@@ -1,8 +1,13 @@
 package httpserve
 
-import "path"
+import (
+	"path"
 
-func newGroup(r *Router, route string, hs ...Handler) *group {
+	"github.com/hatchify/scribe"
+	"github.com/vroomy/common"
+)
+
+func newGroup(r *Router, route string, hs ...common.Handler) *group {
 	var g group
 	g.r = r
 	g.route = route
@@ -14,11 +19,11 @@ func newGroup(r *Router, route string, hs ...Handler) *group {
 type group struct {
 	r     *Router
 	route string
-	hs    []Handler
+	hs    []common.Handler
 }
 
 // GET will set a GET endpoint
-func (g *group) GET(route string, hs ...Handler) {
+func (g *group) GET(route string, hs ...common.Handler) {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -31,7 +36,7 @@ func (g *group) GET(route string, hs ...Handler) {
 }
 
 // PUT will set a PUT endpoint
-func (g *group) PUT(route string, hs ...Handler) {
+func (g *group) PUT(route string, hs ...common.Handler) {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -44,7 +49,7 @@ func (g *group) PUT(route string, hs ...Handler) {
 }
 
 // POST will set a POST endpoint
-func (g *group) POST(route string, hs ...Handler) {
+func (g *group) POST(route string, hs ...common.Handler) {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -53,11 +58,13 @@ func (g *group) POST(route string, hs ...Handler) {
 		hs = append(g.hs, hs...)
 	}
 
+	scribe.New("httpserve").Notificationf("Setting handlers for route %s:%v", route, hs)
+
 	g.r.POST(route, newHandler(hs))
 }
 
 // DELETE will set a DELETE endpoint
-func (g *group) DELETE(route string, hs ...Handler) {
+func (g *group) DELETE(route string, hs ...common.Handler) {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -70,7 +77,7 @@ func (g *group) DELETE(route string, hs ...Handler) {
 }
 
 // OPTIONS will set a OPTIONS endpoint
-func (g *group) OPTIONS(route string, hs ...Handler) {
+func (g *group) OPTIONS(route string, hs ...common.Handler) {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -83,7 +90,7 @@ func (g *group) OPTIONS(route string, hs ...Handler) {
 }
 
 // Group will return a new group
-func (g *group) Group(route string, hs ...Handler) Group {
+func (g *group) Group(route string, hs ...common.Handler) Group {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -97,11 +104,11 @@ func (g *group) Group(route string, hs ...Handler) Group {
 
 // Group is a grouping interface
 type Group interface {
-	GET(route string, hs ...Handler)
-	POST(route string, hs ...Handler)
-	PUT(route string, hs ...Handler)
-	DELETE(route string, hs ...Handler)
-	OPTIONS(route string, hs ...Handler)
+	GET(route string, hs ...common.Handler)
+	POST(route string, hs ...common.Handler)
+	PUT(route string, hs ...common.Handler)
+	DELETE(route string, hs ...common.Handler)
+	OPTIONS(route string, hs ...common.Handler)
 
-	Group(route string, hs ...Handler) Group
+	Group(route string, hs ...common.Handler) Group
 }
