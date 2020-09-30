@@ -23,6 +23,12 @@ func newRouter() *Router {
 
 // Router handles routes
 type Router struct {
+	getRoutes    routes
+	putRoutes    routes
+	postRoutes   routes
+	deleteRoutes routes
+	optionRoutes routes
+
 	rm routesMap
 
 	notFound common.Handler
@@ -38,8 +44,23 @@ func (r *Router) onPanic(v interface{}) {
 // Match will check a url for a matching Handler, and return any associated handler and its parameters
 func (r *Router) Match(method, url string) (h common.Handler, p Params, ok bool) {
 	var rs routes
-	if rs, ok = r.rm[method]; !ok {
-		return
+
+	switch method {
+	case http.MethodGet:
+		rs = r.getRoutes
+	case http.MethodPut:
+		rs = r.putRoutes
+	case http.MethodPost:
+		rs = r.postRoutes
+	case http.MethodDelete:
+		rs = r.deleteRoutes
+	case http.MethodOptions:
+		rs = r.optionRoutes
+
+	default:
+		if rs, ok = r.rm[method]; !ok {
+			return
+		}
 	}
 
 	p = make(Params, 0, r.maxParams)
@@ -78,9 +99,24 @@ func (r *Router) Handle(method, url string, h common.Handler) (err error) {
 		r.maxParams = n
 	}
 
-	rs := r.rm[method]
-	rs = append(rs, route)
-	r.rm[method] = rs
+	switch method {
+	case http.MethodGet:
+		r.getRoutes = append(r.getRoutes, route)
+	case http.MethodPut:
+		r.putRoutes = append(r.putRoutes, route)
+	case http.MethodPost:
+		r.postRoutes = append(r.postRoutes, route)
+	case http.MethodDelete:
+		r.deleteRoutes = append(r.deleteRoutes, route)
+	case http.MethodOptions:
+		r.optionRoutes = append(r.optionRoutes, route)
+
+	default:
+		rs := r.rm[method]
+		rs = append(rs, route)
+		r.rm[method] = rs
+	}
+
 	return
 }
 
