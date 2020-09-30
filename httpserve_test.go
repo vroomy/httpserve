@@ -32,15 +32,21 @@ func TestServeText(t *testing.T) {
 		return NewTextResponse(200, []byte(textVal))
 	})
 
+	errC := make(chan error, 1)
 	// Listen within a new goroutine
 	go func() {
 		if err := serve.Listen(8080); err != nil && err != http.ErrServerClosed {
-			t.Fatal(err)
+			errC <- err
+			return
 		}
 	}()
 
+	select {
 	// Sleep for 200 milliseconds to ensure we've given the serve instance enough time to listen
-	time.Sleep(200 * time.Millisecond)
+	case <-time.After(200 * time.Millisecond):
+	case err = <-errC:
+		t.Fatal(err)
+	}
 
 	// Perform GET request
 	if resp, err = http.Get("http://localhost:8080/derp/hello"); err != nil {
@@ -89,12 +95,20 @@ func TestServeJSON(t *testing.T) {
 		return NewJSONResponse(200, jsonVal)
 	})
 
+	errC := make(chan error, 1)
 	// Listen within a new goroutine
 	go func() {
 		if err := serve.Listen(8080); err != nil && err != http.ErrServerClosed {
-			t.Fatal(err)
+			errC <- err
 		}
 	}()
+
+	select {
+	// Sleep for 200 milliseconds to ensure we've given the serve instance enough time to listen
+	case <-time.After(200 * time.Millisecond):
+	case err = <-errC:
+		t.Fatal(err)
+	}
 
 	// Sleep for 200 milliseconds to ensure we've given the serve instance enough time to listen
 	time.Sleep(200 * time.Millisecond)
