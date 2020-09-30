@@ -109,6 +109,11 @@ func (r *Router) OPTIONS(url string, h common.Handler) error {
 	return r.Handle("OPTIONS", url, h)
 }
 
+// ROUTE will create a route with any given method
+func (r *Router) ROUTE(method, url string, h common.Handler) error {
+	return r.Handle(method, url, h)
+}
+
 func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	h, params, ok := r.Match(req.Method, req.URL.Path)
 	if !ok {

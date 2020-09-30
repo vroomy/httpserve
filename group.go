@@ -86,6 +86,19 @@ func (g *group) OPTIONS(route string, hs ...common.Handler) {
 	g.r.OPTIONS(route, newHandler(hs))
 }
 
+// DELETE will set a DELETE endpoint
+func (g *group) ROUTE(method, route string, hs ...common.Handler) {
+	if g.route != "" {
+		route = path.Join(g.route, route)
+	}
+
+	if len(g.hs) > 0 {
+		hs = append(g.hs, hs...)
+	}
+
+	g.r.ROUTE(method, route, newHandler(hs))
+}
+
 // Group will return a new group
 func (g *group) Group(route string, hs ...common.Handler) Group {
 	if g.route != "" {
@@ -106,6 +119,7 @@ type Group interface {
 	PUT(route string, hs ...common.Handler)
 	DELETE(route string, hs ...common.Handler)
 	OPTIONS(route string, hs ...common.Handler)
+	ROUTE(method, route string, hs ...common.Handler)
 
 	Group(route string, hs ...common.Handler) Group
 }
