@@ -76,7 +76,7 @@ func (s *Serve) Group(route string, hs ...Handler) Group {
 }
 
 // Handle will create a route for any method
-func (s *Serve) Handle(method, route string, hs ...common.Handler) {
+func (s *Serve) Handle(method, route string, hs ...Handler) {
 	s.g.Handle(method, route, hs...)
 }
 
