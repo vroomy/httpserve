@@ -86,6 +86,19 @@ func (g *group) OPTIONS(route string, hs ...common.Handler) {
 	g.r.OPTIONS(route, newHandler(hs))
 }
 
+// Handle will create a route for any method
+func (g *group) Handle(method, route string, hs ...common.Handler) {
+	if g.route != "" {
+		route = path.Join(g.route, route)
+	}
+
+	if len(g.hs) > 0 {
+		hs = append(g.hs, hs...)
+	}
+
+	g.r.Handle(method, route, newHandler(hs))
+}
+
 // Group will return a new group
 func (g *group) Group(route string, hs ...common.Handler) Group {
 	if g.route != "" {
@@ -108,4 +121,5 @@ type Group interface {
 	OPTIONS(route string, hs ...common.Handler)
 
 	Group(route string, hs ...common.Handler) Group
+	Handle(method, route string, hs ...common.Handler)
 }
