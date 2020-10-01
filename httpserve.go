@@ -30,6 +30,8 @@ var defaultConfig = Config{
 	MaxHeaderBytes: 16384,
 }
 
+var _ Group = &Serve{}
+
 // New will return a new instance of Serve
 func New() *Serve {
 	var s Serve
@@ -71,6 +73,11 @@ func (s *Serve) OPTIONS(route string, hs ...Handler) {
 // Group will return a new group for a given route and handlers
 func (s *Serve) Group(route string, hs ...Handler) Group {
 	return s.g.Group(route, hs...)
+}
+
+// Handle will create a route for any method
+func (s *Serve) Handle(method, route string, hs ...common.Handler) {
+	s.g.Handle(method, route, hs...)
 }
 
 // Listen will listen on a given port
