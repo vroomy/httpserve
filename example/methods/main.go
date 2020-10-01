@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 
-	"github.com/vroomy/common"
 	"github.com/vroomy/httpserve"
 )
 
@@ -29,11 +28,11 @@ func main() {
 type Service struct{}
 
 // Ping is the ping endpoint handler
-func (s *Service) Ping(ctx common.Context) (res common.Response) {
+func (s *Service) Ping(ctx *httpserve.Context) (res httpserve.Response) {
 	return httpserve.NewTextResponse(200, []byte("pong"))
 }
 
 // NotFound is the 404 handler
-func (s *Service) NotFound(ctx common.Context) (res common.Response) {
+func (s *Service) NotFound(ctx *httpserve.Context) (res httpserve.Response) {
 	return httpserve.NewTextResponse(404, []byte("Oh shoot, this page doesn't exist"))
 }

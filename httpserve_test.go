@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"testing"
 	"time"
-
-	"github.com/vroomy/common"
 )
 
 func TestServeText(t *testing.T) {
@@ -28,7 +26,7 @@ func TestServeText(t *testing.T) {
 	derp := serve.Group("/derp")
 
 	// Setup text resonse handler
-	derp.GET("hello", func(ctx common.Context) common.Response {
+	derp.GET("hello", func(ctx *Context) Response {
 		return NewTextResponse(200, []byte(textVal))
 	})
 
@@ -91,7 +89,7 @@ func TestServeJSON(t *testing.T) {
 	derp := serve.Group("/derp")
 
 	// Setup json response handler
-	derp.GET("world", func(ctx common.Context) common.Response {
+	derp.GET("world", func(ctx *Context) Response {
 		return NewJSONResponse(200, jsonVal)
 	})
 

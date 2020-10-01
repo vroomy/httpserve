@@ -5,15 +5,13 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-
-	"github.com/vroomy/common"
 )
 
 // newContext will initialize and return a new Context
 func newContext(w http.ResponseWriter, r *http.Request, p Params) *Context {
 	var c Context
 	// Initialize internal storage
-	c.s = make(common.Storage)
+	c.s = make(Storage)
 	// Associate provided http.ResponseWriter
 	c.Writer = w
 	// Associate provided *http.Request
@@ -26,16 +24,16 @@ func newContext(w http.ResponseWriter, r *http.Request, p Params) *Context {
 // Context is the request context
 type Context struct {
 	// Internal context storage, used by Context.Get and Context.Put
-	s common.Storage
+	s Storage
 	// hooks are a list of hook functions added during the lifespam of the context
-	hooks []common.Hook
+	hooks []Hook
 
 	Writer  http.ResponseWriter
 	Request *http.Request
 	Params  Params
 }
 
-func (c *Context) getResponse(hs []common.Handler) (resp common.Response) {
+func (c *Context) getResponse(hs []Handler) (resp Response) {
 	// Iterate through the provided handlers
 	for _, h := range hs {
 		// Call handler and pass Context
@@ -48,7 +46,7 @@ func (c *Context) getResponse(hs []common.Handler) (resp common.Response) {
 	return
 }
 
-func (c *Context) respond(resp common.Response) {
+func (c *Context) respond(resp Response) {
 	// Response is nil, no further action is needed
 	if resp == nil {
 		return
@@ -71,7 +69,7 @@ func (c *Context) respond(resp common.Response) {
 	}
 }
 
-func (c *Context) redirect(resp common.Response) (ok bool) {
+func (c *Context) redirect(resp Response) (ok bool) {
 	var redirect *RedirectResponse
 	if redirect, ok = resp.(*RedirectResponse); !ok {
 		return
@@ -82,7 +80,7 @@ func (c *Context) redirect(resp common.Response) (ok bool) {
 	return
 }
 
-func (c *Context) wasAdopted(resp common.Response) (ok bool) {
+func (c *Context) wasAdopted(resp Response) (ok bool) {
 	if _, ok = resp.(*AdoptResponse); !ok {
 		return
 	}
@@ -138,41 +136,41 @@ func (c *Context) BindJSON(value interface{}) (err error) {
 }
 
 // AddHook will add a hook function to be ran after the context has completed
-func (c *Context) AddHook(fn common.Hook) {
+func (c *Context) AddHook(fn Hook) {
 	c.hooks = append(c.hooks, fn)
 }
 
 // NewAdoptResponse will return an adopt response object
-func (c *Context) NewAdoptResponse() (resp common.Response) {
+func (c *Context) NewAdoptResponse() (resp Response) {
 	return NewAdoptResponse()
 }
 
 // NewNoContentResponse will return a no content response object
-func (c *Context) NewNoContentResponse() (resp common.Response) {
+func (c *Context) NewNoContentResponse() (resp Response) {
 	return NewNoContentResponse()
 }
 
 // NewRedirectResponse will return a redirect response object
-func (c *Context) NewRedirectResponse(code int, url string) (resp common.Response) {
+func (c *Context) NewRedirectResponse(code int, url string) (resp Response) {
 	return NewRedirectResponse(code, url)
 }
 
 // NewJSONResponse will return a json response object
-func (c *Context) NewJSONResponse(code int, value interface{}) (resp common.Response) {
+func (c *Context) NewJSONResponse(code int, value interface{}) (resp Response) {
 	return NewJSONResponse(code, value)
 }
 
 // NewJSONPResponse will return a json response object with callback
-func (c *Context) NewJSONPResponse(callback string, value interface{}) (resp common.Response) {
+func (c *Context) NewJSONPResponse(callback string, value interface{}) (resp Response) {
 	return NewJSONPResponse(callback, value)
 }
 
 // NewTextResponse will return a text response object
-func (c *Context) NewTextResponse(code int, body []byte) (resp common.Response) {
+func (c *Context) NewTextResponse(code int, body []byte) (resp Response) {
 	return NewTextResponse(code, body)
 }
 
 // NewXMLResponse will return an xml response object
-func (c *Context) NewXMLResponse(code int, body []byte) (resp common.Response) {
+func (c *Context) NewXMLResponse(code int, body []byte) (resp Response) {
 	return NewXMLResponse(code, body)
 }
