@@ -4,19 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-
-	"github.com/vroomy/common"
 )
 
 // newHandler will return a new Handler
-func newHandler(hs []common.Handler) common.Handler {
-	return func(context common.Context) (resp common.Response) {
-		var ok bool
-		var ctx *Context
-		if ctx, ok = context.(*Context); !ok {
-			return
-		}
-
+func newHandler(hs []Handler) Handler {
+	return func(ctx *Context) (resp Response) {
 		// Get response from context by passing provided handlers
 		resp = ctx.getResponse(hs)
 
@@ -112,7 +104,7 @@ func shiftStr(str string, n int) (out string) {
 	}
 }
 
-func notFoundHandler(ctx common.Context) common.Response {
+func notFoundHandler(ctx *Context) Response {
 	return NewTextResponse(404, []byte("404, not found"))
 }
 

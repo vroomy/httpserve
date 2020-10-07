@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 
-	"github.com/vroomy/common"
 	"github.com/vroomy/httpserve"
 )
 
@@ -16,11 +15,11 @@ func main() {
 	srv = httpserve.New()
 	defer srv.Close()
 
-	srv.GET("/ping", func(ctx common.Context) (res common.Response) {
+	srv.GET("/ping", func(ctx *httpserve.Context) (res httpserve.Response) {
 		return httpserve.NewTextResponse(200, []byte("pong"))
 	})
 
-	srv.Set404(func(ctx common.Context) (res common.Response) {
+	srv.Set404(func(ctx *httpserve.Context) (res httpserve.Response) {
 		return httpserve.NewTextResponse(404, []byte("Oh shoot, this page doesn't exist"))
 	})
 
