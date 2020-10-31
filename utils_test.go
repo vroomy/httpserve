@@ -11,6 +11,7 @@ const (
 	mediumRoute = "/hello/world/:name/:age"
 	largeRoute  = "/hello/world/:name/:age/:occupation"
 
+	rootRoute          = "/"
 	smallRouteNoParam  = "/hello/world/name"
 	mediumRouteNoParam = "/hello/world/name/age"
 	largeRouteNoParam  = "/hello/world/name/age/occupation"
@@ -19,6 +20,15 @@ const (
 var (
 	getPartsSink []string
 )
+
+func TestGetParts_root(t *testing.T) {
+	ps, err := getParts(rootRoute)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Printf("Parts: %v\n", ps)
+}
 
 func TestGetParts_small(t *testing.T) {
 	ps, err := getParts(smallRoute)
