@@ -44,6 +44,11 @@ func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 
 // getParts is used to split URLs into parts
 func getParts(url string) (parts []string, err error) {
+	if url == "/" {
+		parts = []string{"/"}
+		return
+	}
+
 	var buf []byte
 	for _, part := range strings.Split(url, "/") {
 		if len(part) == 0 {
