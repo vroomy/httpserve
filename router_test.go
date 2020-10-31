@@ -17,8 +17,15 @@ var (
 
 func TestRouter(t *testing.T) {
 	var err error
-	cc := make(chan string, 3)
+	cc := make(chan string, 4)
 	r := newRouter()
+	if err = r.GET(rootRoute, func(ctx *Context) Response {
+		cc <- "root"
+		return nil
+	}); err != nil {
+		t.Fatal(err)
+	}
+
 	if err = r.GET(smallRoute, func(ctx *Context) Response {
 		cc <- "small"
 		return nil
@@ -40,7 +47,18 @@ func TestRouter(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fn, params, ok := r.Match("GET", smallRouteNoParam)
+	fn, params, ok := r.Match("GET", rootRoute)
+	if !ok {
+		t.Fatal("expected match and none was found")
+	}
+
+	fn(nil)
+
+	if val := <-cc; val != "root" {
+		t.Fatalf("invalid value, expected \"%s\" and received \"%s\"", "root", val)
+	}
+
+	fn, params, ok = r.Match("GET", smallRouteNoParam)
 	if !ok {
 		t.Fatal("expected match and none was found")
 	}
