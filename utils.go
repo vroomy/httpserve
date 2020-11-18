@@ -88,12 +88,16 @@ func isPartMatch(url, part string) (match bool) {
 		return
 	}
 
+	if url == part {
+		return true
+	}
+
 	if url[:len(part)] != part {
 		return
 	}
 
-	nextSlash := strings.Index(url[len(part):], "/")
-	return nextSlash <= 0
+	remaining := url[len(part):]
+	return len(remaining) == 0 || remaining[0] == '/'
 }
 
 func shiftStr(str string, n int) (out string) {
