@@ -63,7 +63,7 @@ func TestServeText(t *testing.T) {
 
 	// Ensure values are correct
 	if string(bs) != textVal {
-		t.Fatalf("invalid value, expected \"%s\" and received \"%s\"", string(bs), textVal)
+		t.Fatalf("invalid value, expected \"%s\" and received \"%s\"", textVal, string(bs))
 	}
 }
 
