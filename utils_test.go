@@ -15,6 +15,9 @@ const (
 	smallRouteNoParam  = "/hello/world/name"
 	mediumRouteNoParam = "/hello/world/name/age"
 	largeRouteNoParam  = "/hello/world/name/age/occupation"
+
+	mediumRouteNoParam2 = "/product/:productName"
+	smallRouteNoParam2  = "/products"
 )
 
 var (
