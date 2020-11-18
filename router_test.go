@@ -96,6 +96,40 @@ func TestRouter(t *testing.T) {
 	}
 }
 
+func TestRouterMatch(t *testing.T) {
+	var err error
+	cc := make(chan string, 4)
+	r := newRouter()
+	mediumH := func(ctx *Context) Response {
+		cc <- "medium"
+		return nil
+	}
+
+	smallH := func(ctx *Context) Response {
+		cc <- "small"
+		return nil
+	}
+
+	if err = r.GET(mediumRouteNoParam2, mediumH); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = r.GET(smallRouteNoParam2, smallH); err != nil {
+		t.Fatal(err)
+	}
+
+	handler, _, ok := r.Match("GET", "/products")
+	if !ok {
+		t.Fatal("invalid match, expected match and found none")
+	}
+
+	handler(nil)
+
+	if val := <-cc; val != "small" {
+		t.Fatalf("invalid handler value, expected %v and received %v", "small", val)
+	}
+}
+
 func BenchmarkRouter_small(b *testing.B) {
 	r := newRouter()
 	r.GET(smallRoute, func(ctx *Context) Response { return nil })
