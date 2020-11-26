@@ -131,6 +131,17 @@ func (c *Context) GetWriter() (writer http.ResponseWriter) {
 	return c.Writer
 }
 
+// Bind is a helper function which binds the request body to a provided value to be parsed as the inbound content type
+func (c *Context) Bind(value interface{}) (err error) {
+	defer c.Request.Body.Close()
+	switch c.Request.Header.Get("Content-Type") {
+	case "application/x-www-form-urlencoded":
+		return form.NewDecoder(c.Request.Body).Decode(value)
+	default:
+		return json.NewDecoder(c.Request.Body).Decode(value)
+	}
+}
+
 // BindJSON is a helper function which binds the request body to a provided value to be parsed as JSON
 func (c *Context) BindJSON(value interface{}) (err error) {
 	defer c.Request.Body.Close()
