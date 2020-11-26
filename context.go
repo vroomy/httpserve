@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+
+	"github.com/vroomy/httpserve/form"
 )
 
 // newContext will initialize and return a new Context
@@ -133,6 +135,12 @@ func (c *Context) GetWriter() (writer http.ResponseWriter) {
 func (c *Context) BindJSON(value interface{}) (err error) {
 	defer c.Request.Body.Close()
 	return json.NewDecoder(c.Request.Body).Decode(value)
+}
+
+// BindForm is a helper function which binds the request body to a provided value to be parsed as an HTML form
+func (c *Context) BindForm(value interface{}) (err error) {
+	defer c.Request.Body.Close()
+	return form.NewDecoder(c.Request.Body).Decode(value)
 }
 
 // AddHook will add a hook function to be ran after the context has completed
