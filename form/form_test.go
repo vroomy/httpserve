@@ -1,9 +1,18 @@
-package query
+package form
 
 import (
+	"io/ioutil"
+	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"testing"
+)
+
+var (
+	testStructSink  testStruct
+	testQuery       = newTestQuery()
+	testQueryString = testQuery.Encode()
 )
 
 func TestBind(t *testing.T) {
@@ -31,4 +40,102 @@ func TestBind(t *testing.T) {
 	if test.Bar != 1337 {
 		t.Fatalf("invalid value, expected %d and received %d", 1337, test.Bar)
 	}
+}
+
+func BenchmarkBindReader(b *testing.B) {
+	var test testStruct
+	for i := 0; i < b.N; i++ {
+		if err := BindReader(strings.NewReader(testQueryString), &test); err != nil {
+			b.Fatal(err)
+		}
+	}
+
+	b.ReportAllocs()
+}
+
+func BenchmarkBindReader_unmarshaler(b *testing.B) {
+	var test testUnmarshaler
+	rdr := strings.NewReader(testQueryString)
+	for i := 0; i < b.N; i++ {
+		if err := BindReader(rdr, &test); err != nil {
+			b.Fatal(err)
+		}
+
+		rdr.Seek(0, 0)
+	}
+
+	b.ReportAllocs()
+}
+
+func BenchmarkDecoder_Decode_unmarshaler(b *testing.B) {
+	var test testUnmarshaler
+	rdr := strings.NewReader(testQueryString)
+
+	for i := 0; i < b.N; i++ {
+		if err := NewDecoder(rdr).Decode(&test); err != nil {
+			b.Fatal(err)
+		}
+
+		rdr.Seek(0, 0)
+	}
+
+	b.ReportAllocs()
+}
+
+func BenchmarkStdlib(b *testing.B) {
+	var (
+		test testStruct
+		req  http.Request
+	)
+
+	rdr := strings.NewReader(testQueryString)
+	req.Body = ioutil.NopCloser(rdr)
+	req.Method = "POST"
+	req.Header = make(http.Header)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	for i := 0; i < b.N; i++ {
+		var err error
+		if err = req.ParseForm(); err != nil {
+			b.Fatal(err)
+		}
+
+		test.Foo = req.Form.Get("foo")
+		if test.Bar, err = strconv.ParseInt(req.Form.Get("bar"), 10, 64); err != nil {
+			b.Fatal(err)
+		}
+
+		req.Form = nil
+		req.PostForm = nil
+		rdr.Seek(0, 0)
+	}
+
+	b.ReportAllocs()
+}
+
+func newTestQuery() url.Values {
+	u := make(url.Values)
+	u.Set("foo", "hello world!")
+	u.Set("bar", "1337")
+	return u
+}
+
+type testStruct struct {
+	Foo string `form:"foo"`
+	Bar int64  `form:"bar"`
+}
+
+type testUnmarshaler struct {
+	testStruct
+}
+
+func (t *testUnmarshaler) UnmarshalForm(key, value string) (err error) {
+	switch key {
+	case "foo":
+		t.Foo = value
+	case "bar":
+		t.Bar, err = strconv.ParseInt(value, 10, 64)
+	}
+
+	return
 }

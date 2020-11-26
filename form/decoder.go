@@ -1,27 +1,29 @@
-package query
+package form
 
 import (
 	"bufio"
 	"io"
 	"net/url"
-	"reflect"
-
-	"github.com/gdbu/reflectio"
 )
 
 // NewDecoder will initialize a new decoder
 func NewDecoder(r io.Reader) *Decoder {
-	var d Decoder
-	d.r = bufio.NewReader(r)
+	var (
+		d  Decoder
+		ok bool
+	)
+
+	if d.r, ok = r.(io.RuneReader); !ok {
+		d.r = bufio.NewReader(r)
+	}
+
 	return &d
 }
 
 // Decoder will decode a value
 type Decoder struct {
-	rval reflect.Value
-
-	m reflectio.Map
-	r *bufio.Reader
+	u Unmarshaler
+	r io.RuneReader
 
 	char       rune
 	seenEquals bool
@@ -55,11 +57,12 @@ func (d *Decoder) Decode(value interface{}) (err error) {
 }
 
 func (d *Decoder) setValue(value interface{}) {
-	if d.rval = reflect.ValueOf(value); d.rval.Kind() == reflect.Ptr {
-		d.rval = d.rval.Elem()
+	var ok bool
+	if d.u, ok = value.(Unmarshaler); ok {
+		return
 	}
 
-	d.m = cache.Get(value, "form")
+	d.u = newMapUnmarshaler(value)
 }
 
 func (d *Decoder) reset() {
@@ -89,7 +92,7 @@ func (d *Decoder) processAmpersand() (err error) {
 
 	d.reset()
 
-	return d.m.SetValueAsString(d.rval, key, val)
+	return d.u.UnmarshalForm(key, val)
 }
 
 func (d *Decoder) processChar() (err error) {
