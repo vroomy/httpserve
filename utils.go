@@ -18,13 +18,17 @@ func newHandler(hs []Handler) Handler {
 		}
 		defer ctx.Request.Body.Close()
 
-		// Respond using context
-		ctx.respond(resp)
-
 		sc := 200
 		if resp != nil {
 			sc = resp.StatusCode()
 		}
+
+		if redirectTo, ok := ctx.getRedirect(sc); ok {
+			resp = NewRedirectResponse(302, redirectTo)
+		}
+
+		// Respond using context
+		ctx.respond(resp)
 
 		// Process context hooks
 		ctx.processHooks(sc)
@@ -119,3 +123,7 @@ func notFoundHandler(ctx *Context) Response {
 
 // PanicHandler is a panic handler
 type PanicHandler func(v interface{})
+
+type redirectQuery struct {
+	Redirect string `form:"redirect"`
+}
