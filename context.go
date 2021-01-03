@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/vroomy/httpserve/form"
 )
@@ -94,6 +95,27 @@ func (c *Context) processHooks(statusCode int) {
 	for i := len(c.hooks) - 1; i > -1; i-- {
 		c.hooks[i](statusCode, c.s)
 	}
+}
+
+func (c *Context) getRedirect(statusCode int) (redirectTo string, ok bool) {
+	if statusCode < 200 || statusCode >= 300 {
+		return
+	}
+
+	accept := c.Request.Header.Get("Accept")
+	firstAccept := strings.SplitN(accept, ",", 2)[0]
+	if firstAccept != "text/html" {
+		return
+	}
+
+	var rq redirectQuery
+	form.Unmarshal(c.Request.URL.RawQuery, &rq)
+	if redirectTo = rq.Redirect; len(redirectTo) == 0 {
+		return
+	}
+
+	ok = true
+	return
 }
 
 // Write will write a byteslice
