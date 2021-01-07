@@ -1,6 +1,8 @@
 package form
 
 import (
+	"bytes"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -39,6 +41,29 @@ func TestBind(t *testing.T) {
 
 	if test.Bar != 1337 {
 		t.Fatalf("invalid value, expected %d and received %d", 1337, test.Bar)
+	}
+}
+
+func TestDecode(t *testing.T) {
+	type testStruct struct {
+		Email    string `json:"email" form:"email"`
+		Password string `json:"password,omitempty" form:"password"`
+	}
+
+	var val testStruct
+	str := "email=test1%40test.com&password=foobar&passwordConfirm=foobar"
+	// Ensure bufio is used so every aspect is tested
+	rdr := &ronly{bytes.NewBufferString(str)}
+	if err := BindReader(rdr, &val); err != nil {
+		t.Fatal(err)
+	}
+
+	if val.Email != "test1@test.com" {
+		t.Fatalf("invalid email: %v", val.Email)
+	}
+
+	if val.Password != "foobar" {
+		t.Fatalf("invalid password: %v", val.Password)
 	}
 }
 
@@ -139,3 +164,13 @@ func (t *testUnmarshaler) UnmarshalForm(key, value string) (err error) {
 
 	return
 }
+
+type ronly struct {
+	r io.Reader
+}
+
+func (r *ronly) Read(p []byte) (n int, err error) {
+	return r.r.Read(p)
+}
+
+var _ io.Reader = &ronly{}
