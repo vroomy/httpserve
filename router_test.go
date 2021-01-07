@@ -2,6 +2,8 @@ package httpserve
 
 import (
 	"testing"
+
+	"github.com/vroomy/common"
 )
 
 const (
@@ -9,7 +11,7 @@ const (
 )
 
 var (
-	handlerSink Handler
+	handlerSink common.Handler
 	paramsSink  Params
 
 	boolSink bool
@@ -19,25 +21,25 @@ func TestRouter(t *testing.T) {
 	var err error
 	cc := make(chan string, 4)
 	r := newRouter()
-	if err = r.GET(rootRoute, func(ctx *Context) {
+	if err = r.GET(rootRoute, func(ctx common.Context) {
 		cc <- "root"
 	}); err != nil {
 		t.Fatal(err)
 	}
 
-	if err = r.GET(smallRoute, func(ctx *Context) {
+	if err = r.GET(smallRoute, func(ctx common.Context) {
 		cc <- "small"
 	}); err != nil {
 		t.Fatal(err)
 	}
 
-	if err = r.GET(mediumRoute, func(ctx *Context) {
+	if err = r.GET(mediumRoute, func(ctx common.Context) {
 		cc <- "medium"
 	}); err != nil {
 		t.Fatal(err)
 	}
 
-	if err = r.GET(largeRoute, func(ctx *Context) {
+	if err = r.GET(largeRoute, func(ctx common.Context) {
 		cc <- "large"
 	}); err != nil {
 		t.Fatal(err)
@@ -96,11 +98,11 @@ func TestRouterMatch(t *testing.T) {
 	var err error
 	cc := make(chan string, 4)
 	r := newRouter()
-	mediumH := func(ctx *Context) {
+	mediumH := func(ctx common.Context) {
 		cc <- "medium"
 	}
 
-	smallH := func(ctx *Context) {
+	smallH := func(ctx common.Context) {
 		cc <- "small"
 	}
 
@@ -126,9 +128,9 @@ func TestRouterMatch(t *testing.T) {
 
 func BenchmarkRouter_small(b *testing.B) {
 	r := newRouter()
-	r.GET(smallRoute, func(ctx *Context) {})
-	r.GET(mediumRoute, func(ctx *Context) {})
-	r.GET(largeRoute, func(ctx *Context) {})
+	r.GET(smallRoute, func(ctx common.Context) {})
+	r.GET(mediumRoute, func(ctx common.Context) {})
+	r.GET(largeRoute, func(ctx common.Context) {})
 
 	for i := 0; i < b.N; i++ {
 		handlerSink, paramsSink, boolSink = r.Match("GET", smallRouteNoParam)
@@ -139,9 +141,9 @@ func BenchmarkRouter_small(b *testing.B) {
 
 func BenchmarkRouter_medium(b *testing.B) {
 	r := newRouter()
-	r.GET(smallRoute, func(ctx *Context) {})
-	r.GET(mediumRoute, func(ctx *Context) {})
-	r.GET(largeRoute, func(ctx *Context) {})
+	r.GET(smallRoute, func(ctx common.Context) {})
+	r.GET(mediumRoute, func(ctx common.Context) {})
+	r.GET(largeRoute, func(ctx common.Context) {})
 
 	for i := 0; i < b.N; i++ {
 		handlerSink, paramsSink, boolSink = r.Match("GET", mediumRouteNoParam)
@@ -152,9 +154,9 @@ func BenchmarkRouter_medium(b *testing.B) {
 
 func BenchmarkRouter_large(b *testing.B) {
 	r := newRouter()
-	r.GET(smallRoute, func(ctx *Context) {})
-	r.GET(mediumRoute, func(ctx *Context) {})
-	r.GET(largeRoute, func(ctx *Context) {})
+	r.GET(smallRoute, func(ctx common.Context) {})
+	r.GET(mediumRoute, func(ctx common.Context) {})
+	r.GET(largeRoute, func(ctx common.Context) {})
 
 	for i := 0; i < b.N; i++ {
 		handlerSink, paramsSink, boolSink = r.Match("GET", largeRouteNoParam)

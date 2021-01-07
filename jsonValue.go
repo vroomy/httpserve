@@ -2,6 +2,7 @@ package httpserve
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 
 	"github.com/hatchify/errors"
@@ -29,6 +30,29 @@ func UnmarshalJSONValue(bs []byte, val interface{}) (err error) {
 
 	if err = jv.Errors.Err(); err != nil {
 		return
+	}
+
+	return
+}
+
+func makeJSONValue(statusCode int, data interface{}) (val JSONValue, err error) {
+	if statusCode < 400 {
+		// Status code is not an error code, set the data as the associated value and return.
+		val.Data = data
+		return
+	}
+
+	// Switch on associated value's type
+	switch v := data.(type) {
+	case error:
+		// Type is a single error value, create new error slice with error as only item
+		val.Errors.Push(v)
+	case []error:
+		// Type is an error slice, set errors as the value
+		val.Errors.Copy(v)
+	default:
+		// Invalid error value, return error
+		err = fmt.Errorf("invalid type for an error response: %#v", v)
 	}
 
 	return

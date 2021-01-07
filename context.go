@@ -104,6 +104,8 @@ func (c *Context) WriteBytes(statusCode int, contentType string, bs []byte) (err
 		return
 	}
 
+	// Set status code
+	c.setStatusCode(statusCode)
 	// Set content type
 	c.setContentType(contentType)
 
@@ -123,6 +125,8 @@ func (c *Context) WriteReader(statusCode int, contentType string, r io.Reader) (
 		return
 	}
 
+	// Set status code
+	c.setStatusCode(statusCode)
 	// Set content type
 	c.setContentType(contentType)
 
@@ -143,10 +147,18 @@ func (c *Context) WriteJSON(statusCode int, value interface{}) (err error) {
 		return
 	}
 
+	var resp JSONValue
+	if resp, err = makeJSONValue(statusCode, value); err != nil {
+		return
+	}
+
+	// Set status code
+	c.setStatusCode(statusCode)
 	// Set content type
 	c.setContentType("application/json")
+
 	// Encode value as JSON
-	return json.NewEncoder(c.writer).Encode(value)
+	return json.NewEncoder(c.writer).Encode(resp)
 }
 
 // WriteNoContent will write a no content response
@@ -200,7 +212,7 @@ func (c *Context) setContentType(contentType string) {
 	header.Set("Content-Type", contentType)
 }
 
-func (c *Context) processHandlers(hs []Handler) {
+func (c *Context) processHandlers(hs []common.Handler) {
 	// Iterate through the provided handlers
 	for _, h := range hs {
 		if h(c); c.completed {
