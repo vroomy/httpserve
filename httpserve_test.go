@@ -130,6 +130,6 @@ func TestServeJSON(t *testing.T) {
 
 	// Ensure values are correct
 	if ts != jsonVal {
-		t.Fatalf("invalid value, expected \"%#v\" and received \"%#v\"", ts, jsonVal)
+		t.Fatalf("invalid value, expected \"%#v\" and received \"%#v\"", jsonVal, ts)
 	}
 }
