@@ -150,13 +150,13 @@ func (c *Context) WriteJSON(statusCode int, value interface{}) (err error) {
 }
 
 // WriteNoContent will write a no content response
-func (c *Context) WriteNoContent(statusCode int, value interface{}) (err error) {
+func (c *Context) WriteNoContent() (err error) {
 	if c.completed {
 		return ErrContextIsClosed
 	}
 	defer c.close()
 
-	if redirected := c.tryRedirect(statusCode); redirected {
+	if redirected := c.tryRedirect(204); redirected {
 		// Request was redirected, return
 		return
 	}
