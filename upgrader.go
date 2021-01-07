@@ -31,10 +31,10 @@ type VirtualHost struct {
 	Port uint16
 }
 
-func (u *Upgrader) upgradeConn(ctx *Context) (res Response) {
-	newURL := *ctx.GetRequest().URL
+func (u *Upgrader) upgradeConn(ctx *Context) {
+	newURL := *ctx.Request().URL
 	newURL.Scheme = "https"
-	newURL.Host = ctx.GetRequest().Host
+	newURL.Host = ctx.Request().Host
 	newURL.Host = strings.Split(newURL.Host, ":")[0]
 
 	var port = u.port
@@ -47,7 +47,7 @@ func (u *Upgrader) upgradeConn(ctx *Context) (res Response) {
 	}
 
 	newURL.Host += fmt.Sprintf(":%d", port)
-	return NewRedirectResponse(301, newURL.String())
+	ctx.Redirect(301, newURL.String())
 }
 
 // Listen will listen to a given port

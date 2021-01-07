@@ -28,11 +28,11 @@ func main() {
 type Service struct{}
 
 // Ping is the ping endpoint handler
-func (s *Service) Ping(ctx *httpserve.Context) (res httpserve.Response) {
-	return httpserve.NewTextResponse(200, []byte("pong"))
+func (s *Service) Ping(ctx *httpserve.Context) {
+	ctx.WriteString(200, "text/plain", "pong")
 }
 
 // NotFound is the 404 handler
-func (s *Service) NotFound(ctx *httpserve.Context) (res httpserve.Response) {
-	return httpserve.NewTextResponse(404, []byte("Oh shoot, this page doesn't exist"))
+func (s *Service) NotFound(ctx *httpserve.Context) {
+	ctx.WriteString(404, "text/plain", "Oh shoot, this page doesn't exist")
 }

@@ -2,13 +2,15 @@ package httpserve
 
 import (
 	"encoding/json"
-	"fmt"
+	"io"
 	"net/http"
-	"os"
 	"strings"
 
+	"github.com/vroomy/common"
 	"github.com/vroomy/httpserve/form"
 )
+
+var _ common.Context = &Context{}
 
 // newContext will initialize and return a new Context
 func newContext(w http.ResponseWriter, r *http.Request, p Params) *Context {
@@ -16,9 +18,9 @@ func newContext(w http.ResponseWriter, r *http.Request, p Params) *Context {
 	// Initialize internal storage
 	c.s = make(Storage)
 	// Associate provided http.ResponseWriter
-	c.Writer = w
+	c.writer = w
 	// Associate provided *http.Request
-	c.Request = r
+	c.request = r
 	// Associate provided httprouter.Params
 	c.Params = p
 	return &c
@@ -29,124 +31,45 @@ type Context struct {
 	// Internal context storage, used by Context.Get and Context.Put
 	s Storage
 	// hooks are a list of hook functions added during the lifespam of the context
-	hooks []Hook
+	hooks []common.Hook
 
 	// Whether or not the context has been completed
 	completed bool
+	// Status code of response
+	statusCode int
 
-	Writer  http.ResponseWriter
-	Request *http.Request
-	Params  Params
+	writer  http.ResponseWriter
+	request *http.Request
+
+	Params Params
 }
 
-func (c *Context) getResponse(hs []Handler) (resp Response) {
-	// Iterate through the provided handlers
-	for _, h := range hs {
-		// Call handler and pass Context
-		if resp = h(c); resp != nil {
-			// A non-nil response was provided, return
-			return
-		}
-	}
-
-	return
-}
-
-func (c *Context) respond(resp Response) {
-	if c.completed {
-		// Context is already completed, return
-		return
-	}
-
-	// Set completed state to true
-	c.completed = true
-
-	// Response is nil, no further action is needed
-	if resp == nil {
-		return
-	}
-
-	if c.redirect(resp) {
-		return
-	}
-
-	// Write content type!
-	c.Writer.Header().Set("Content-Type", resp.ContentType())
-
-	// Write status code to header
-	c.Writer.WriteHeader(resp.StatusCode())
-
-	// Write response to http.ResponseWriter
-	if _, err := resp.WriteTo(c.Writer); err != nil {
-		// Write error to stderr
-		fmt.Fprintf(os.Stderr, "Error writing to http.ResponseWriter: %v\n", err)
+// Bind is a helper function which binds the request body to a provided value to be parsed as the inbound content type
+func (c *Context) Bind(value interface{}) (err error) {
+	defer c.request.Body.Close()
+	switch c.request.Header.Get("Content-Type") {
+	case "application/x-www-form-urlencoded":
+		return form.NewDecoder(c.request.Body).Decode(value)
+	default:
+		return json.NewDecoder(c.request.Body).Decode(value)
 	}
 }
 
-func (c *Context) redirect(resp Response) (ok bool) {
-	var redirect *RedirectResponse
-	if redirect, ok = resp.(*RedirectResponse); !ok {
-		return
-	}
-
-	c.Writer.Header().Add("Location", redirect.url)
-	c.Writer.WriteHeader(redirect.code)
-	return
+// BindJSON is a helper function which binds the request body to a provided value to be parsed as JSON
+func (c *Context) BindJSON(value interface{}) (err error) {
+	defer c.request.Body.Close()
+	return json.NewDecoder(c.request.Body).Decode(value)
 }
 
-func (c *Context) wasAdopted(resp Response) (ok bool) {
-	if _, ok = resp.(*AdoptResponse); !ok {
-		return
-	}
-
-	return
+// BindForm is a helper function which binds the request body to a provided value to be parsed as an HTML form
+func (c *Context) BindForm(value interface{}) (err error) {
+	defer c.request.Body.Close()
+	return form.NewDecoder(c.request.Body).Decode(value)
 }
 
-func (c *Context) processHooks(statusCode int) {
-	for i := len(c.hooks) - 1; i > -1; i-- {
-		c.hooks[i](statusCode, c)
-	}
-}
-
-func (c *Context) getRedirect(statusCode int) (redirectTo string, ok bool) {
-	if statusCode < 200 || statusCode >= 300 {
-		return
-	}
-
-	accept := c.Request.Header.Get("Accept")
-	firstAccept := strings.SplitN(accept, ",", 2)[0]
-	if firstAccept != "text/html" {
-		return
-	}
-
-	var rq redirectQuery
-	form.Unmarshal(c.Request.URL.RawQuery, &rq)
-	if redirectTo = rq.Redirect; len(redirectTo) == 0 {
-		return
-	}
-
-	ok = true
-	return
-}
-
-// Write will write a byteslice
-func (c *Context) Write(bs []byte) (n int, err error) {
-	if c.completed {
-		err = ErrContextIsClosed
-		return
-	}
-
-	return c.Writer.Write(bs)
-}
-
-// WriteString will write a string
-func (c *Context) WriteString(str string) (n int, err error) {
-	if c.completed {
-		err = ErrContextIsClosed
-		return
-	}
-
-	return c.Writer.Write([]byte(str))
+// AddHook will add a hook function to be ran after the context has completed
+func (c *Context) AddHook(fn common.Hook) {
+	c.hooks = append(c.hooks, fn)
 }
 
 // Param will return the associated parameter value with the provided key
@@ -164,79 +87,171 @@ func (c *Context) Put(key, value string) {
 	c.s[key] = value
 }
 
-// GetRequest will return http.Request
-func (c *Context) GetRequest() (req *http.Request) {
-	return c.Request
+// WriteString will write a string
+func (c *Context) WriteString(statusCode int, contentType, str string) (err error) {
+	return c.WriteBytes(statusCode, contentType, []byte(str))
 }
 
-// GetWriter will return http.Writer
-func (c *Context) GetWriter() (writer http.ResponseWriter) {
+// WriteBytes will write a byte slice
+func (c *Context) WriteBytes(statusCode int, contentType string, bs []byte) (err error) {
 	if c.completed {
+		return ErrContextIsClosed
+	}
+	defer c.close()
+
+	if redirected := c.tryRedirect(statusCode); redirected {
+		// Request was redirected, return
 		return
 	}
 
-	return c.Writer
+	// Set content type
+	c.setContentType(contentType)
+
+	_, err = c.writer.Write(bs)
+	return
 }
 
-// Bind is a helper function which binds the request body to a provided value to be parsed as the inbound content type
-func (c *Context) Bind(value interface{}) (err error) {
-	defer c.Request.Body.Close()
-	switch c.Request.Header.Get("Content-Type") {
-	case "application/x-www-form-urlencoded":
-		return form.NewDecoder(c.Request.Body).Decode(value)
-	default:
-		return json.NewDecoder(c.Request.Body).Decode(value)
+// WriteReader will copy reader bytes to the http response body
+func (c *Context) WriteReader(statusCode int, contentType string, r io.Reader) (err error) {
+	if c.completed {
+		return ErrContextIsClosed
+	}
+	defer c.close()
+
+	if redirected := c.tryRedirect(statusCode); redirected {
+		// Request was redirected, return
+		return
+	}
+
+	// Set content type
+	c.setContentType(contentType)
+
+	// Copy reader bytes to writer
+	_, err = io.Copy(c.writer, r)
+	return
+}
+
+// WriteJSON will write JSON bytes to the http response body
+func (c *Context) WriteJSON(statusCode int, value interface{}) (err error) {
+	if c.completed {
+		return ErrContextIsClosed
+	}
+	defer c.close()
+
+	if redirected := c.tryRedirect(statusCode); redirected {
+		// Request was redirected, return
+		return
+	}
+
+	// Set content type
+	c.setContentType("application/json")
+	// Encode value as JSON
+	return json.NewEncoder(c.writer).Encode(value)
+}
+
+// WriteNoContent will write a no content response
+func (c *Context) WriteNoContent(statusCode int, value interface{}) (err error) {
+	if c.completed {
+		return ErrContextIsClosed
+	}
+	defer c.close()
+
+	if redirected := c.tryRedirect(statusCode); redirected {
+		// Request was redirected, return
+		return
+	}
+
+	c.setStatusCode(204)
+	return
+}
+
+// Redirect will redirect the client to the provided destinatoin
+func (c *Context) Redirect(statusCode int, destination string) (err error) {
+	if c.completed {
+		return ErrContextIsClosed
+	}
+	defer c.close()
+
+	c.redirect(statusCode, destination)
+	return
+}
+
+// Writer will return the underlying http.ResponseWriter
+func (c *Context) Writer() http.ResponseWriter {
+	return c.writer
+}
+
+// Request will return the underlying http.Request
+func (c *Context) Request() *http.Request {
+	return c.request
+}
+
+func (c *Context) setStatusCode(statusCode int) {
+	// Write status code to header
+	c.writer.WriteHeader(statusCode)
+	// Set context status code as the provided status code
+	c.statusCode = statusCode
+}
+
+func (c *Context) setContentType(contentType string) {
+	// Get reference to header
+	header := c.writer.Header()
+	// Set content type
+	header.Set("Content-Type", contentType)
+}
+
+func (c *Context) processHandlers(hs []Handler) {
+	// Iterate through the provided handlers
+	for _, h := range hs {
+		if h(c); c.completed {
+			return
+		}
 	}
 }
 
-// BindJSON is a helper function which binds the request body to a provided value to be parsed as JSON
-func (c *Context) BindJSON(value interface{}) (err error) {
-	defer c.Request.Body.Close()
-	return json.NewDecoder(c.Request.Body).Decode(value)
+func (c *Context) processHooks() {
+	for i := len(c.hooks) - 1; i > -1; i-- {
+		c.hooks[i](c.statusCode, c)
+	}
 }
 
-// BindForm is a helper function which binds the request body to a provided value to be parsed as an HTML form
-func (c *Context) BindForm(value interface{}) (err error) {
-	defer c.Request.Body.Close()
-	return form.NewDecoder(c.Request.Body).Decode(value)
+func (c *Context) getRedirect(statusCode int) (redirectTo string, ok bool) {
+	if statusCode < 200 || statusCode >= 300 {
+		return
+	}
+
+	accept := c.request.Header.Get("Accept")
+	firstAccept := strings.SplitN(accept, ",", 2)[0]
+	if firstAccept != "text/html" {
+		return
+	}
+
+	var rq redirectQuery
+	form.Unmarshal(c.request.URL.RawQuery, &rq)
+	if redirectTo = rq.Redirect; len(redirectTo) == 0 {
+		return
+	}
+
+	ok = true
+	return
 }
 
-// AddHook will add a hook function to be ran after the context has completed
-func (c *Context) AddHook(fn Hook) {
-	c.hooks = append(c.hooks, fn)
+func (c *Context) tryRedirect(statusCode int) (ok bool) {
+	var redirectTo string
+	if redirectTo, ok = c.getRedirect(statusCode); !ok {
+		return
+	}
+
+	c.redirect(http.StatusFound, redirectTo)
+	return
 }
 
-// NewAdoptResponse will return an adopt response object
-func (c *Context) NewAdoptResponse() (resp Response) {
-	return NewAdoptResponse()
+func (c *Context) redirect(statusCode int, destination string) {
+	c.setStatusCode(statusCode)
+	c.writer.Header().Add("Location", destination)
+	return
 }
 
-// NewNoContentResponse will return a no content response object
-func (c *Context) NewNoContentResponse() (resp Response) {
-	return NewNoContentResponse()
-}
-
-// NewRedirectResponse will return a redirect response object
-func (c *Context) NewRedirectResponse(code int, url string) (resp Response) {
-	return NewRedirectResponse(code, url)
-}
-
-// NewJSONResponse will return a json response object
-func (c *Context) NewJSONResponse(code int, value interface{}) (resp Response) {
-	return NewJSONResponse(code, value)
-}
-
-// NewJSONPResponse will return a json response object with callback
-func (c *Context) NewJSONPResponse(callback string, value interface{}) (resp Response) {
-	return NewJSONPResponse(callback, value)
-}
-
-// NewTextResponse will return a text response object
-func (c *Context) NewTextResponse(code int, body []byte) (resp Response) {
-	return NewTextResponse(code, body)
-}
-
-// NewXMLResponse will return an xml response object
-func (c *Context) NewXMLResponse(code int, body []byte) (resp Response) {
-	return NewXMLResponse(code, body)
+func (c *Context) close() {
+	c.completed = true
 }
