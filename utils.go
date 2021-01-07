@@ -8,30 +8,15 @@ import (
 
 // newHandler will return a new Handler
 func newHandler(hs []Handler) Handler {
-	return func(ctx *Context) (resp Response) {
-		// Get response from context by passing provided handlers
-		resp = ctx.getResponse(hs)
-
-		// Check to see if the context was adopted
-		if ctx.wasAdopted(resp) {
-			return
+	return func(ctx *Context) {
+		// Process handler funcs
+		ctx.processHandlers(hs)
+		if ctx.completed {
+			ctx.request.Body.Close()
 		}
-		defer ctx.Request.Body.Close()
-
-		sc := 200
-		if resp != nil {
-			sc = resp.StatusCode()
-		}
-
-		if redirectTo, ok := ctx.getRedirect(sc); ok {
-			resp = NewRedirectResponse(302, redirectTo)
-		}
-
-		// Respond using context
-		ctx.respond(resp)
 
 		// Process context hooks
-		ctx.processHooks(sc)
+		ctx.processHooks()
 		return
 	}
 }
@@ -117,8 +102,8 @@ func shiftStr(str string, n int) (out string) {
 	}
 }
 
-func notFoundHandler(ctx *Context) Response {
-	return NewTextResponse(404, []byte("404, not found"))
+func notFoundHandler(ctx *Context) {
+	ctx.WriteString(404, "text/plain", "404, not found")
 }
 
 // PanicHandler is a panic handler
