@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/vroomy/common"
 )
 
 const (
@@ -23,7 +25,7 @@ func newRouter() *Router {
 type Router struct {
 	rm routesMap
 
-	notFound Handler
+	notFound common.Handler
 	panic    PanicHandler
 
 	maxParams int
@@ -33,8 +35,8 @@ func (r *Router) onPanic(v interface{}) {
 	log.Println("Panic encountered", v)
 }
 
-// Match will check a url for a matching Handler, and return any associated handler and its parameters
-func (r *Router) Match(method, url string) (h Handler, p Params, ok bool) {
+// Match will check a url for a matching common.Handler, and return any associated handler and its parameters
+func (r *Router) Match(method, url string) (h common.Handler, p Params, ok bool) {
 	var rs routes
 	if rs, ok = r.rm[method]; !ok {
 		return
@@ -56,7 +58,7 @@ func (r *Router) Match(method, url string) (h Handler, p Params, ok bool) {
 }
 
 // SetNotFound will set the not found handler (404)
-func (r *Router) SetNotFound(hs ...Handler) {
+func (r *Router) SetNotFound(hs ...common.Handler) {
 	r.notFound = newHandler(hs)
 }
 
@@ -66,7 +68,7 @@ func (r *Router) SetPanic(h PanicHandler) {
 }
 
 // Handle will create a route for any method
-func (r *Router) Handle(method, url string, h Handler) (err error) {
+func (r *Router) Handle(method, url string, h common.Handler) (err error) {
 	var route *route
 	if route, err = newRoute(url, h, method); err != nil {
 		return fmt.Errorf("error creating route for [%s] \"%s\": %v", method, url, err)
@@ -83,27 +85,27 @@ func (r *Router) Handle(method, url string, h Handler) (err error) {
 }
 
 // GET will create a GET route
-func (r *Router) GET(url string, h Handler) error {
+func (r *Router) GET(url string, h common.Handler) error {
 	return r.Handle("GET", url, h)
 }
 
 // PUT will create a PUT route
-func (r *Router) PUT(url string, h Handler) error {
+func (r *Router) PUT(url string, h common.Handler) error {
 	return r.Handle("PUT", url, h)
 }
 
 // POST will create a POST route
-func (r *Router) POST(url string, h Handler) error {
+func (r *Router) POST(url string, h common.Handler) error {
 	return r.Handle("POST", url, h)
 }
 
 // DELETE will create a DELETE route
-func (r *Router) DELETE(url string, h Handler) error {
+func (r *Router) DELETE(url string, h common.Handler) error {
 	return r.Handle("DELETE", url, h)
 }
 
 // OPTIONS will create an OPTIONS route
-func (r *Router) OPTIONS(url string, h Handler) error {
+func (r *Router) OPTIONS(url string, h common.Handler) error {
 	return r.Handle("OPTIONS", url, h)
 }
 

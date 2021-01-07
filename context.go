@@ -200,7 +200,7 @@ func (c *Context) setContentType(contentType string) {
 	header.Set("Content-Type", contentType)
 }
 
-func (c *Context) processHandlers(hs []Handler) {
+func (c *Context) processHandlers(hs []common.Handler) {
 	// Iterate through the provided handlers
 	for _, h := range hs {
 		if h(c); c.completed {

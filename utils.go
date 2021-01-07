@@ -4,19 +4,26 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/vroomy/common"
 )
 
-// newHandler will return a new Handler
-func newHandler(hs []Handler) Handler {
-	return func(ctx *Context) {
+// newHandler will return a new common.Handler
+func newHandler(hs []common.Handler) common.Handler {
+	return func(ctx common.Context) {
+		c, ok := ctx.(*Context)
+		if !ok {
+			panic(fmt.Sprintf("invalid context type, %T is not supported", ctx))
+		}
+
 		// Process handler funcs
-		ctx.processHandlers(hs)
-		if ctx.completed {
-			ctx.request.Body.Close()
+		c.processHandlers(hs)
+		if c.completed {
+			c.request.Body.Close()
 		}
 
 		// Process context hooks
-		ctx.processHooks()
+		c.processHooks()
 		return
 	}
 }
@@ -102,7 +109,7 @@ func shiftStr(str string, n int) (out string) {
 	}
 }
 
-func notFoundHandler(ctx *Context) {
+func notFoundHandler(ctx common.Context) {
 	ctx.WriteString(404, "text/plain", "404, not found")
 }
 
