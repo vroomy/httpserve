@@ -33,7 +33,7 @@ var defaultConfig = Config{
 	MaxHeaderBytes: 16384,
 }
 
-var _ Group = &Serve{}
+var _ common.Group = &Serve{}
 
 // New will return a new instance of Serve
 func New() *Serve {
@@ -74,7 +74,7 @@ func (s *Serve) OPTIONS(route string, hs ...common.Handler) {
 }
 
 // Group will return a new group for a given route and handlers
-func (s *Serve) Group(route string, hs ...common.Handler) Group {
+func (s *Serve) Group(route string, hs ...common.Handler) common.Group {
 	return s.g.Group(route, hs...)
 }
 

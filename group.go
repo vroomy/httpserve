@@ -100,7 +100,7 @@ func (g *group) Handle(method, route string, hs ...common.Handler) {
 }
 
 // Group will return a new group
-func (g *group) Group(route string, hs ...common.Handler) Group {
+func (g *group) Group(route string, hs ...common.Handler) common.Group {
 	if g.route != "" {
 		route = path.Join(g.route, route)
 	}
@@ -110,16 +110,4 @@ func (g *group) Group(route string, hs ...common.Handler) Group {
 	}
 
 	return newGroup(g.r, route, hs...)
-}
-
-// Group is a grouping interface
-type Group interface {
-	GET(route string, hs ...common.Handler)
-	POST(route string, hs ...common.Handler)
-	PUT(route string, hs ...common.Handler)
-	DELETE(route string, hs ...common.Handler)
-	OPTIONS(route string, hs ...common.Handler)
-
-	Group(route string, hs ...common.Handler) Group
-	Handle(method, route string, hs ...common.Handler)
 }
