@@ -31,6 +31,9 @@ type Context struct {
 	// hooks are a list of hook functions added during the lifespam of the context
 	hooks []Hook
 
+	// Whether or not the context has been completed
+	completed bool
+
 	Writer  http.ResponseWriter
 	Request *http.Request
 	Params  Params
@@ -50,6 +53,14 @@ func (c *Context) getResponse(hs []Handler) (resp Response) {
 }
 
 func (c *Context) respond(resp Response) {
+	if c.completed {
+		// Context is already completed, return
+		return
+	}
+
+	// Set completed state to true
+	c.completed = true
+
 	// Response is nil, no further action is needed
 	if resp == nil {
 		return
@@ -93,7 +104,7 @@ func (c *Context) wasAdopted(resp Response) (ok bool) {
 
 func (c *Context) processHooks(statusCode int) {
 	for i := len(c.hooks) - 1; i > -1; i-- {
-		c.hooks[i](statusCode, c.s)
+		c.hooks[i](statusCode, c)
 	}
 }
 
@@ -120,11 +131,21 @@ func (c *Context) getRedirect(statusCode int) (redirectTo string, ok bool) {
 
 // Write will write a byteslice
 func (c *Context) Write(bs []byte) (n int, err error) {
+	if c.completed {
+		err = ErrContextIsClosed
+		return
+	}
+
 	return c.Writer.Write(bs)
 }
 
 // WriteString will write a string
 func (c *Context) WriteString(str string) (n int, err error) {
+	if c.completed {
+		err = ErrContextIsClosed
+		return
+	}
+
 	return c.Writer.Write([]byte(str))
 }
 
@@ -150,6 +171,10 @@ func (c *Context) GetRequest() (req *http.Request) {
 
 // GetWriter will return http.Writer
 func (c *Context) GetWriter() (writer http.ResponseWriter) {
+	if c.completed {
+		return
+	}
+
 	return c.Writer
 }
 

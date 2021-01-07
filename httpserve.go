@@ -22,6 +22,8 @@ const (
 	ErrInvalidParamLocation = errors.Error("parameters can only directly follow a forward slash")
 	// ErrInvalidWildcardLocation is returned when a wildcard follows a character other than "/"
 	ErrInvalidWildcardLocation = errors.Error("wildcards can only directly follow a forward slash")
+	// ErrContextIsClosed is returned when write actions are attempted on a closed context
+	ErrContextIsClosed = errors.Error("cannot perform write actions on a closed context")
 )
 
 var defaultConfig = Config{
