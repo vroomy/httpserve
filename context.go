@@ -104,10 +104,10 @@ func (c *Context) WriteBytes(statusCode int, contentType string, bs []byte) (err
 		return
 	}
 
-	// Set status code
-	c.setStatusCode(statusCode)
 	// Set content type
 	c.setContentType(contentType)
+	// Set status code
+	c.setStatusCode(statusCode)
 
 	_, err = c.writer.Write(bs)
 	return
@@ -125,10 +125,10 @@ func (c *Context) WriteReader(statusCode int, contentType string, r io.Reader) (
 		return
 	}
 
-	// Set status code
-	c.setStatusCode(statusCode)
 	// Set content type
 	c.setContentType(contentType)
+	// Set status code
+	c.setStatusCode(statusCode)
 
 	// Copy reader bytes to writer
 	_, err = io.Copy(c.writer, r)
@@ -152,10 +152,10 @@ func (c *Context) WriteJSON(statusCode int, value interface{}) (err error) {
 		return
 	}
 
-	// Set status code
-	c.setStatusCode(statusCode)
 	// Set content type
 	c.setContentType("application/json")
+	// Set status code
+	c.setStatusCode(statusCode)
 
 	// Encode value as JSON
 	return json.NewEncoder(c.writer).Encode(resp)
@@ -259,8 +259,8 @@ func (c *Context) tryRedirect(statusCode int) (ok bool) {
 }
 
 func (c *Context) redirect(statusCode int, destination string) {
-	c.setStatusCode(statusCode)
 	c.writer.Header().Add("Location", destination)
+	c.setStatusCode(statusCode)
 	return
 }
 
