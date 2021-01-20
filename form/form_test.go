@@ -67,6 +67,28 @@ func TestDecode(t *testing.T) {
 	}
 }
 
+func TestDecode_redirect(t *testing.T) {
+	type testStruct struct {
+		Redirect string `form:"redirect"`
+	}
+
+	var val testStruct
+	str := "redirect=/dashboard"
+	// Ensure bufio is used so every aspect is tested
+	rdr := &ronly{bytes.NewBufferString(str)}
+	if err := BindReader(rdr, &val); err != nil {
+		t.Fatal(err)
+	}
+
+	if val.Redirect != "/dashboard" {
+		t.Fatalf("invalid redirect: %v", val.Redirect)
+	}
+}
+
+//Raw query redirect=/dashboard
+//Raw query bs [114 101 100 105 114 101 99 116 61 47 100 97 115 104 98 111 97 114 100]
+//RQ? {}
+
 func BenchmarkBindReader(b *testing.B) {
 	var test testStruct
 	for i := 0; i < b.N; i++ {
