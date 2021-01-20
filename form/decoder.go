@@ -49,8 +49,12 @@ func (d *Decoder) Decode(value interface{}) (err error) {
 		}
 	}
 
-	if err == io.EOF {
-		err = nil
+	switch err {
+	case nil:
+	case io.EOF:
+
+	default:
+		return
 	}
 
 	return d.processAmpersand()
