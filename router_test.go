@@ -1,6 +1,7 @@
 package httpserve
 
 import (
+	"sync"
 	"testing"
 
 	"github.com/vroomy/common"
@@ -92,6 +93,40 @@ func TestRouter(t *testing.T) {
 	if params.ByName("name") != "name" {
 		t.Fatalf("invalid value, expected \"%s\" and received \"%s\"", "name", params.ByName("name"))
 	}
+}
+
+func TestRouter_multi_level_handlers(t *testing.T) {
+	r := newRouter()
+	var wg sync.WaitGroup
+	wg.Add(4)
+	fn1 := func(ctx common.Context) {
+		wg.Done()
+	}
+	fn2 := func(ctx common.Context) {
+		wg.Done()
+	}
+	fn3 := func(ctx common.Context) {
+		wg.Done()
+	}
+	fn4 := func(ctx common.Context) {
+		wg.Done()
+	}
+	fn5 := func(ctx common.Context) {
+		t.Fatal("invalid handler called")
+	}
+
+	g1 := newGroup(r, "/api", fn1, fn2, fn3)
+	g2 := g1.Group("")
+	g3 := g1.Group("/users")
+	g3.GET("/", fn5)
+	g2.GET("/logout", fn4)
+	h, _, ok := r.Match("GET", "/api/logout")
+	if !ok {
+		t.Fatal("expected match, none found")
+	}
+
+	h(newContext(nil, nil, nil))
+	wg.Wait()
 }
 
 func TestRouterMatch(t *testing.T) {
