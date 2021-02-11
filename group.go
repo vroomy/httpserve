@@ -28,7 +28,8 @@ func (g *group) GET(route string, hs ...common.Handler) {
 	}
 
 	if len(g.hs) > 0 {
-		hs = append(g.hs, hs...)
+		ghs := append([]common.Handler{}, g.hs...)
+		hs = append(ghs, hs...)
 	}
 
 	g.r.GET(route, newHandler(hs))
