@@ -3,6 +3,8 @@ package httpserve
 import (
 	"fmt"
 	"net/http"
+	"reflect"
+	"runtime"
 	"strings"
 
 	"github.com/vroomy/common"
@@ -118,4 +120,9 @@ type PanicHandler func(v interface{})
 
 type redirectQuery struct {
 	Redirect string `form:"redirect"`
+}
+
+func getFuncName(fn interface{}) string {
+	val := reflect.ValueOf(fn).Pointer()
+	return runtime.FuncForPC(val).Name()
 }
