@@ -232,6 +232,10 @@ func (c *Context) getRedirect(statusCode int) (redirectTo string, ok bool) {
 		return
 	}
 
+	if c.request.Method == http.MethodGet {
+		return
+	}
+
 	accept := c.request.Header.Get("Accept")
 	firstAccept := strings.SplitN(accept, ",", 2)[0]
 	if firstAccept != "text/html" {
