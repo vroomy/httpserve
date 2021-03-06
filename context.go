@@ -232,7 +232,7 @@ func (c *Context) getRedirect(statusCode int) (redirectTo string, ok bool) {
 		return
 	}
 
-	if c.request.Method == http.MethodGet {
+	if c.request.Method == http.MethodGet && statusCode != 204 {
 		return
 	}
 
