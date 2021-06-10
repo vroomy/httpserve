@@ -1,5 +1,5 @@
-github.com/gdbu/reflectio v0.1.2 h1:+IaXw9kpM8RujG/Ir5DbGLqB4dVpAyAFFNQ8oVGEkoI=
-github.com/gdbu/reflectio v0.1.2/go.mod h1:lmPbGDeqC0WYCTzIiB4YlvE7JgHtrw9ceGfNznv4K3A=
+github.com/gdbu/reflectio v0.1.3 h1:O/4WhuCqXDBCyKGUKYwBAIDNV2xoJpHVhZe4NAUMBsU=
+github.com/gdbu/reflectio v0.1.3/go.mod h1:lmPbGDeqC0WYCTzIiB4YlvE7JgHtrw9ceGfNznv4K3A=
 github.com/hatchify/errors v0.4.82 h1:o7eB9r1X3Sx7PBRRXMCaAm+vXcoQLE4ZOesIv4oK36Q=
 github.com/hatchify/errors v0.4.82/go.mod h1:niCrsPjs0fFes147TgJ0LSUVdtavQTUvBxNoJm9Vew0=
 github.com/vroomy/common v0.5.2 h1:xx0szLHDKmudw3FzSQdLWiGE4Ps0oJUT6WpYpIerBhk=
