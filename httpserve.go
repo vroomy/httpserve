@@ -148,6 +148,11 @@ func (s *Serve) SetPanic(h PanicHandler) {
 	s.g.r.SetPanic(h)
 }
 
+// SetPanic will set the panic handler
+func (s *Serve) SetOnError(fn func(error)) {
+	s.g.r.SetOnError(fn)
+}
+
 // Close will close an instance of Serve
 func (s *Serve) Close() (err error) {
 	if s.s == nil {
