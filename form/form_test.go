@@ -12,7 +12,6 @@ import (
 )
 
 var (
-	testStructSink  testStruct
 	testQuery       = newTestQuery()
 	testQueryString = testQuery.Encode()
 )
@@ -108,7 +107,9 @@ func BenchmarkBindReader_unmarshaler(b *testing.B) {
 			b.Fatal(err)
 		}
 
-		rdr.Seek(0, 0)
+		if _, err := rdr.Seek(0, 0); err != nil {
+			b.Fatal(err)
+		}
 	}
 
 	b.ReportAllocs()
@@ -123,7 +124,9 @@ func BenchmarkDecoder_Decode_unmarshaler(b *testing.B) {
 			b.Fatal(err)
 		}
 
-		rdr.Seek(0, 0)
+		if _, err := rdr.Seek(0, 0); err != nil {
+			b.Fatal(err)
+		}
 	}
 
 	b.ReportAllocs()
@@ -154,7 +157,11 @@ func BenchmarkStdlib(b *testing.B) {
 
 		req.Form = nil
 		req.PostForm = nil
-		rdr.Seek(0, 0)
+
+		if _, err := rdr.Seek(0, 0); err != nil {
+			b.Fatal(err)
+		}
+
 	}
 
 	b.ReportAllocs()
