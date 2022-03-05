@@ -28,6 +28,8 @@ func newContext(w http.ResponseWriter, r *http.Request, p Params) *Context {
 
 // Context is the request context
 type Context struct {
+	errorFn func(error)
+
 	// Internal context storage, used by Context.Get and Context.Put
 	s Storage
 	// hooks are a list of hook functions added during the lifespam of the context
@@ -88,14 +90,15 @@ func (c *Context) Put(key, value string) {
 }
 
 // WriteString will write a string
-func (c *Context) WriteString(statusCode int, contentType, str string) (err error) {
-	return c.WriteBytes(statusCode, contentType, []byte(str))
+func (c *Context) WriteString(statusCode int, contentType, str string) {
+	c.WriteBytes(statusCode, contentType, []byte(str))
 }
 
 // WriteBytes will write a byte slice
-func (c *Context) WriteBytes(statusCode int, contentType string, bs []byte) (err error) {
+func (c *Context) WriteBytes(statusCode int, contentType string, bs []byte) {
 	if c.completed {
-		return ErrContextIsClosed
+		c.errorFn(ErrContextIsClosed)
+		return
 	}
 	defer c.close()
 
@@ -109,14 +112,19 @@ func (c *Context) WriteBytes(statusCode int, contentType string, bs []byte) (err
 	// Set status code
 	c.setStatusCode(statusCode)
 
-	_, err = c.writer.Write(bs)
+	if _, err := c.writer.Write(bs); err != nil {
+		c.errorFn(err)
+		return
+	}
+
 	return
 }
 
 // WriteReader will copy reader bytes to the http response body
-func (c *Context) WriteReader(statusCode int, contentType string, r io.Reader) (err error) {
+func (c *Context) WriteReader(statusCode int, contentType string, r io.Reader) {
 	if c.completed {
-		return ErrContextIsClosed
+		c.errorFn(ErrContextIsClosed)
+		return
 	}
 	defer c.close()
 
@@ -131,14 +139,17 @@ func (c *Context) WriteReader(statusCode int, contentType string, r io.Reader) (
 	c.setStatusCode(statusCode)
 
 	// Copy reader bytes to writer
-	_, err = io.Copy(c.writer, r)
-	return
+	if _, err := io.Copy(c.writer, r); err != nil {
+		c.errorFn(err)
+		return
+	}
 }
 
 // WriteJSON will write JSON bytes to the http response body
-func (c *Context) WriteJSON(statusCode int, value interface{}) (err error) {
+func (c *Context) WriteJSON(statusCode int, value interface{}) {
 	if c.completed {
-		return ErrContextIsClosed
+		c.errorFn(ErrContextIsClosed)
+		return
 	}
 	defer c.close()
 
@@ -147,8 +158,13 @@ func (c *Context) WriteJSON(statusCode int, value interface{}) (err error) {
 		return
 	}
 
-	var resp JSONValue
+	var (
+		resp JSONValue
+		err  error
+	)
+
 	if resp, err = makeJSONValue(statusCode, value); err != nil {
+		c.errorFn(err)
 		return
 	}
 
@@ -158,13 +174,17 @@ func (c *Context) WriteJSON(statusCode int, value interface{}) (err error) {
 	c.setStatusCode(statusCode)
 
 	// Encode value as JSON
-	return json.NewEncoder(c.writer).Encode(resp)
+	if err = json.NewEncoder(c.writer).Encode(resp); err != nil {
+		c.errorFn(err)
+		return
+	}
 }
 
 // WriteNoContent will write a no content response
-func (c *Context) WriteNoContent() (err error) {
+func (c *Context) WriteNoContent() {
 	if c.completed {
-		return ErrContextIsClosed
+		c.errorFn(ErrContextIsClosed)
+		return
 	}
 	defer c.close()
 
@@ -178,9 +198,10 @@ func (c *Context) WriteNoContent() (err error) {
 }
 
 // Redirect will redirect the client to the provided destinatoin
-func (c *Context) Redirect(statusCode int, destination string) (err error) {
+func (c *Context) Redirect(statusCode int, destination string) {
 	if c.completed {
-		return ErrContextIsClosed
+		c.errorFn(ErrContextIsClosed)
+		return
 	}
 	defer c.close()
 

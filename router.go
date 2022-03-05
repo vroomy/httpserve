@@ -28,11 +28,22 @@ type Router struct {
 	notFound common.Handler
 	panic    PanicHandler
 
+	errorFn func(error)
+
 	maxParams int
 }
 
 func (r *Router) onPanic(v interface{}) {
-	log.Println("Panic encountered", v)
+	log.Println("Panic encountered:", v)
+}
+
+func (r *Router) onError(err error) {
+	if r.errorFn != nil {
+		r.errorFn(err)
+		return
+	}
+
+	log.Println("Error encountered:", err)
 }
 
 // Match will check a url for a matching common.Handler, and return any associated handler and its parameters
@@ -65,6 +76,10 @@ func (r *Router) SetNotFound(hs ...common.Handler) {
 // SetPanic will set panic handler
 func (r *Router) SetPanic(h PanicHandler) {
 	r.panic = h
+}
+
+func (r *Router) SetOnError(onError func(error)) {
+	r.errorFn = onError
 }
 
 // Handle will create a route for any method
@@ -116,6 +131,7 @@ func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	ctx := newContext(rw, req, params)
+	ctx.errorFn = r.onError
 
 	defer func() {
 		if p := recover(); p != nil && r.panic != nil {
