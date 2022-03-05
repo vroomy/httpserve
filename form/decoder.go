@@ -47,6 +47,10 @@ func (d *Decoder) Decode(value interface{}) (err error) {
 		default:
 			err = d.processChar()
 		}
+
+		if err != nil {
+			break
+		}
 	}
 
 	switch err {
