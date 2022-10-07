@@ -12,6 +12,8 @@ import (
 
 var _ common.Context = &Context{}
 
+const formContentType = "application/x-www-form-urlencoded"
+
 // newContext will initialize and return a new Context
 func newContext(w http.ResponseWriter, r *http.Request, p Params) *Context {
 	var c Context
@@ -49,8 +51,10 @@ type Context struct {
 // Bind is a helper function which binds the request body to a provided value to be parsed as the inbound content type
 func (c *Context) Bind(value interface{}) (err error) {
 	defer c.request.Body.Close()
-	switch c.request.Header.Get("Content-Type") {
-	case "application/x-www-form-urlencoded":
+	contentType := c.request.Header.Get("Content-Type")
+
+	switch {
+	case strings.Index(contentType, formContentType) == 0:
 		return form.NewDecoder(c.request.Body).Decode(value)
 	default:
 		return json.NewDecoder(c.request.Body).Decode(value)
