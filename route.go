@@ -1,8 +1,6 @@
 package httpserve
 
-import "github.com/vroomy/common"
-
-func newRoute(url string, h common.Handler, method string) (rp *route, err error) {
+func newRoute(url string, h Handler, method string) (rp *route, err error) {
 	if url[0] != '/' {
 		err = ErrMissingLeadSlash
 		return
@@ -21,7 +19,7 @@ func newRoute(url string, h common.Handler, method string) (rp *route, err error
 
 type route struct {
 	s []string
-	h common.Handler
+	h Handler
 
 	method string
 }

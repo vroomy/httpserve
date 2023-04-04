@@ -3,8 +3,6 @@ package httpserve
 import (
 	"fmt"
 	"strings"
-
-	"github.com/vroomy/common"
 )
 
 // NewUpgrader will return an upgrader
@@ -33,7 +31,7 @@ type VirtualHost struct {
 	Port uint16
 }
 
-func (u *Upgrader) upgradeConn(ctx common.Context) {
+func (u *Upgrader) upgradeConn(ctx *Context) {
 	newURL := *ctx.Request().URL
 	newURL.Scheme = "https"
 	newURL.Host = ctx.Request().Host

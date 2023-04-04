@@ -23,7 +23,7 @@ func TestRouteCheck(t *testing.T) {
 		t.Fatalf("Invalid value for key \"%s\", expected \"%s\" and received \"%s\"", "name", "name", value)
 	}
 
-	params, ok = r.check(params, "test")
+	_, ok = r.check(params, "test")
 	if ok {
 		t.Fatal("Match ok when it should not be")
 	}

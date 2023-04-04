@@ -12,7 +12,10 @@ func TestJSONResponseData(t *testing.T) {
 	ts.Age = 33
 	resp := NewJSONResponse(200, ts)
 	buf := bytes.NewBuffer(nil)
-	resp.WriteTo(buf)
+
+	if _, err := resp.WriteTo(buf); err != nil {
+		t.Fatalf("error writing: %v", err)
+	}
 
 	var nts TestJSONStruct
 	if err := UnmarshalJSONValue(buf.Bytes(), &nts); err != nil {
@@ -28,7 +31,10 @@ func TestJSONResponseError(t *testing.T) {
 	err := errors.New("test error")
 	resp := NewJSONResponse(400, err)
 	buf := bytes.NewBuffer(nil)
-	resp.WriteTo(buf)
+
+	if _, err := resp.WriteTo(buf); err != nil {
+		t.Fatalf("error writing: %v", err)
+	}
 
 	var nts TestJSONStruct
 	if nerr := UnmarshalJSONValue(buf.Bytes(), &nts); nerr == nil {

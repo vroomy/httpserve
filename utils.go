@@ -3,30 +3,20 @@ package httpserve
 import (
 	"fmt"
 	"net/http"
-	"reflect"
-	"runtime"
 	"strings"
-
-	"github.com/vroomy/common"
 )
 
-// newHandler will return a new common.Handler
-func newHandler(hs []common.Handler) common.Handler {
-	return func(ctx common.Context) {
-		c, ok := ctx.(*Context)
-		if !ok {
-			panic(fmt.Sprintf("invalid context type, %T is not supported", ctx))
-		}
-
+// newHandler will return a new Handler
+func newHandler(hs []Handler) Handler {
+	return func(ctx *Context) {
 		// Process handler funcs
-		c.processHandlers(hs)
-		if c.completed {
-			c.request.Body.Close()
+		ctx.processHandlers(hs)
+		if ctx.completed {
+			ctx.request.Body.Close()
 		}
 
 		// Process context hooks
-		c.processHooks()
-		return
+		ctx.processHooks()
 	}
 }
 
@@ -111,7 +101,7 @@ func shiftStr(str string, n int) (out string) {
 	}
 }
 
-func notFoundHandler(ctx common.Context) {
+func notFoundHandler(ctx *Context) {
 	ctx.WriteString(404, "text/plain", "404, not found")
 }
 
@@ -120,9 +110,4 @@ type PanicHandler func(v interface{})
 
 type redirectQuery struct {
 	Redirect string `form:"redirect"`
-}
-
-func getFuncName(fn interface{}) string {
-	val := reflect.ValueOf(fn).Pointer()
-	return runtime.FuncForPC(val).Name()
 }
