@@ -10,7 +10,6 @@ type Config struct {
 }
 
 type AutoCertConfig struct {
-	Email    string
 	DirCache string
 	Hosts    []string
 }
