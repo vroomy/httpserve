@@ -8,3 +8,9 @@ type Config struct {
 	WriteTimeout   time.Duration
 	MaxHeaderBytes int
 }
+
+type AutoCertConfig struct {
+	Email    string
+	DirCache string
+	Hosts    []string
+}
