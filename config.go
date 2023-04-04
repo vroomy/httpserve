@@ -8,3 +8,8 @@ type Config struct {
 	WriteTimeout   time.Duration
 	MaxHeaderBytes int
 }
+
+type AutoCertConfig struct {
+	DirCache string
+	Hosts    []string
+}

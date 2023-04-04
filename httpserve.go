@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/hatchify/errors"
+	"golang.org/x/crypto/acme/autocert"
 )
 
 const (
@@ -44,7 +45,7 @@ func New() *Serve {
 // Serve will serve HTTP requests
 type Serve struct {
 	s *http.Server
-	g *group
+	g group
 }
 
 // GET will set a GET endpoint
@@ -135,6 +136,28 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 	}
 
 	return s.s.Serve(l)
+}
+
+// ListenAutoCertTLS will listen using the TLS procol on a given port using the certificate being provided by LetsEncrypt
+func (s *Serve) ListenAutoCertTLS(port uint16, ac AutoCertConfig) (err error) {
+	return s.ListenAutoCertTLSWithConfig(port, ac, defaultConfig)
+}
+
+// ListenAutoCertTLSWithConfig will listen using the TLS procol on a given port using configurations and the certificate being provided by LetsEncrypt
+func (s *Serve) ListenAutoCertTLSWithConfig(port uint16, ac AutoCertConfig, c Config) (err error) {
+	s.s = newHTTPServer(s.g.r, port, c)
+
+	m := &autocert.Manager{
+		Cache:      autocert.DirCache(ac.DirCache),
+		Prompt:     autocert.AcceptTOS,
+		HostPolicy: autocert.HostWhitelist(ac.Hosts...),
+	}
+
+	cfg := m.TLSConfig()
+	cfg.PreferServerCipherSuites = true
+	cfg.MinVersion = tls.VersionTLS12
+	s.s.TLSConfig = cfg
+	return s.s.ListenAndServeTLS("", "")
 }
 
 // Set404 will set the 404 handler
