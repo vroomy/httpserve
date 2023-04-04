@@ -57,11 +57,11 @@ func main() {
 	srv = ctx.New()
 	defer srv.Close()
 
-	srv.GET("/ping", func(ctx common.Context) (res vroomy.Response) {
+	srv.GET("/ping", func(ctx *Context) (res vroomy.Response) {
 		return ctx.NewTextResponse(200, []byte("pong"))
 	})
 
-	srv.Set404(func(ctx common.Context) (res vroomy.Response) {
+	srv.Set404(func(ctx *Context) (res vroomy.Response) {
 		return ctx.NewTextResponse(404, []byte("Oh shoot, this page doesn't exist"))
 	})
 
@@ -106,12 +106,12 @@ func main() {
 type Service struct{}
 
 // Ping is the ping endpoint handler
-func (s *Service) Ping(ctx common.Context) (res vroomy.Response) {
+func (s *Service) Ping(ctx *Context) (res vroomy.Response) {
 	return ctx.NewTextResponse(200, []byte("pong"))
 }
 
 // NotFound is the 404 handler
-func (s *Service) NotFound(ctx common.Context) (res vroomy.Response) {
+func (s *Service) NotFound(ctx *Context) (res vroomy.Response) {
 	return ctx.NewTextResponse(404, []byte("Oh shoot, this page doesn't exist"))
 }
 

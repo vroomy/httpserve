@@ -58,12 +58,17 @@ func (j *JSONPResponse) WriteTo(w io.Writer) (n int64, err error) {
 	value := j.newValue()
 	// Initialize a new JSON encoder
 	enc := json.NewEncoder(buf)
+
 	// Encode the responder
-	err = enc.Encode(value)
+	if err = enc.Encode(value); err != nil {
+		return
+	}
+
 	// Remove the trailing newline
 	buf.Truncate(buf.Len() - 1)
 	// Write jsonP ending
 	buf.Write(jsonPEnding)
+
 	// Flush buffer to writer
 	_, err = w.Write(buf.Bytes())
 	return

@@ -2,15 +2,13 @@ package httpserve
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
 
-	"github.com/vroomy/common"
 	"github.com/vroomy/httpserve/form"
 )
-
-var _ common.Context = &Context{}
 
 const formContentType = "application/x-www-form-urlencoded"
 
@@ -35,7 +33,7 @@ type Context struct {
 	// Internal context storage, used by Context.Get and Context.Put
 	s Storage
 	// hooks are a list of hook functions added during the lifespam of the context
-	hooks []common.Hook
+	hooks []Hook
 
 	// Whether or not the context has been completed
 	completed bool
@@ -74,7 +72,7 @@ func (c *Context) BindForm(value interface{}) (err error) {
 }
 
 // AddHook will add a hook function to be ran after the context has completed
-func (c *Context) AddHook(fn common.Hook) {
+func (c *Context) AddHook(fn Hook) {
 	c.hooks = append(c.hooks, fn)
 }
 
@@ -120,8 +118,6 @@ func (c *Context) WriteBytes(statusCode int, contentType string, bs []byte) {
 		c.errorFn(err)
 		return
 	}
-
-	return
 }
 
 // WriteReader will copy reader bytes to the http response body
@@ -198,10 +194,10 @@ func (c *Context) WriteNoContent() {
 	}
 
 	c.setStatusCode(204)
-	return
 }
 
 // Redirect will redirect the client to the provided destinatoin
+
 func (c *Context) Redirect(statusCode int, destination string) {
 	if c.completed {
 		c.errorFn(ErrContextIsClosed)
@@ -210,7 +206,6 @@ func (c *Context) Redirect(statusCode int, destination string) {
 	defer c.close()
 
 	c.redirect(statusCode, destination)
-	return
 }
 
 // Writer will return the underlying http.ResponseWriter
@@ -237,7 +232,7 @@ func (c *Context) setContentType(contentType string) {
 	header.Set("Content-Type", contentType)
 }
 
-func (c *Context) processHandlers(hs []common.Handler) {
+func (c *Context) processHandlers(hs []Handler) {
 	// Iterate through the provided handlers
 	for _, h := range hs {
 		if h(c); c.completed {
@@ -268,7 +263,12 @@ func (c *Context) getRedirect(statusCode int) (redirectTo string, ok bool) {
 	}
 
 	var rq redirectQuery
-	form.Unmarshal(c.request.URL.RawQuery, &rq)
+	if err := form.Unmarshal(c.request.URL.RawQuery, &rq); err != nil {
+		err = fmt.Errorf("httpserve.Context.getRedirect(): error unmarshaling form: %v", err)
+		c.errorFn(err)
+		return
+	}
+
 	if redirectTo = rq.Redirect; len(redirectTo) == 0 {
 		return
 	}
@@ -290,7 +290,6 @@ func (c *Context) tryRedirect(statusCode int) (ok bool) {
 func (c *Context) redirect(statusCode int, destination string) {
 	c.writer.Header().Add("Location", destination)
 	c.setStatusCode(statusCode)
-	return
 }
 
 func (c *Context) close() {

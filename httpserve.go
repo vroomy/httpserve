@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/hatchify/errors"
-	"github.com/vroomy/common"
 )
 
 const (
@@ -33,7 +32,7 @@ var defaultConfig = Config{
 	MaxHeaderBytes: 16384,
 }
 
-var _ common.Group = &Serve{}
+var _ Group = &Serve{}
 
 // New will return a new instance of Serve
 func New() *Serve {
@@ -45,42 +44,42 @@ func New() *Serve {
 // Serve will serve HTTP requests
 type Serve struct {
 	s *http.Server
-	g group
+	g *group
 }
 
 // GET will set a GET endpoint
-func (s *Serve) GET(route string, hs ...common.Handler) {
-	s.g.GET(route, hs...)
+func (s *Serve) GET(route string, hs ...Handler) (err error) {
+	return s.g.GET(route, hs...)
 }
 
 // PUT will set a PUT endpoint
-func (s *Serve) PUT(route string, hs ...common.Handler) {
-	s.g.PUT(route, hs...)
+func (s *Serve) PUT(route string, hs ...Handler) (err error) {
+	return s.g.PUT(route, hs...)
 }
 
 // POST will set a POST endpoint
-func (s *Serve) POST(route string, hs ...common.Handler) {
-	s.g.POST(route, hs...)
+func (s *Serve) POST(route string, hs ...Handler) (err error) {
+	return s.g.POST(route, hs...)
 }
 
 // DELETE will set a DELETE endpoint
-func (s *Serve) DELETE(route string, hs ...common.Handler) {
-	s.g.DELETE(route, hs...)
+func (s *Serve) DELETE(route string, hs ...Handler) (err error) {
+	return s.g.DELETE(route, hs...)
 }
 
 // OPTIONS will set a OPTIONS endpoint
-func (s *Serve) OPTIONS(route string, hs ...common.Handler) {
-	s.g.OPTIONS(route, hs...)
-}
-
-// Group will return a new group for a given route and handlers
-func (s *Serve) Group(route string, hs ...common.Handler) common.Group {
-	return s.g.Group(route, hs...)
+func (s *Serve) OPTIONS(route string, hs ...Handler) (err error) {
+	return s.g.OPTIONS(route, hs...)
 }
 
 // Handle will create a route for any method
-func (s *Serve) Handle(method, route string, hs ...common.Handler) {
-	s.g.Handle(method, route, hs...)
+func (s *Serve) Handle(method, route string, hs ...Handler) (err error) {
+	return s.g.Handle(method, route, hs...)
+}
+
+// Group will return a new group for a given route and handlers
+func (s *Serve) Group(route string, hs ...Handler) Group {
+	return s.g.Group(route, hs...)
 }
 
 // Listen will listen on a given port
@@ -139,7 +138,7 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 }
 
 // Set404 will set the 404 handler
-func (s *Serve) Set404(h common.Handler) {
+func (s *Serve) Set404(h Handler) {
 	s.g.r.SetNotFound(h)
 }
 

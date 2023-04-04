@@ -3,16 +3,10 @@ package httpserve
 import (
 	"sync"
 	"testing"
-
-	"github.com/vroomy/common"
-)
-
-const (
-	noParamRoute = "/hello/world"
 )
 
 var (
-	handlerSink common.Handler
+	handlerSink Handler
 	paramsSink  Params
 
 	boolSink bool
@@ -22,25 +16,25 @@ func TestRouter(t *testing.T) {
 	var err error
 	cc := make(chan string, 4)
 	r := newRouter()
-	if err = r.GET(rootRoute, func(ctx common.Context) {
+	if err = r.GET(rootRoute, func(ctx *Context) {
 		cc <- "root"
 	}); err != nil {
 		t.Fatal(err)
 	}
 
-	if err = r.GET(smallRoute, func(ctx common.Context) {
+	if err = r.GET(smallRoute, func(ctx *Context) {
 		cc <- "small"
 	}); err != nil {
 		t.Fatal(err)
 	}
 
-	if err = r.GET(mediumRoute, func(ctx common.Context) {
+	if err = r.GET(mediumRoute, func(ctx *Context) {
 		cc <- "medium"
 	}); err != nil {
 		t.Fatal(err)
 	}
 
-	if err = r.GET(largeRoute, func(ctx common.Context) {
+	if err = r.GET(largeRoute, func(ctx *Context) {
 		cc <- "large"
 	}); err != nil {
 		t.Fatal(err)
@@ -49,6 +43,10 @@ func TestRouter(t *testing.T) {
 	fn, params, ok := r.Match("GET", rootRoute)
 	if !ok {
 		t.Fatal("expected match and none was found")
+	}
+
+	if len(params) > 0 {
+		t.Fatalf("unexpected params length, expected <0> and found <%d>", len(params))
 	}
 
 	fn(nil)
@@ -64,6 +62,10 @@ func TestRouter(t *testing.T) {
 
 	fn(nil)
 
+	if len(params) > 0 {
+		t.Fatalf("unexpected params length, expected <0> and received <%d>", len(params))
+	}
+
 	if val := <-cc; val != "small" {
 		t.Fatalf("invalid value, expected \"%s\" and received \"%s\"", val, "small")
 	}
@@ -74,6 +76,10 @@ func TestRouter(t *testing.T) {
 	}
 
 	fn(nil)
+
+	if len(params) > 0 {
+		t.Fatalf("unexpected params length, expected <0> and received <%d>", len(params))
+	}
 
 	if val := <-cc; val != "medium" {
 		t.Fatalf("invalid value, expected \"%s\" and received \"%s\"", val, "small")
@@ -99,19 +105,19 @@ func TestRouter_multi_level_handlers(t *testing.T) {
 	r := newRouter()
 	var wg sync.WaitGroup
 	wg.Add(4)
-	fn1 := func(ctx common.Context) {
+	fn1 := func(ctx *Context) {
 		wg.Done()
 	}
-	fn2 := func(ctx common.Context) {
+	fn2 := func(ctx *Context) {
 		wg.Done()
 	}
-	fn3 := func(ctx common.Context) {
+	fn3 := func(ctx *Context) {
 		wg.Done()
 	}
-	fn4 := func(ctx common.Context) {
+	fn4 := func(ctx *Context) {
 		wg.Done()
 	}
-	fn5 := func(ctx common.Context) {
+	fn5 := func(ctx *Context) {
 		t.Fatal("invalid handler called")
 	}
 
@@ -133,11 +139,11 @@ func TestRouterMatch(t *testing.T) {
 	var err error
 	cc := make(chan string, 4)
 	r := newRouter()
-	mediumH := func(ctx common.Context) {
+	mediumH := func(ctx *Context) {
 		cc <- "medium"
 	}
 
-	smallH := func(ctx common.Context) {
+	smallH := func(ctx *Context) {
 		cc <- "small"
 	}
 
@@ -163,9 +169,9 @@ func TestRouterMatch(t *testing.T) {
 
 func BenchmarkRouter_small(b *testing.B) {
 	r := newRouter()
-	r.GET(smallRoute, func(ctx common.Context) {})
-	r.GET(mediumRoute, func(ctx common.Context) {})
-	r.GET(largeRoute, func(ctx common.Context) {})
+	r.GET(smallRoute, func(ctx *Context) {})
+	r.GET(mediumRoute, func(ctx *Context) {})
+	r.GET(largeRoute, func(ctx *Context) {})
 
 	for i := 0; i < b.N; i++ {
 		handlerSink, paramsSink, boolSink = r.Match("GET", smallRouteNoParam)
@@ -176,9 +182,9 @@ func BenchmarkRouter_small(b *testing.B) {
 
 func BenchmarkRouter_medium(b *testing.B) {
 	r := newRouter()
-	r.GET(smallRoute, func(ctx common.Context) {})
-	r.GET(mediumRoute, func(ctx common.Context) {})
-	r.GET(largeRoute, func(ctx common.Context) {})
+	r.GET(smallRoute, func(ctx *Context) {})
+	r.GET(mediumRoute, func(ctx *Context) {})
+	r.GET(largeRoute, func(ctx *Context) {})
 
 	for i := 0; i < b.N; i++ {
 		handlerSink, paramsSink, boolSink = r.Match("GET", mediumRouteNoParam)
@@ -189,9 +195,9 @@ func BenchmarkRouter_medium(b *testing.B) {
 
 func BenchmarkRouter_large(b *testing.B) {
 	r := newRouter()
-	r.GET(smallRoute, func(ctx common.Context) {})
-	r.GET(mediumRoute, func(ctx common.Context) {})
-	r.GET(largeRoute, func(ctx common.Context) {})
+	r.GET(smallRoute, func(ctx *Context) {})
+	r.GET(mediumRoute, func(ctx *Context) {})
+	r.GET(largeRoute, func(ctx *Context) {})
 
 	for i := 0; i < b.N; i++ {
 		handlerSink, paramsSink, boolSink = r.Match("GET", largeRouteNoParam)
