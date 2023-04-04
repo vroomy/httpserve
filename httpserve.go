@@ -45,7 +45,7 @@ func New() *Serve {
 // Serve will serve HTTP requests
 type Serve struct {
 	s *http.Server
-	g *group
+	g group
 }
 
 // GET will set a GET endpoint
@@ -145,28 +145,19 @@ func (s *Serve) ListenAutoCertTLS(port uint16, ac AutoCertConfig) (err error) {
 
 // ListenAutoCertTLSWithConfig will listen using the TLS procol on a given port using configurations and the certificate being provided by LetsEncrypt
 func (s *Serve) ListenAutoCertTLSWithConfig(port uint16, ac AutoCertConfig, c Config) (err error) {
-	var cfg tls.Config
-	cfg.PreferServerCipherSuites = true
-	cfg.MinVersion = tls.VersionTLS12
-	cfg.RootCAs = x509.NewCertPool()
-	cfg.BuildNameToCertificate()
 	s.s = newHTTPServer(s.g.r, port, c)
 
 	m := &autocert.Manager{
 		Cache:      autocert.DirCache(ac.DirCache),
 		Prompt:     autocert.AcceptTOS,
-		Email:      ac.Email,
 		HostPolicy: autocert.HostWhitelist(ac.Hosts...),
 	}
 
-	s.s.TLSConfig = m.TLSConfig()
-
-	var l net.Listener
-	if l, err = tls.Listen("tcp", s.s.Addr, &cfg); err != nil {
-		return
-	}
-
-	return s.s.Serve(l)
+	cfg := m.TLSConfig()
+	cfg.PreferServerCipherSuites = true
+	cfg.MinVersion = tls.VersionTLS12
+	s.s.TLSConfig = cfg
+	return s.s.ListenAndServeTLS("", "")
 }
 
 // Set404 will set the 404 handler
