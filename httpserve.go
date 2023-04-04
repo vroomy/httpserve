@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/hatchify/errors"
+	"golang.org/x/crypto/acme/autocert"
 )
 
 const (
@@ -128,6 +129,37 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 	cfg.BuildNameToCertificate()
 	s.s = newHTTPServer(s.g.r, port, c)
 	s.s.TLSConfig = &cfg
+
+	var l net.Listener
+	if l, err = tls.Listen("tcp", s.s.Addr, &cfg); err != nil {
+		return
+	}
+
+	return s.s.Serve(l)
+}
+
+// ListenAutoCertTLS will listen using the TLS procol on a given port using the certificate being provided by LetsEncrypt
+func (s *Serve) ListenAutoCertTLS(port uint16, ac AutoCertConfig) (err error) {
+	return s.ListenAutoCertTLSWithConfig(port, ac, defaultConfig)
+}
+
+// ListenAutoCertTLSWithConfig will listen using the TLS procol on a given port using configurations and the certificate being provided by LetsEncrypt
+func (s *Serve) ListenAutoCertTLSWithConfig(port uint16, ac AutoCertConfig, c Config) (err error) {
+	var cfg tls.Config
+	cfg.PreferServerCipherSuites = true
+	cfg.MinVersion = tls.VersionTLS12
+	cfg.RootCAs = x509.NewCertPool()
+	cfg.BuildNameToCertificate()
+	s.s = newHTTPServer(s.g.r, port, c)
+
+	m := &autocert.Manager{
+		Cache:      autocert.DirCache(ac.DirCache),
+		Prompt:     autocert.AcceptTOS,
+		Email:      ac.Email,
+		HostPolicy: autocert.HostWhitelist(ac.Hosts...),
+	}
+
+	s.s.TLSConfig = m.TLSConfig()
 
 	var l net.Listener
 	if l, err = tls.Listen("tcp", s.s.Addr, &cfg); err != nil {
