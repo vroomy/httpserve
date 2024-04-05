@@ -150,7 +150,7 @@ func (s *Serve) ListenAutoCertTLSWithConfig(port uint16, ac AutoCertConfig, c Co
 	m := &autocert.Manager{
 		Cache:      autocert.DirCache(ac.DirCache),
 		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist(ac.Hosts...),
+		HostPolicy: ac.hostPolicy(),
 	}
 
 	cfg := m.TLSConfig()
