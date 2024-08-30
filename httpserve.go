@@ -175,7 +175,7 @@ func (s *Serve) SetOnError(fn func(error)) {
 
 // Close will close an instance of Serve
 func (s *Serve) Close() (err error) {
-	if s.http == nil || s.https == nil {
+	if s.http == nil && s.https == nil {
 		return ErrNotInitialized
 	}
 
