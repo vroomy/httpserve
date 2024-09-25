@@ -180,7 +180,13 @@ func (s *Serve) Close() (err error) {
 	}
 
 	var errs errors.ErrorList
-	errs.Push(s.http.Close())
-	errs.Push(s.https.Close())
+	if s.http != nil {
+		errs.Push(s.http.Close())
+	}
+
+	if s.https != nil {
+		errs.Push(s.https.Close())
+	}
+
 	return errs.Err()
 }
