@@ -13,8 +13,6 @@ import (
 )
 
 const (
-	// ErrNotInitialized is returned when an action is performed on an uninitialized instance of Serve
-	ErrNotInitialized = errors.Error("cannot perform action on uninitialized Serve")
 	// ErrInvalidWildcardRoute is returned when an invalid wildcard route is encountered
 	ErrInvalidWildcardRoute = errors.Error("wildcard routes cannot have any additional characters following the asterisk")
 	// ErrMissingLeadSlash is returned when a route does not begin with "/"
@@ -175,10 +173,6 @@ func (s *Serve) SetOnError(fn func(error)) {
 
 // Close will close an instance of Serve
 func (s *Serve) Close() (err error) {
-	if s.http == nil && s.https == nil {
-		return ErrNotInitialized
-	}
-
 	var errs errors.ErrorList
 	if s.http != nil {
 		errs.Push(s.http.Close())
