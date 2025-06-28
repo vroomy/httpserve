@@ -10,6 +10,8 @@ import (
 
 	"github.com/hatchify/errors"
 	"golang.org/x/crypto/acme/autocert"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 )
 
 const (
@@ -90,6 +92,14 @@ func (s *Serve) Listen(port uint16) (err error) {
 // ListenWithConfig will listen on a given port using the specified configuration
 func (s *Serve) ListenWithConfig(port uint16, c Config) (err error) {
 	s.http = newHTTPServer(s.g.r, port, c)
+
+	_, http2raw := os.LookupEnv("USE_HTTP2_RAW")
+
+	if http2raw {
+		h2s := &http2.Server{}
+		s.http.Handler = h2c.NewHandler(s.http.Handler, h2s)
+	}
+
 	var l net.Listener
 	if l, err = net.Listen("tcp", s.http.Addr); err != nil {
 		return
