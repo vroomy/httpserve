@@ -122,6 +122,9 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 		return
 	}
 
+	//Enable http2 as protocol option
+	cfg.NextProtos = []string{"h2", "http/1.1"}
+
 	cfg.MinVersion = tls.VersionTLS12
 	cfg.RootCAs = x509.NewCertPool()
 	s.https = newHTTPServer(s.g.r, port, c)
