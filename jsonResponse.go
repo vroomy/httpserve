@@ -41,10 +41,10 @@ func (j *JSONResponse) newValue() (value JSONValue, err error) {
 	switch v := j.val.(type) {
 	case error:
 		// Type is a single error value, create new error slice with error as only item
-		value.Errors.Push(v)
+		value.PushErrors(v)
 	case []error:
 		// Type is an error slice, set errors as the value
-		value.Errors.Copy(v)
+		value.PushErrors(v...)
 	default:
 		// Invalid error value, return error
 		err = fmt.Errorf("invalid type for an error response: %#v", v)

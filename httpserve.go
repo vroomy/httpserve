@@ -3,26 +3,26 @@ package httpserve
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"errors"
 	"net"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/hatchify/errors"
 	"golang.org/x/crypto/acme/autocert"
 )
 
-const (
+var (
 	// ErrInvalidWildcardRoute is returned when an invalid wildcard route is encountered
-	ErrInvalidWildcardRoute = errors.Error("wildcard routes cannot have any additional characters following the asterisk")
+	ErrInvalidWildcardRoute = errors.New("wildcard routes cannot have any additional characters following the asterisk")
 	// ErrMissingLeadSlash is returned when a route does not begin with "/"
-	ErrMissingLeadSlash = errors.Error("invalid route, needs to start with a forward slash")
+	ErrMissingLeadSlash = errors.New("invalid route, needs to start with a forward slash")
 	// ErrInvalidParamLocation is returned when a parameter follows a character other than "/"
-	ErrInvalidParamLocation = errors.Error("parameters can only directly follow a forward slash")
+	ErrInvalidParamLocation = errors.New("parameters can only directly follow a forward slash")
 	// ErrInvalidWildcardLocation is returned when a wildcard follows a character other than "/"
-	ErrInvalidWildcardLocation = errors.Error("wildcards can only directly follow a forward slash")
+	ErrInvalidWildcardLocation = errors.New("wildcards can only directly follow a forward slash")
 	// ErrContextIsClosed is returned when write actions are attempted on a closed context
-	ErrContextIsClosed = errors.Error("cannot perform write actions on a closed context")
+	ErrContextIsClosed = errors.New("cannot perform write actions on a closed context")
 )
 
 var defaultConfig = Config{
@@ -173,14 +173,14 @@ func (s *Serve) SetOnError(fn func(error)) {
 
 // Close will close an instance of Serve
 func (s *Serve) Close() (err error) {
-	var errs errors.ErrorList
+	var errs []error
 	if s.http != nil {
-		errs.Push(s.http.Close())
+		errs = append(errs, s.http.Close())
 	}
 
 	if s.https != nil {
-		errs.Push(s.https.Close())
+		errs = append(errs, s.https.Close())
 	}
 
-	return errs.Err()
+	return errors.Join(errs...)
 }
