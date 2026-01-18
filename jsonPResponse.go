@@ -37,10 +37,10 @@ func (j *JSONPResponse) newValue() (value JSONValue) {
 	switch v := j.val.(type) {
 	case error:
 		// Type is a single error value, create new error slice with error as only item
-		value.Errors.Push(v)
+		value.PushErrors(v)
 	case []error:
 		// Type is an error slice, set errors as the value
-		value.Errors.Copy(v)
+		value.PushErrors(v...)
 	default:
 		value.Data = j.val
 	}
