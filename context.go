@@ -1,27 +1,67 @@
 package httpserve
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
+	"sync"
 
 	"github.com/vroomy/httpserve/form"
 )
 
 const formContentType = "application/x-www-form-urlencoded"
 
-// newContext will initialize and return a new Context
+// bufPool pools byte buffers used for JSON decoding and encoding,
+// eliminating per-request allocations from json.NewDecoder / json.NewEncoder.
+var bufPool = sync.Pool{
+	New: func() interface{} { return new(bytes.Buffer) },
+}
+
+// ctxPool pools Context objects to avoid per-request heap allocation
+// of the Context struct, its Storage map, and its Params slice.
+var ctxPool = sync.Pool{
+	New: func() interface{} {
+		c := &Context{}
+		c.Params = make(Params, 0, 4)
+		return c
+	},
+}
+
+// acquireContext retrieves a Context from the pool and resets it for reuse.
+func acquireContext(w http.ResponseWriter, r *http.Request) *Context {
+	c := ctxPool.Get().(*Context)
+	c.writer = w
+	c.request = r
+	c.completed = false
+	c.statusCode = 0
+	c.errorFn = nil
+	// Clear storage without re-allocating the map.
+	for k := range c.s {
+		delete(c.s, k)
+	}
+	// Reset slices to zero length while keeping backing arrays.
+	c.hooks = c.hooks[:0]
+	c.Params = c.Params[:0]
+	return c
+}
+
+// releaseContext clears held references and returns the Context to the pool.
+func releaseContext(c *Context) {
+	c.writer = nil
+	c.request = nil
+	c.errorFn = nil
+	ctxPool.Put(c)
+}
+
+// newContext will initialize and return a new Context.
+// Kept for test compatibility; production code uses acquireContext/releaseContext.
 func newContext(w http.ResponseWriter, r *http.Request, p Params) *Context {
 	var c Context
-	// Initialize internal storage
-	c.s = make(Storage)
-	// Associate provided http.ResponseWriter
 	c.writer = w
-	// Associate provided *http.Request
 	c.request = r
-	// Associate provided httprouter.Params
 	c.Params = p
 	return &c
 }
@@ -30,9 +70,11 @@ func newContext(w http.ResponseWriter, r *http.Request, p Params) *Context {
 type Context struct {
 	errorFn func(error)
 
-	// Internal context storage, used by Context.Get and Context.Put
+	// Internal context storage, used by Context.Get and Context.Put.
+	// Lazily initialized on first Put to avoid allocation on requests that
+	// never use storage.
 	s Storage
-	// hooks are a list of hook functions added during the lifespam of the context
+	// hooks are a list of hook functions added during the lifespan of the context
 	hooks []Hook
 
 	// Whether or not the context has been completed
@@ -50,19 +92,29 @@ type Context struct {
 func (c *Context) Bind(value interface{}) (err error) {
 	defer c.request.Body.Close()
 	contentType := c.request.Header.Get("Content-Type")
-
-	switch {
-	case strings.Index(contentType, formContentType) == 0:
+	if strings.HasPrefix(contentType, formContentType) {
 		return form.NewDecoder(c.request.Body).Decode(value)
-	default:
-		return json.NewDecoder(c.request.Body).Decode(value)
 	}
+
+	buf := bufPool.Get().(*bytes.Buffer)
+	buf.Reset()
+	defer bufPool.Put(buf)
+	if _, err = buf.ReadFrom(c.request.Body); err != nil {
+		return
+	}
+	return json.Unmarshal(buf.Bytes(), value)
 }
 
 // BindJSON is a helper function which binds the request body to a provided value to be parsed as JSON
 func (c *Context) BindJSON(value interface{}) (err error) {
 	defer c.request.Body.Close()
-	return json.NewDecoder(c.request.Body).Decode(value)
+	buf := bufPool.Get().(*bytes.Buffer)
+	buf.Reset()
+	defer bufPool.Put(buf)
+	if _, err = buf.ReadFrom(c.request.Body); err != nil {
+		return
+	}
+	return json.Unmarshal(buf.Bytes(), value)
 }
 
 // BindForm is a helper function which binds the request body to a provided value to be parsed as an HTML form
@@ -83,11 +135,15 @@ func (c *Context) Param(key string) (value string) {
 
 // Get will retrieve a value for a provided key from the Context's internal storage
 func (c *Context) Get(key string) (value string) {
+	// nil map reads are safe in Go and return the zero value
 	return c.s[key]
 }
 
 // Put will set a value for a provided key into the Context's internal storage
 func (c *Context) Put(key, value string) {
+	if c.s == nil {
+		c.s = make(Storage)
+	}
 	c.s[key] = value
 }
 
@@ -168,15 +224,22 @@ func (c *Context) WriteJSON(statusCode int, value interface{}) {
 		return
 	}
 
+	// Encode into pooled buffer first so we don't commit headers if encoding fails.
+	buf := bufPool.Get().(*bytes.Buffer)
+	buf.Reset()
+	defer bufPool.Put(buf)
+	if err = json.NewEncoder(buf).Encode(resp); err != nil {
+		c.errorFn(err)
+		return
+	}
+
 	// Set content type
 	c.setContentType("application/json")
 	// Set status code
 	c.setStatusCode(statusCode)
 
-	// Encode value as JSON
-	if err = json.NewEncoder(c.writer).Encode(resp); err != nil {
+	if _, err = buf.WriteTo(c.writer); err != nil {
 		c.errorFn(err)
-		return
 	}
 }
 
@@ -196,8 +259,7 @@ func (c *Context) WriteNoContent() {
 	c.setStatusCode(204)
 }
 
-// Redirect will redirect the client to the provided destinatoin
-
+// Redirect will redirect the client to the provided destination
 func (c *Context) Redirect(statusCode int, destination string) {
 	if c.completed {
 		c.errorFn(ErrContextIsClosed)
