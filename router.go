@@ -66,6 +66,25 @@ func (r *Router) Match(method, url string) (h Handler, p Params, ok bool) {
 	return
 }
 
+// match is the hot-path route matcher used by ServeHTTP. It fills the provided
+// Params slice in-place (from the pooled Context) instead of allocating a new
+// one, eliminating a per-request heap allocation.
+func (r *Router) match(method, url string, p *Params) (h Handler) {
+	rs, ok := r.rm[method]
+	if !ok {
+		return r.notFound
+	}
+
+	for _, rt := range rs {
+		if *p, ok = rt.check(*p, url); ok {
+			return rt.h
+		}
+		*p = (*p)[:0]
+	}
+
+	return r.notFound
+}
+
 // SetNotFound will set the not found handler (404)
 func (r *Router) SetNotFound(hs ...Handler) {
 	r.notFound = newHandler(hs)
@@ -123,19 +142,17 @@ func (r *Router) OPTIONS(url string, h Handler) error {
 }
 
 func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	h, params, ok := r.Match(req.Method, req.URL.Path)
-	if !ok {
-		h = r.notFound
-	}
-
-	ctx := newContext(rw, req, params)
+	ctx := acquireContext(rw, req)
 	ctx.errorFn = r.onError
+
+	h := r.match(req.Method, req.URL.Path, &ctx.Params)
 
 	defer func() {
 		if p := recover(); p != nil && r.panic != nil {
 			rw.WriteHeader(500)
 			r.panic(p)
 		}
+		releaseContext(ctx)
 	}()
 
 	h(ctx)
