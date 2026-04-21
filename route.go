@@ -71,5 +71,3 @@ func (r *route) check(p Params, url string) (out Params, ok bool) {
 }
 
 type routes []*route
-
-type routesMap map[string]routes

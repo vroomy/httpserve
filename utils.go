@@ -26,7 +26,9 @@ func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 	srv.Addr = fmt.Sprintf(":%d", port)
 	srv.ReadTimeout = c.ReadTimeout
 	srv.WriteTimeout = c.WriteTimeout
+	srv.IdleTimeout = c.IdleTimeout
 	srv.MaxHeaderBytes = c.MaxHeaderBytes
+	srv.DisableGeneralOptionsHandler = true
 	return &srv
 }
 
@@ -88,17 +90,11 @@ func isPartMatch(url, part string) (match bool) {
 	return len(remaining) == 0 || remaining[0] == '/'
 }
 
-func shiftStr(str string, n int) (out string) {
-	switch {
-	case len(str) >= n:
-		return str[n:]
-	case len(str) >= n:
-		return str[n:]
-
-	default:
+func shiftStr(str string, n int) string {
+	if n > len(str) {
 		return str
-
 	}
+	return str[n:]
 }
 
 func notFoundHandler(ctx *Context) {
