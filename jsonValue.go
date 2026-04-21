@@ -1,17 +1,18 @@
 package httpserve
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+
+	"github.com/bytedance/sonic"
 )
 
 // DecodeJSONValue will decode a JSON value
 func DecodeJSONValue(r io.Reader, val interface{}) (err error) {
 	var jv JSONValue
 	jv.Data = val
-	dec := json.NewDecoder(r)
+	dec := sonic.ConfigDefault.NewDecoder(r)
 	if err = dec.Decode(&jv); err != nil {
 		return
 	}
@@ -23,7 +24,7 @@ func DecodeJSONValue(r io.Reader, val interface{}) (err error) {
 func UnmarshalJSONValue(bs []byte, val interface{}) (err error) {
 	var jv JSONValue
 	jv.Data = val
-	if err = json.Unmarshal(bs, &jv); err != nil {
+	if err = sonic.Unmarshal(bs, &jv); err != nil {
 		return
 	}
 

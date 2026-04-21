@@ -2,20 +2,20 @@ package httpserve
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"sync"
 
+	"github.com/bytedance/sonic"
 	"github.com/vroomy/httpserve/form"
 )
 
 const formContentType = "application/x-www-form-urlencoded"
 
 // bufPool pools byte buffers used for JSON decoding and encoding,
-// eliminating per-request allocations from json.NewDecoder / json.NewEncoder.
+// eliminating per-request allocations from json.NewDecoder / sonic.ConfigDefault.NewEncoder.
 var bufPool = sync.Pool{
 	New: func() interface{} { return new(bytes.Buffer) },
 }
@@ -102,7 +102,7 @@ func (c *Context) Bind(value interface{}) (err error) {
 	if _, err = buf.ReadFrom(c.request.Body); err != nil {
 		return
 	}
-	return json.Unmarshal(buf.Bytes(), value)
+	return sonic.Unmarshal(buf.Bytes(), value)
 }
 
 // BindJSON is a helper function which binds the request body to a provided value to be parsed as JSON
@@ -114,7 +114,7 @@ func (c *Context) BindJSON(value interface{}) (err error) {
 	if _, err = buf.ReadFrom(c.request.Body); err != nil {
 		return
 	}
-	return json.Unmarshal(buf.Bytes(), value)
+	return sonic.Unmarshal(buf.Bytes(), value)
 }
 
 // BindForm is a helper function which binds the request body to a provided value to be parsed as an HTML form
@@ -228,7 +228,7 @@ func (c *Context) WriteJSON(statusCode int, value interface{}) {
 	buf := bufPool.Get().(*bytes.Buffer)
 	buf.Reset()
 	defer bufPool.Put(buf)
-	if err = json.NewEncoder(buf).Encode(resp); err != nil {
+	if err = sonic.ConfigDefault.NewEncoder(buf).Encode(resp); err != nil {
 		c.errorFn(err)
 		return
 	}
@@ -319,7 +319,8 @@ func (c *Context) getRedirect(statusCode int) (redirectTo string, ok bool) {
 	}
 
 	accept := c.request.Header.Get("Accept")
-	firstAccept := strings.SplitN(accept, ",", 2)[0]
+	// zero allocation, returns sub-slice of original string
+	firstAccept, _, _ := strings.Cut(accept, ",")
 	if firstAccept != "text/html" {
 		return
 	}
