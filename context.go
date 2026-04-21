@@ -292,9 +292,6 @@ func (c *Context) processHandlers(hs []Handler) {
 }
 
 func (c *Context) processHooks() {
-	if len(c.hooks) == 0 {
-		return
-	}
 	for i := len(c.hooks) - 1; i > -1; i-- {
 		c.hooks[i](c.statusCode, c)
 	}

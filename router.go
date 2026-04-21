@@ -11,39 +11,6 @@ const (
 	forwardSlash = "/"
 )
 
-// methodIndex maps HTTP method strings to a compact array index,
-// replacing the map[string]routes lookup with a direct array access.
-type methodIndex uint8
-
-const (
-	mGET     methodIndex = iota // 0
-	mHEAD                       // 1
-	mPOST                       // 2
-	mPUT                        // 3
-	mDELETE                     // 4
-	mOPTIONS                    // 5
-	numMethods = 6
-)
-
-func methodToIndex(m string) (methodIndex, bool) {
-	switch m {
-	case http.MethodGet:
-		return mGET, true
-	case http.MethodHead:
-		return mHEAD, true
-	case http.MethodPost:
-		return mPOST, true
-	case http.MethodPut:
-		return mPUT, true
-	case http.MethodDelete:
-		return mDELETE, true
-	case http.MethodOptions:
-		return mOPTIONS, true
-	default:
-		return 0, false
-	}
-}
-
 func newRouter() *Router {
 	var r Router
 	r.SetNotFound(notFoundHandler)
@@ -79,8 +46,8 @@ func (r *Router) onError(err error) {
 
 // Match will check a url for a matching Handler, and return any associated handler and its parameters
 func (r *Router) Match(method, url string) (h Handler, p Params, ok bool) {
-	idx, valid := methodToIndex(method)
-	if !valid {
+	idx := methodToIndex(method)
+	if idx == methodUnknown {
 		h = r.notFound
 		return
 	}
@@ -103,8 +70,8 @@ func (r *Router) Match(method, url string) (h Handler, p Params, ok bool) {
 // Params slice in-place (from the pooled Context) instead of allocating a new
 // one, eliminating a per-request heap allocation.
 func (r *Router) match(method, url string, p *Params) Handler {
-	idx, valid := methodToIndex(method)
-	if !valid {
+	idx := methodToIndex(method)
+	if idx == methodUnknown {
 		return r.notFound
 	}
 
@@ -135,8 +102,8 @@ func (r *Router) SetOnError(onError func(error)) {
 
 // Handle will create a route for any method
 func (r *Router) Handle(method, url string, h Handler) (err error) {
-	idx, valid := methodToIndex(method)
-	if !valid {
+	idx := methodToIndex(method)
+	if idx == methodUnknown {
 		return fmt.Errorf("unsupported HTTP method: %s", method)
 	}
 
