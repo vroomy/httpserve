@@ -152,12 +152,14 @@ func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	h := r.match(req.Method, req.URL.Path, &ctx.Params)
 
 	// panicked starts true; set to false on clean exit so the deferred
-	// recovery only calls recover() when an actual panic occurred,
-	// avoiding the closure allocation cost on every normal request.
+	// recovery only fires when an actual panic occurred.
 	panicked := true
 	defer func() {
-		if panicked && r.panic != nil {
-			r.panic(recover())
+		if panicked {
+			v := recover()
+			if r.panic != nil {
+				r.panic(v)
+			}
 			rw.WriteHeader(500)
 		}
 		releaseContext(ctx)
