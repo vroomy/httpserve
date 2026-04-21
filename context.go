@@ -95,26 +95,14 @@ func (c *Context) Bind(value interface{}) (err error) {
 	if strings.HasPrefix(contentType, formContentType) {
 		return form.NewDecoder(c.request.Body).Decode(value)
 	}
-
-	buf := bufPool.Get().(*bytes.Buffer)
-	buf.Reset()
-	defer bufPool.Put(buf)
-	if _, err = buf.ReadFrom(c.request.Body); err != nil {
-		return
-	}
-	return sonic.Unmarshal(buf.Bytes(), value)
+	// Stream directly from body — no intermediate buffer or pool operations.
+	return sonic.ConfigDefault.NewDecoder(c.request.Body).Decode(value)
 }
 
 // BindJSON is a helper function which binds the request body to a provided value to be parsed as JSON
 func (c *Context) BindJSON(value interface{}) (err error) {
 	defer c.request.Body.Close()
-	buf := bufPool.Get().(*bytes.Buffer)
-	buf.Reset()
-	defer bufPool.Put(buf)
-	if _, err = buf.ReadFrom(c.request.Body); err != nil {
-		return
-	}
-	return sonic.Unmarshal(buf.Bytes(), value)
+	return sonic.ConfigDefault.NewDecoder(c.request.Body).Decode(value)
 }
 
 // BindForm is a helper function which binds the request body to a provided value to be parsed as an HTML form
@@ -304,6 +292,9 @@ func (c *Context) processHandlers(hs []Handler) {
 }
 
 func (c *Context) processHooks() {
+	if len(c.hooks) == 0 {
+		return
+	}
 	for i := len(c.hooks) - 1; i > -1; i-- {
 		c.hooks[i](c.statusCode, c)
 	}

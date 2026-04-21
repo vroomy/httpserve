@@ -28,9 +28,10 @@ var (
 )
 
 var defaultConfig = Config{
-	ReadTimeout:    5 * time.Minute,
-	WriteTimeout:   5 * time.Minute,
-	MaxHeaderBytes: 16384,
+	ReadTimeout:    30 * time.Second,
+	WriteTimeout:   30 * time.Second,
+	IdleTimeout:    90 * time.Second,
+	MaxHeaderBytes: 4096,
 }
 
 var _ Group = &Serve{}

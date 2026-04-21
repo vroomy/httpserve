@@ -11,9 +11,41 @@ const (
 	forwardSlash = "/"
 )
 
+// methodIndex maps HTTP method strings to a compact array index,
+// replacing the map[string]routes lookup with a direct array access.
+type methodIndex uint8
+
+const (
+	mGET     methodIndex = iota // 0
+	mHEAD                       // 1
+	mPOST                       // 2
+	mPUT                        // 3
+	mDELETE                     // 4
+	mOPTIONS                    // 5
+	numMethods = 6
+)
+
+func methodToIndex(m string) (methodIndex, bool) {
+	switch m {
+	case http.MethodGet:
+		return mGET, true
+	case http.MethodHead:
+		return mHEAD, true
+	case http.MethodPost:
+		return mPOST, true
+	case http.MethodPut:
+		return mPUT, true
+	case http.MethodDelete:
+		return mDELETE, true
+	case http.MethodOptions:
+		return mOPTIONS, true
+	default:
+		return 0, false
+	}
+}
+
 func newRouter() *Router {
 	var r Router
-	r.rm = make(routesMap, 3)
 	r.SetNotFound(notFoundHandler)
 	r.SetPanic(r.onPanic)
 	return &r
@@ -21,7 +53,8 @@ func newRouter() *Router {
 
 // Router handles routes
 type Router struct {
-	rm routesMap
+	// rm is indexed by methodIndex for O(1) array access instead of map hashing.
+	rm [numMethods]routes
 
 	notFound Handler
 	panic    PanicHandler
@@ -46,22 +79,22 @@ func (r *Router) onError(err error) {
 
 // Match will check a url for a matching Handler, and return any associated handler and its parameters
 func (r *Router) Match(method, url string) (h Handler, p Params, ok bool) {
-	var rs routes
-	if rs, ok = r.rm[method]; !ok {
+	idx, valid := methodToIndex(method)
+	if !valid {
+		h = r.notFound
 		return
 	}
 
+	rs := r.rm[idx]
 	p = make(Params, 0, r.maxParams)
 	for _, rt := range rs {
 		if p, ok = rt.check(p, url); ok {
 			h = rt.h
 			return
 		}
-
 		p = p[:0]
 	}
 
-	// No match was found, set handler as our not found handler
 	h = r.notFound
 	return
 }
@@ -69,13 +102,14 @@ func (r *Router) Match(method, url string) (h Handler, p Params, ok bool) {
 // match is the hot-path route matcher used by ServeHTTP. It fills the provided
 // Params slice in-place (from the pooled Context) instead of allocating a new
 // one, eliminating a per-request heap allocation.
-func (r *Router) match(method, url string, p *Params) (h Handler) {
-	rs, ok := r.rm[method]
-	if !ok {
+func (r *Router) match(method, url string, p *Params) Handler {
+	idx, valid := methodToIndex(method)
+	if !valid {
 		return r.notFound
 	}
 
-	for _, rt := range rs {
+	var ok bool
+	for _, rt := range r.rm[idx] {
 		if *p, ok = rt.check(*p, url); ok {
 			return rt.h
 		}
@@ -101,18 +135,21 @@ func (r *Router) SetOnError(onError func(error)) {
 
 // Handle will create a route for any method
 func (r *Router) Handle(method, url string, h Handler) (err error) {
-	var route *route
-	if route, err = newRoute(url, h, method); err != nil {
+	idx, valid := methodToIndex(method)
+	if !valid {
+		return fmt.Errorf("unsupported HTTP method: %s", method)
+	}
+
+	var rt *route
+	if rt, err = newRoute(url, h, method); err != nil {
 		return fmt.Errorf("error creating route for [%s] \"%s\": %v", method, url, err)
 	}
 
-	if n := route.numParams(); n > r.maxParams {
+	if n := rt.numParams(); n > r.maxParams {
 		r.maxParams = n
 	}
 
-	rs := r.rm[method]
-	rs = append(rs, route)
-	r.rm[method] = rs
+	r.rm[idx] = append(r.rm[idx], rt)
 	return
 }
 
@@ -147,13 +184,18 @@ func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 	h := r.match(req.Method, req.URL.Path, &ctx.Params)
 
+	// panicked starts true; set to false on clean exit so the deferred
+	// recovery only calls recover() when an actual panic occurred,
+	// avoiding the closure allocation cost on every normal request.
+	panicked := true
 	defer func() {
-		if p := recover(); p != nil && r.panic != nil {
+		if panicked && r.panic != nil {
+			r.panic(recover())
 			rw.WriteHeader(500)
-			r.panic(p)
 		}
 		releaseContext(ctx)
 	}()
 
 	h(ctx)
+	panicked = false
 }
