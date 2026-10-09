@@ -18,7 +18,7 @@ func newGroup(r *Router, route string, hs ...Handler) *group {
 	var g group
 	g.r = r
 	g.route = route
-	g.hs = hs
+	g.hs = append([]Handler{}, hs...)
 	return &g
 }
 
@@ -35,10 +35,7 @@ func (g *group) GET(route string, hs ...Handler) (err error) {
 		route = path.Join(g.route, route)
 	}
 
-	if len(g.hs) > 0 {
-		ghs := append([]Handler{}, g.hs...)
-		hs = append(ghs, hs...)
-	}
+	hs = append(append([]Handler{}, g.hs...), hs...)
 
 	return g.r.GET(route, newHandler(hs))
 }
@@ -49,9 +46,7 @@ func (g *group) PUT(route string, hs ...Handler) (err error) {
 		route = path.Join(g.route, route)
 	}
 
-	if len(g.hs) > 0 {
-		hs = append(g.hs, hs...)
-	}
+	hs = append(append([]Handler{}, g.hs...), hs...)
 
 	return g.r.PUT(route, newHandler(hs))
 }
@@ -62,9 +57,7 @@ func (g *group) POST(route string, hs ...Handler) (err error) {
 		route = path.Join(g.route, route)
 	}
 
-	if len(g.hs) > 0 {
-		hs = append(g.hs, hs...)
-	}
+	hs = append(append([]Handler{}, g.hs...), hs...)
 
 	return g.r.POST(route, newHandler(hs))
 }
@@ -75,9 +68,7 @@ func (g *group) DELETE(route string, hs ...Handler) (err error) {
 		route = path.Join(g.route, route)
 	}
 
-	if len(g.hs) > 0 {
-		hs = append(g.hs, hs...)
-	}
+	hs = append(append([]Handler{}, g.hs...), hs...)
 
 	return g.r.DELETE(route, newHandler(hs))
 }
@@ -88,9 +79,7 @@ func (g *group) OPTIONS(route string, hs ...Handler) (err error) {
 		route = path.Join(g.route, route)
 	}
 
-	if len(g.hs) > 0 {
-		hs = append(g.hs, hs...)
-	}
+	hs = append(append([]Handler{}, g.hs...), hs...)
 
 	return g.r.OPTIONS(route, newHandler(hs))
 }
@@ -101,9 +90,7 @@ func (g *group) Handle(method, route string, hs ...Handler) (err error) {
 		route = path.Join(g.route, route)
 	}
 
-	if len(g.hs) > 0 {
-		hs = append(g.hs, hs...)
-	}
+	hs = append(append([]Handler{}, g.hs...), hs...)
 
 	return g.r.Handle(method, route, newHandler(hs))
 }
@@ -114,9 +101,7 @@ func (g *group) Group(route string, hs ...Handler) Group {
 		route = path.Join(g.route, route)
 	}
 
-	if len(g.hs) > 0 {
-		hs = append(g.hs, hs...)
-	}
+	hs = append(append([]Handler{}, g.hs...), hs...)
 
 	return newGroup(g.r, route, hs...)
 }

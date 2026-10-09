@@ -62,8 +62,8 @@ func TestRouter(t *testing.T) {
 
 	fn(nil)
 
-	if len(params) > 0 {
-		t.Fatalf("unexpected params length, expected <0> and received <%d>", len(params))
+	if len(params) != 1 || params.ByName("name") != "name" {
+		t.Fatalf("small route parameters = %v, want name=name", params)
 	}
 
 	if val := <-cc; val != "small" {
@@ -77,8 +77,8 @@ func TestRouter(t *testing.T) {
 
 	fn(nil)
 
-	if len(params) > 0 {
-		t.Fatalf("unexpected params length, expected <0> and received <%d>", len(params))
+	if len(params) != 2 || params.ByName("name") != "name" || params.ByName("age") != "age" {
+		t.Fatalf("medium route parameters = %v, want name=name and age=age", params)
 	}
 
 	if val := <-cc; val != "medium" {
@@ -96,7 +96,7 @@ func TestRouter(t *testing.T) {
 		t.Fatalf("invalid value, expected \"%s\" and received \"%s\"", val, "small")
 	}
 
-	if params.ByName("name") != "name" {
+	if len(params) != 3 || params.ByName("name") != "name" || params.ByName("age") != "age" || params.ByName("occupation") != "occupation" {
 		t.Fatalf("invalid value, expected \"%s\" and received \"%s\"", "name", params.ByName("name"))
 	}
 }
