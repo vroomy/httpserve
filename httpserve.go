@@ -4,9 +4,11 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
+	"fmt"
 	"net"
 	"net/http"
 	"os"
+	"sync"
 	"time"
 
 	"golang.org/x/crypto/acme/autocert"
@@ -45,9 +47,11 @@ func New() *Serve {
 
 // Serve will serve HTTP requests
 type Serve struct {
-	http  *http.Server
-	https *http.Server
-	g     group
+	mu     sync.Mutex
+	closed bool
+	http   *http.Server
+	https  *http.Server
+	g      group
 }
 
 // GET will set a GET endpoint
@@ -92,21 +96,12 @@ func (s *Serve) Listen(port uint16) (err error) {
 
 // ListenWithConfig will listen on a given port using the specified configuration
 func (s *Serve) ListenWithConfig(port uint16, c Config) (err error) {
-	s.http = newHTTPServer(s.g.r, port, c)
-
-	_, http2raw := os.LookupEnv("USE_HTTP2_RAW")
-
-	if http2raw {
-		h2s := &http2.Server{}
-		s.http.Handler = h2c.NewHandler(s.http.Handler, h2s)
+	server := newHTTPServer(s.g.r, port, c)
+	if _, enabled := os.LookupEnv("USE_HTTP2_RAW"); enabled {
+		server.Handler = h2c.NewHandler(server.Handler, &http2.Server{})
 	}
 
-	var l net.Listener
-	if l, err = net.Listen("tcp", s.http.Addr); err != nil {
-		return
-	}
-
-	return s.http.Serve(l)
+	return s.listenServer(server, false)
 }
 
 // ListenTLS will listen using the TLS procol on a given port
@@ -138,15 +133,9 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 
 	cfg.MinVersion = tls.VersionTLS12
 	cfg.RootCAs = x509.NewCertPool()
-	s.https = newHTTPServer(s.g.r, port, c)
-	s.https.TLSConfig = &cfg
-
-	var l net.Listener
-	if l, err = tls.Listen("tcp", s.https.Addr, &cfg); err != nil {
-		return
-	}
-
-	return s.https.Serve(l)
+	server := newHTTPServer(s.g.r, port, c)
+	server.TLSConfig = &cfg
+	return s.listenServer(server, true)
 }
 
 // ListenAutoCertTLS will listen using the TLS procol on a given port using the certificate being provided by LetsEncrypt
@@ -156,7 +145,7 @@ func (s *Serve) ListenAutoCertTLS(port uint16, ac AutoCertConfig) (err error) {
 
 // ListenAutoCertTLSWithConfig will listen using the TLS procol on a given port using configurations and the certificate being provided by LetsEncrypt
 func (s *Serve) ListenAutoCertTLSWithConfig(port uint16, ac AutoCertConfig, c Config) (err error) {
-	s.https = newHTTPServer(s.g.r, port, c)
+	server := newHTTPServer(s.g.r, port, c)
 
 	m := &autocert.Manager{
 		Cache:      autocert.DirCache(ac.DirCache),
@@ -166,8 +155,8 @@ func (s *Serve) ListenAutoCertTLSWithConfig(port uint16, ac AutoCertConfig, c Co
 
 	cfg := m.TLSConfig()
 	cfg.MinVersion = tls.VersionTLS12
-	s.https.TLSConfig = cfg
-	return s.https.ListenAndServeTLS("", "")
+	server.TLSConfig = cfg
+	return s.listenServer(server, true)
 }
 
 // Set404 will set the 404 handler
@@ -185,16 +174,54 @@ func (s *Serve) SetOnError(fn func(error)) {
 	s.g.r.SetOnError(fn)
 }
 
-// Close will close an instance of Serve
-func (s *Serve) Close() (err error) {
+// Close closes both servers and prevents listeners from starting afterward.
+func (s *Serve) Close() error {
+	s.mu.Lock()
+	s.closed = true
+	httpServer, httpsServer := s.http, s.https
+	s.mu.Unlock()
+
 	var errs []error
-	if s.http != nil {
-		errs = append(errs, s.http.Close())
+	if httpServer != nil {
+		errs = append(errs, httpServer.Close())
 	}
 
-	if s.https != nil {
-		errs = append(errs, s.https.Close())
+	if httpsServer != nil {
+		errs = append(errs, httpsServer.Close())
 	}
 
 	return errors.Join(errs...)
+}
+
+// listenServer publishes server ownership before binding and serving. Close and
+// startup synchronize on mu; http.Server handles Close racing with Serve.
+func (s *Serve) listenServer(server *http.Server, secure bool) error {
+	s.mu.Lock()
+	if s.closed {
+		s.mu.Unlock()
+		return http.ErrServerClosed
+	}
+
+	destination := &s.http
+	if secure {
+		destination = &s.https
+	}
+
+	if *destination != nil {
+		s.mu.Unlock()
+		return fmt.Errorf("listener already started for %s", server.Addr)
+	}
+
+	*destination = server
+	listener, err := net.Listen("tcp", server.Addr)
+	s.mu.Unlock()
+	if err != nil {
+		return fmt.Errorf("listen on %s: %w", server.Addr, err)
+	}
+
+	if secure {
+		return server.ServeTLS(listener, "", "")
+	}
+
+	return server.Serve(listener)
 }

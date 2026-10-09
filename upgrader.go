@@ -54,3 +54,8 @@ func (u *Upgrader) upgradeConn(ctx *Context) {
 func (u *Upgrader) Listen(port uint16) (err error) {
 	return u.s.Listen(port)
 }
+
+// Close releases the redirect listener and prevents subsequent startup.
+func (u *Upgrader) Close() error {
+	return u.s.Close()
+}
