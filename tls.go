@@ -29,13 +29,16 @@ func (t tlsCerts) get(name string) (tc *tlsCert) {
 	return
 }
 func (t tlsCerts) walk(path string, info os.FileInfo, ierr error) (err error) {
+	if ierr != nil {
+		return ierr
+	}
+
 	if info.IsDir() {
 		return
 	}
 
-	end := len(path) - 4
-	name := path[:end]
-	ext := path[end:]
+	ext := filepath.Ext(path)
+	name := path[:len(path)-len(ext)]
 
 	switch ext {
 	case ".crt":
