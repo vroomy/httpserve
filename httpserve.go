@@ -193,13 +193,30 @@ func (s *Serve) Close() error {
 	return errors.Join(errs...)
 }
 
-// listenServer publishes server ownership before binding and serving. Close and
-// startup synchronize on mu; http.Server handles Close racing with Serve.
 func (s *Serve) listenServer(server *http.Server, secure bool) error {
+	var (
+		listener net.Listener
+		err      error
+	)
+	if listener, err = s.openListener(server, secure); err != nil {
+		return err
+	}
+
+	if secure {
+		return server.ServeTLS(listener, "", "")
+	}
+
+	return server.Serve(listener)
+}
+
+// openListener publishes server ownership and binds under the startup/Close lock.
+// Serving begins after the lock is released; http.Server handles Close racing with Serve.
+func (s *Serve) openListener(server *http.Server, secure bool) (net.Listener, error) {
 	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	if s.closed {
-		s.mu.Unlock()
-		return http.ErrServerClosed
+		return nil, http.ErrServerClosed
 	}
 
 	destination := &s.http
@@ -208,20 +225,17 @@ func (s *Serve) listenServer(server *http.Server, secure bool) error {
 	}
 
 	if *destination != nil {
-		s.mu.Unlock()
-		return fmt.Errorf("listener already started for %s", server.Addr)
+		return nil, fmt.Errorf("listener already started for %s", server.Addr)
 	}
 
 	*destination = server
-	listener, err := net.Listen("tcp", server.Addr)
-	s.mu.Unlock()
-	if err != nil {
-		return fmt.Errorf("listen on %s: %w", server.Addr, err)
+	var (
+		listener net.Listener
+		err      error
+	)
+	if listener, err = net.Listen("tcp", server.Addr); err != nil {
+		return nil, fmt.Errorf("listen on %s: %w", server.Addr, err)
 	}
 
-	if secure {
-		return server.ServeTLS(listener, "", "")
-	}
-
-	return server.Serve(listener)
+	return listener, nil
 }
