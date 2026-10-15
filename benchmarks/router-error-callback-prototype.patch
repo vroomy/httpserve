@@ -1,0 +1,22 @@
+--- a/router.go
++++ b/router.go
+@@ -157,7 +157,10 @@
+ 
+ func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+ 	ctx := acquireContext(rw, req)
+-	ctx.errorFn = r.onError
++	ctx.errorFn = r.errorFn
++	if ctx.errorFn == nil {
++		ctx.errorFn = defaultRouterError
++	}
+ 
+ 	h := r.match(req.Method, req.URL.Path, &ctx.Params)
+ 
+@@ -178,3 +181,7 @@
+ 	h(ctx)
+ 	panicked = false
+ }
++
++func defaultRouterError(err error) {
++	log.Println("Error encountered:", err)
++}

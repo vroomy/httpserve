@@ -33,14 +33,42 @@ zero allocations in the routing benchmarks; cold pools, response generation,
 and application work can still allocate.
 
 ## Benchmarks
+
 For reproducible router comparisons across short (9-byte), medium (39-byte), and
 long (172-byte) URLs, see [the router benchmark guide](benchmarks/README.md).
 It includes list-versus-trie and standard-library comparisons, route-count and
 hit/miss coverage, allocation measurements, and commands for comparing
 implementations with `benchstat`.
 
-### Routing
-Historical routing results:
+### Standard library comparison
+
+Median dispatch times for HTTPServe's trie and Go's `http.ServeMux`, each with
+40 GET routes and one named parameter per route:
+
+| URL fixture | `http.ServeMux` | HTTPServe | HTTPServe speedup |
+| --- | ---: | ---: | ---: |
+| Common (19 bytes): `/api/users/00000000` | 129.90 ns/op | 47.32 ns/op | **2.75×** |
+| Short (9 bytes) | 99.52 ns/op | 58.31 ns/op | **1.71×** |
+| Medium (39 bytes) | 224.95 ns/op | 58.00 ns/op | **3.88×** |
+| Long (172 bytes) | 645.45 ns/op | 58.84 ns/op | **10.97×** |
+
+Across all four fixtures, HTTPServe used **0 B/op and 0 allocations/op**;
+`http.ServeMux` used **16 B/op and 1 allocation/op**.
+
+Measured on 2026-10-15 with Go 1.26.5 (`darwin/arm64`) on Apple M3, using one CPU
+and ten one-second samples per case. All timing differences were statistically
+significant in `benchstat` (`p < 0.001`). These are warmed successful-route
+benchmarks that include native parameter lookup and a minimal handler, excluding
+request construction, network I/O, and application work. They do not measure
+end-to-end HTTP throughput or compare all routing semantics.
+
+See the [benchmark source](router_stdlib_benchmark_test.go),
+[raw samples](benchmarks/router-stdlib-allocations.txt), and
+[statistical comparison](benchmarks/router-stdlib-allocations-comparison.txt).
+The [benchmark guide](benchmarks/README.md#after-allocation-improvements-2026-10-15)
+includes the reproduction command and fixture details.
+
+### Historical routing results
 
 ```
 # httpserve's router

@@ -1,0 +1,33 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/Static/ServeHTTP         	 3321741	        34.17 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Static/ServeHTTP         	 3518228	        34.12 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Static/ServeHTTP         	 3392341	        34.04 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/ServeHTTP          	 2760696	        44.00 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/ServeHTTP          	 2724318	        43.65 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/ServeHTTP          	 2721661	        44.07 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Wildcard/ServeHTTP       	 2549181	        48.18 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Wildcard/ServeHTTP       	 2389454	        48.56 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Wildcard/ServeHTTP       	 2489624	        48.20 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Miss/ServeHTTP           	 4005122	        30.59 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Miss/ServeHTTP           	 3962886	        30.16 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Miss/ServeHTTP           	 4054122	        30.46 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/EmptyMethod/ServeHTTP    	 7228734	        16.58 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/EmptyMethod/ServeHTTP    	 7299084	        16.60 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/EmptyMethod/ServeHTTP    	 7192986	        16.63 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/UnknownMethod/ServeHTTP  	 7553959	        16.10 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/UnknownMethod/ServeHTTP  	 7490421	        16.01 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/UnknownMethod/ServeHTTP  	 7324795	        16.12 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP        	 1000000	       108.8 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP        	 1000000	       109.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP        	 1000000	       108.8 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepMiss/ServeHTTP       	 1000000	       107.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepMiss/ServeHTTP       	 1000000	       108.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepMiss/ServeHTTP       	 1000000	       106.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP       	 1000000	       121.0 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP       	  990643	       119.8 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP       	 1000000	       121.0 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/vroomy/httpserve	4.248s

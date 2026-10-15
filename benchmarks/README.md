@@ -4,6 +4,9 @@ The repeatable suite in [router_benchmark_test.go](../router_benchmark_test.go)
 compares the original route list with the compressed prefix trie. The benchmark
 code and fixtures are the same for both runs.
 
+For the implemented allocation improvements, before/after measurements, and
+remaining ideas, see the [trie allocation review](trie-allocation-review.md).
+
 ## Coverage
 
 Each benchmark runs the following matrix (162 cases total):
@@ -114,10 +117,10 @@ above had ±1%. Use the longer focused run above if a future difference is small
 [route.go](../route.go) stores a compressed prefix trie for each HTTP
 method. Static edges share common byte prefixes; parameter branches share their
 structure while keeping each endpoint's parameter names in
-[routeEndpoint.go](../routeEndpoint.go). The trie captures parameter values during
-traversal into caller-owned or pooled storage. Failed branches restore the
-previous parameter length, and successful matches assign names from the selected
-endpoint. The old route-pattern record and second path scan have been removed;
+[routeEndpoint.go](../routeEndpoint.go). The trie fills parameter values as a
+successful traversal returns into caller-owned or pooled storage. Failed branches
+do not modify capture storage, and successful matches assign names from the
+selected endpoint. The old route-pattern record and second path scan have been removed;
 `route` now names the trie itself.
 
 Matching now prefers static branches, then parameters, then wildcards, with
@@ -281,10 +284,12 @@ work are excluded.
 ## Endpoint refactor
 
 The preceding captures measure the initial trie, which retained a parsed route
-record and checked the winning path again to extract parameters. The current
-implementation in [route.go](../route.go) captures values while traversing the
-trie and rolls back captures when a branch fails. After choosing an endpoint, it
-assigns that endpoint's parameter names without scanning the path again.
+record and checked the winning path again to extract parameters. The endpoint
+implementation measured here captured values while traversing the
+trie and rolled back captures when a branch failed. After choosing an endpoint, it
+assigned that endpoint's parameter names without scanning the path again. The
+later [allocation changes](trie-allocation-review.md#implemented-follow-up) defer
+capture writes until a complete match instead.
 
 `route` now names the trie, `routeNode` its branches, and
 [routeEndpoint](../routeEndpoint.go) stores only the handler and parameter names.
@@ -351,6 +356,8 @@ These are successful GET cases with canonical ASCII paths and one named
 parameter. They do not compare redirects, escaped paths, HEAD behavior, misses,
 or startup costs; the routers' behavior differs in some of those areas.
 
+### Before allocation improvements (2026-10-14)
+
 Captured on 2026-10-14 with Go `go1.26.5 darwin/arm64` on Apple M3, using the
 current working tree and the installed standard-library implementation. The
 module declares Go 1.25, and `GODEBUG` is unset, so the modern ServeMux wildcard
@@ -389,3 +396,42 @@ determine lookup cost.
 
 `go test ./...`, `go vet ./...`, and `go build ./...` passed after adding the
 comparison suite. No production code changed for this comparison.
+
+### After allocation improvements (2026-10-15)
+
+This capture measures the working tree with the
+[implemented allocation changes](trie-allocation-review.md#implemented-follow-up),
+using the unchanged `BenchmarkRouterStdlib` fixtures above. Both routers ran in
+the same invocation with Go `go1.26.5 darwin/arm64` on Apple M3, `GODEBUG` unset,
+one CPU, and ten one-second samples per case.
+
+```sh
+GOCACHE=/tmp/httpserve-go-build go test -run '^$' -bench '^BenchmarkRouterStdlib$' \
+  -benchmem -benchtime=1s -count=10 -cpu=1 > benchmarks/router-stdlib-allocations.txt
+benchstat -row /URL -col /Router benchmarks/router-stdlib-allocations.txt \
+  > benchmarks/router-stdlib-allocations-comparison.txt
+```
+
+Saved data: [raw samples](router-stdlib-allocations.txt) and
+[benchstat comparison](router-stdlib-allocations-comparison.txt).
+Median dispatch times across ten samples per case:
+
+| Fixture | ServeMux | Trie | Trie speedup |
+| --- | ---: | ---: | ---: |
+| Common (19 bytes) | 129.90 ns/op | 47.32 ns/op | **2.75×** |
+| Short (9 bytes) | 99.52 ns/op | 58.31 ns/op | **1.71×** |
+| Medium (39 bytes) | 224.95 ns/op | 58.00 ns/op | **3.88×** |
+| Long (172 bytes) | 645.45 ns/op | 58.84 ns/op | **10.97×** |
+
+The trie used **0 B/op and 0 allocs/op** in every sample. ServeMux used
+**16 B/op and 1 alloc/op** in every sample. Benchstat reports statistically
+significant timing differences for all four fixtures (`p < 0.001`, ten samples
+per router), with the common user URL taking 63.57% less dispatch time.
+
+All eight handler, parameter, and status correctness checks passed. These results
+include warmed Context pooling, panic recovery, and native parameter lookup, but
+exclude request creation and network/application work. They establish an
+advantage for these successful one-parameter GET fixtures; they do not establish
+the same speedup for complete HTTP requests, other route shapes, or the additional
+path and method behavior supported by ServeMux. No production or benchmark source
+changed for this capture.
