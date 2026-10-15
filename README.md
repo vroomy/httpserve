@@ -34,23 +34,22 @@ and application work can still allocate.
 
 ## Benchmarks
 
-For reproducible router comparisons across short (9-byte), medium (39-byte), and
-long (172-byte) URLs, see [the router benchmark guide](benchmarks/README.md).
-It includes list-versus-trie and standard-library comparisons, route-count and
-hit/miss coverage, allocation measurements, and commands for comparing
-implementations with `benchstat`.
+For reproducible comparisons between HTTPServe and Go's `http.ServeMux`, see
+[the router benchmark guide](benchmarks/README.md#after-allocation-improvements-2026-10-15).
+It includes fixture details, allocation measurements, and commands for comparing
+the routers with `benchstat`.
 
 ### Standard library comparison
 
-Median dispatch times for HTTPServe's trie and Go's `http.ServeMux`, each with
-40 GET routes and one named parameter per route:
+Comparison with 40 GET routes and one named parameter per route. `http.ServeMux`
+shows median dispatch time; HTTPServe shows its speedup over that baseline:
 
-| URL fixture | `http.ServeMux` | HTTPServe | HTTPServe speedup |
-| --- | ---: | ---: | ---: |
-| Common (19 bytes): `/api/users/00000000` | 129.90 ns/op | 47.32 ns/op | **2.75×** |
-| Short (9 bytes) | 99.52 ns/op | 58.31 ns/op | **1.71×** |
-| Medium (39 bytes) | 224.95 ns/op | 58.00 ns/op | **3.88×** |
-| Long (172 bytes) | 645.45 ns/op | 58.84 ns/op | **10.97×** |
+| URL fixture | `http.ServeMux` | HTTPServe |
+| --- | ---: | ---: |
+| Common (19 bytes): `/api/users/00000000` | 129.90 ns/op | **2.75× faster** |
+| Short (9 bytes) | 99.52 ns/op | **1.71× faster** |
+| Medium (39 bytes) | 224.95 ns/op | **3.88× faster** |
+| Long (172 bytes) | 645.45 ns/op | **10.97× faster** |
 
 Across all four fixtures, HTTPServe used **0 B/op and 0 allocations/op**;
 `http.ServeMux` used **16 B/op and 1 allocation/op**.
@@ -67,35 +66,6 @@ See the [benchmark source](router_stdlib_benchmark_test.go),
 [statistical comparison](benchmarks/router-stdlib-allocations-comparison.txt).
 The [benchmark guide](benchmarks/README.md#after-allocation-improvements-2026-10-15)
 includes the reproduction command and fixture details.
-
-### Historical routing results
-
-```
-# httpserve's router
-BenchmarkRouter-4             20000000      55.0 ns/op      48 B/op        1 allocs/op
-# github.com/julienschmidt/httprouter
-BenchmarkJulianSchmidt-4      20000000      72.9 ns/op      32 B/op        1 allocs/op
-# github.com/missionMeteora/apiserv/router
-BenchmarkAPIServe-4            5000000       284 ns/op      64 B/op        2 allocs/op
-```
-
-### String splitting
-```
-# httpserve.getParts
-BenchmarkGetPartsSmall-4        20000000                93.4 ns/op            48 B/op          1 allocs/op
-# Standard library
-BenchmarkStringsSpitSmall-4     10000000               120 ns/op              48 B/op          1 allocs/op
-
-# httpserve.getParts
-BenchmarkGetPartsMedium-4       20000000               104 ns/op              48 B/op          1 allocs/op
-# Standard library
-BenchmarkStringsSpitMedium-4    10000000               134 ns/op              64 B/op          1 allocs/op
-
-# httpserve.getParts
-BenchmarkGetPartsLarge-4        10000000               116 ns/op              48 B/op          1 allocs/op
-# Standard library
-BenchmarkStringsSpitLarge-4     10000000               156 ns/op              80 B/op          1 allocs/op
-```
 
 ## Usage
 
