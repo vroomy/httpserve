@@ -43,8 +43,3 @@ func TestJSONResponseError(t *testing.T) {
 		t.Fatalf("invalid error, expected \"%s\" and received \"%s\"", err.Error(), nerr.Error())
 	}
 }
-
-type TestJSONStruct struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
-}

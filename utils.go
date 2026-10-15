@@ -6,20 +6,6 @@ import (
 	"strings"
 )
 
-// newHandler will return a new Handler
-func newHandler(hs []Handler) Handler {
-	return func(ctx *Context) {
-		// Process handler funcs
-		ctx.processHandlers(hs)
-		if ctx.completed {
-			ctx.request.Body.Close()
-		}
-
-		// Process context hooks
-		ctx.processHooks()
-	}
-}
-
 func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 	var srv http.Server
 	srv.Handler = h
@@ -99,11 +85,4 @@ func shiftStr(str string, n int) string {
 
 func notFoundHandler(ctx *Context) {
 	ctx.WriteString(404, "text/plain", "404, not found")
-}
-
-// PanicHandler is a panic handler
-type PanicHandler func(v interface{})
-
-type redirectQuery struct {
-	Redirect string `form:"redirect"`
 }
