@@ -23,14 +23,6 @@ type Upgrader struct {
 	proxies []VirtualHost
 }
 
-// VirtualHost represents a registered port to forward on the local host for a request to the given Domain
-type VirtualHost struct {
-	// Domain is the Host to parse for the redirect
-	Domain string
-	// Port is the localhost port forwarded to when Domain is parsed
-	Port uint16
-}
-
 func (u *Upgrader) upgradeConn(ctx *Context) {
 	newURL := *ctx.Request().URL
 	newURL.Scheme = "https"

@@ -2,7 +2,6 @@ package form
 
 import (
 	"bytes"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -173,33 +172,3 @@ func newTestQuery() url.Values {
 	u.Set("bar", "1337")
 	return u
 }
-
-type testStruct struct {
-	Foo string `form:"foo"`
-	Bar int64  `form:"bar"`
-}
-
-type testUnmarshaler struct {
-	testStruct
-}
-
-func (t *testUnmarshaler) UnmarshalForm(key, value string) (err error) {
-	switch key {
-	case "foo":
-		t.Foo = value
-	case "bar":
-		t.Bar, err = strconv.ParseInt(value, 10, 64)
-	}
-
-	return
-}
-
-type ronly struct {
-	r io.Reader
-}
-
-func (r *ronly) Read(p []byte) (n int, err error) {
-	return r.r.Read(p)
-}
-
-var _ io.Reader = &ronly{}

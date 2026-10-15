@@ -2,9 +2,31 @@ package httpserve
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 	"testing"
 )
+
+func TestGetPartsNormalization(t *testing.T) {
+	var cases = []struct {
+		path string
+		want []string
+	}{
+		{path: "/", want: []string{"/"}},
+		{path: "///"},
+		{path: "/api//items/", want: []string{"/api/items"}},
+		{path: "//api///:id//tail/*/:ignored/", want: []string{"/api", ":id", "/tail", "*", ":ignored"}},
+		{path: "/:a/:b/", want: []string{":a", ":b"}},
+	}
+	for _, test := range cases {
+		t.Run(test.path, func(t *testing.T) {
+			var parts, err = getParts(test.path)
+			if err != nil || !slices.Equal(parts, test.want) {
+				t.Fatalf("getParts = %v/%v, want %v", parts, err, test.want)
+			}
+		})
+	}
+}
 
 const (
 	smallRoute  = "/hello/world/:name"

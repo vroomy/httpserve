@@ -1,0 +1,31 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+        │   ServeMux   │                Trie                 │
+        │    sec/op    │   sec/op     vs base                │
+Common    129.90n ± 1%   47.32n ± 1%  -63.57% (p=0.000 n=10)
+Short      99.52n ± 0%   58.31n ± 1%  -41.41% (p=0.000 n=10)
+Medium    224.95n ± 3%   58.00n ± 1%  -74.21% (p=0.000 n=10)
+Long      645.45n ± 1%   58.84n ± 1%  -90.88% (p=0.000 n=10)
+geomean    208.1n        55.40n       -73.39%
+
+        │  ServeMux  │                  Trie                  │
+        │    B/op    │   B/op     vs base                     │
+Common    16.00 ± 0%   0.00 ± 0%  -100.00% (p=0.000 n=10)
+Short     16.00 ± 0%   0.00 ± 0%  -100.00% (p=0.000 n=10)
+Medium    16.00 ± 0%   0.00 ± 0%  -100.00% (p=0.000 n=10)
+Long      16.00 ± 0%   0.00 ± 0%  -100.00% (p=0.000 n=10)
+geomean   16.00                   ?                       ¹ ²
+¹ summaries must be >0 to compute geomean
+² ratios must be >0 to compute geomean
+
+        │  ServeMux  │                  Trie                   │
+        │ allocs/op  │ allocs/op   vs base                     │
+Common    1.000 ± 0%   0.000 ± 0%  -100.00% (p=0.000 n=10)
+Short     1.000 ± 0%   0.000 ± 0%  -100.00% (p=0.000 n=10)
+Medium    1.000 ± 0%   0.000 ± 0%  -100.00% (p=0.000 n=10)
+Long      1.000 ± 0%   0.000 ± 0%  -100.00% (p=0.000 n=10)
+geomean   1.000                    ?                       ¹ ²
+¹ summaries must be >0 to compute geomean
+² ratios must be >0 to compute geomean

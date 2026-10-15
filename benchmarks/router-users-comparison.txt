@@ -1,0 +1,53 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+                                 │ benchmarks/router-users-before.txt │  benchmarks/router-users-after.txt  │
+                                 │               sec/op               │   sec/op     vs base                │
+RouterUsers/Routes=20/FirstHit                           47.80n ±  5%   76.26n ± 2%  +59.54% (p=0.000 n=10)
+RouterUsers/Routes=20/MiddleHit                          94.91n ±  4%   77.01n ± 4%  -18.86% (p=0.000 n=10)
+RouterUsers/Routes=20/LastHit                           142.15n ± 10%   78.20n ± 2%  -44.99% (p=0.000 n=10)
+RouterUsers/Routes=20/Miss                              127.55n ±  4%   50.62n ± 1%  -60.31% (p=0.000 n=10)
+RouterUsers/Routes=50/FirstHit                           48.36n ±  1%   77.94n ± 1%  +61.19% (p=0.000 n=10)
+RouterUsers/Routes=50/MiddleHit                         164.05n ±  3%   78.52n ± 2%  -52.13% (p=0.000 n=10)
+RouterUsers/Routes=50/LastHit                           257.00n ±  1%   79.32n ± 1%  -69.14% (p=0.000 n=10)
+RouterUsers/Routes=50/Miss                              253.40n ±  4%   51.28n ± 1%  -79.76% (p=0.000 n=10)
+RouterUsers/Routes=100/FirstHit                          48.45n ±  2%   78.71n ± 2%  +62.46% (p=0.000 n=10)
+RouterUsers/Routes=100/MiddleHit                        266.30n ±  4%   79.05n ± 2%  -70.32% (p=0.000 n=10)
+RouterUsers/Routes=100/LastHit                          491.20n ±  1%   79.69n ± 2%  -83.78% (p=0.000 n=10)
+RouterUsers/Routes=100/Miss                             478.50n ±  4%   51.18n ± 3%  -89.31% (p=0.000 n=10)
+geomean                                                  149.9n         70.35n       -53.08%
+
+                                 │ benchmarks/router-users-before.txt │  benchmarks/router-users-after.txt  │
+                                 │                B/op                │    B/op     vs base                 │
+RouterUsers/Routes=20/FirstHit                             16.00 ± 0%   16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=20/MiddleHit                            16.00 ± 0%   16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=20/LastHit                              16.00 ± 0%   16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=20/Miss                                 16.00 ± 0%   16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=50/FirstHit                             16.00 ± 0%   16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=50/MiddleHit                            16.00 ± 0%   16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=50/LastHit                              16.00 ± 0%   16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=50/Miss                                 16.00 ± 0%   16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=100/FirstHit                            16.00 ± 0%   16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=100/MiddleHit                           16.00 ± 0%   16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=100/LastHit                             16.00 ± 0%   16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=100/Miss                                16.00 ± 0%   16.00 ± 0%       ~ (p=1.000 n=10) ¹
+geomean                                                    16.00        16.00       +0.00%
+¹ all samples are equal
+
+                                 │ benchmarks/router-users-before.txt │  benchmarks/router-users-after.txt  │
+                                 │             allocs/op              │ allocs/op   vs base                 │
+RouterUsers/Routes=20/FirstHit                             1.000 ± 0%   1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=20/MiddleHit                            1.000 ± 0%   1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=20/LastHit                              1.000 ± 0%   1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=20/Miss                                 1.000 ± 0%   1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=50/FirstHit                             1.000 ± 0%   1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=50/MiddleHit                            1.000 ± 0%   1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=50/LastHit                              1.000 ± 0%   1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=50/Miss                                 1.000 ± 0%   1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=100/FirstHit                            1.000 ± 0%   1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=100/MiddleHit                           1.000 ± 0%   1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=100/LastHit                             1.000 ± 0%   1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterUsers/Routes=100/Miss                                1.000 ± 0%   1.000 ± 0%       ~ (p=1.000 n=10) ¹
+geomean                                                    1.000        1.000       +0.00%
+¹ all samples are equal

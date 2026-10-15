@@ -7,34 +7,65 @@ HTTPServe is a simple and lightweight HTTP framework. It's intended to make HTTP
 - Middleware support
 - Simple TLS configuration (http2 by default)
 
+## Routing
+
+Routes use a compressed prefix trie for each HTTP method. Matching tries static
+branches first, then named parameters, then wildcards. If a branch cannot complete
+the match, the router tries the next branch. For example, `/users/current` takes
+precedence over `/users/:id` regardless of registration order. Duplicate patterns
+keep their first registered handler.
+
+The trie reserves parameter storage only after a complete match, then fills
+values as traversal returns and assigns names from the selected endpoint. Failed
+branches neither allocate capture storage nor retain captured strings.
+
+`Router.Match` returns caller-owned parameters with space for exactly the winning
+route's captures. Static matches, parameter-free wildcard matches, and misses
+need no parameter allocation. `Router.MatchInto(method, path, params)` accepts
+reusable storage and returns the handler, updated parameters, and match status.
+Pass its returned slice into the next call; the previous values are cleared and
+overwritten. Concurrent callers must use separate backing arrays.
+
+`ServeHTTP` reuses a pooled Context and clears parameter, hook, and storage
+references before returning it to the pool. The Context and its parameter slice
+are valid only during the handler. Warmed dispatch with sufficient capacity uses
+zero allocations in the routing benchmarks; cold pools, response generation,
+and application work can still allocate.
+
 ## Benchmarks
-### Routing
-```
-# httpserve's router
-BenchmarkRouter-4             20000000      55.0 ns/op      48 B/op        1 allocs/op
-# github.com/julienschmidt/httprouter
-BenchmarkJulianSchmidt-4      20000000      72.9 ns/op      32 B/op        1 allocs/op
-# github.com/missionMeteora/apiserv/router
-BenchmarkAPIServe-4            5000000       284 ns/op      64 B/op        2 allocs/op
-```
 
-### String splitting
-```
-# httpserve.getParts
-BenchmarkGetPartsSmall-4        20000000                93.4 ns/op            48 B/op          1 allocs/op
-# Standard library
-BenchmarkStringsSpitSmall-4     10000000               120 ns/op              48 B/op          1 allocs/op
+For reproducible comparisons between HTTPServe and Go's `http.ServeMux`, see
+[the router benchmark guide](benchmarks/README.md#after-allocation-improvements-2026-10-15).
+It includes fixture details, allocation measurements, and commands for comparing
+the routers with `benchstat`.
 
-# httpserve.getParts
-BenchmarkGetPartsMedium-4       20000000               104 ns/op              48 B/op          1 allocs/op
-# Standard library
-BenchmarkStringsSpitMedium-4    10000000               134 ns/op              64 B/op          1 allocs/op
+### Standard library comparison
 
-# httpserve.getParts
-BenchmarkGetPartsLarge-4        10000000               116 ns/op              48 B/op          1 allocs/op
-# Standard library
-BenchmarkStringsSpitLarge-4     10000000               156 ns/op              80 B/op          1 allocs/op
-```
+Comparison with 40 GET routes and one named parameter per route. `http.ServeMux`
+shows median dispatch time; HTTPServe shows its speedup over that baseline:
+
+| URL fixture | `http.ServeMux` | HTTPServe |
+| --- | ---: | ---: |
+| Common (19 bytes): `/api/users/00000000` | 129.90 ns/op | **2.75× faster** |
+| Short (9 bytes) | 99.52 ns/op | **1.71× faster** |
+| Medium (39 bytes) | 224.95 ns/op | **3.88× faster** |
+| Long (172 bytes) | 645.45 ns/op | **10.97× faster** |
+
+Across all four fixtures, HTTPServe used **0 B/op and 0 allocations/op**;
+`http.ServeMux` used **16 B/op and 1 allocation/op**.
+
+Measured on 2026-10-15 with Go 1.26.5 (`darwin/arm64`) on Apple M3, using one CPU
+and ten one-second samples per case. All timing differences were statistically
+significant in `benchstat` (`p < 0.001`). These are warmed successful-route
+benchmarks that include native parameter lookup and a minimal handler, excluding
+request construction, network I/O, and application work. They do not measure
+end-to-end HTTP throughput or compare all routing semantics.
+
+See the [benchmark source](router_stdlib_benchmark_test.go),
+[raw samples](benchmarks/router-stdlib-allocations.txt), and
+[statistical comparison](benchmarks/router-stdlib-allocations-comparison.txt).
+The [benchmark guide](benchmarks/README.md#after-allocation-improvements-2026-10-15)
+includes the reproduction command and fixture details.
 
 ## Usage
 

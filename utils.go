@@ -2,23 +2,10 @@ package httpserve
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 )
-
-// newHandler will return a new Handler
-func newHandler(hs []Handler) Handler {
-	return func(ctx *Context) {
-		// Process handler funcs
-		ctx.processHandlers(hs)
-		if ctx.completed {
-			ctx.request.Body.Close()
-		}
-
-		// Process context hooks
-		ctx.processHooks()
-	}
-}
 
 func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 	var srv http.Server
@@ -36,11 +23,13 @@ func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 func getParts(url string) (parts []string, err error) {
 	if url == "/" {
 		parts = []string{"/"}
-		return
+		return parts, nil
 	}
 
 	var buf []byte
-	for _, part := range strings.Split(url, "/") {
+	for len(url) > 0 {
+		var part string
+		part, url, _ = strings.Cut(url, "/")
 		if len(part) == 0 {
 			continue
 		}
@@ -64,46 +53,18 @@ func getParts(url string) (parts []string, err error) {
 	}
 
 	if len(buf) == 0 {
-		return
+		return parts, nil
 	}
 
 	parts = append(parts, string(buf))
 
-	return
-}
-
-func isPartMatch(url, part string) (match bool) {
-	if len(url) < len(part) {
-		// Remaining URL is less than our part, return
-		return
-	}
-
-	if url == part {
-		return true
-	}
-
-	if url[:len(part)] != part {
-		return
-	}
-
-	remaining := url[len(part):]
-	return len(remaining) == 0 || remaining[0] == '/'
-}
-
-func shiftStr(str string, n int) string {
-	if n > len(str) {
-		return str
-	}
-	return str[n:]
+	return parts, nil
 }
 
 func notFoundHandler(ctx *Context) {
 	ctx.WriteString(404, "text/plain", "404, not found")
 }
 
-// PanicHandler is a panic handler
-type PanicHandler func(v interface{})
-
-type redirectQuery struct {
-	Redirect string `form:"redirect"`
+func defaultRouterError(err error) {
+	log.Println("Error encountered:", err)
 }
