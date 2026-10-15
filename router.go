@@ -27,34 +27,37 @@ type Router struct {
 	panic    PanicHandler
 
 	errorFn func(error)
-
-	maxParams int
 }
 
 func (r *Router) onPanic(v interface{}) {
 	log.Println("Panic encountered:", v)
 }
 
-func (r *Router) onError(err error) {
-	if r.errorFn != nil {
-		r.errorFn(err)
-		return
-	}
-
-	log.Println("Error encountered:", err)
-}
-
 // Match returns a matching handler and its parameters, preferring static branches
 // over parameters and parameters over wildcards. Failed branches fall back to
 // less specific matches. Duplicate patterns retain their first handler.
 // The returned Params belong to the caller. A miss returns the not-found handler.
+// Parameter storage is allocated only for a successful match with named parameters.
+// Matches without named parameters and misses return nil Params.
 func (r *Router) Match(method, url string) (h Handler, p Params, ok bool) {
+	return r.MatchInto(method, url, nil)
+}
+
+// MatchInto matches a route using caller-owned parameter storage. It clears the
+// supplied slice's existing elements and replaces them with the selected route's
+// parameters. It returns an empty slice on a miss and grows storage only when a
+// successful match exceeds its capacity. A nil slice is valid.
+// Retain the returned slice for subsequent calls. Reusing storage overwrites prior
+// results; concurrent calls must use separate backing arrays. Strings reference
+// the request path and registered parameter names without copying their contents.
+func (r *Router) MatchInto(method, url string, params Params) (h Handler, p Params, ok bool) {
+	clear(params)
+	p = params[:0]
 	var idx = methodToIndex(method)
 	if idx == methodUnknown {
-		return r.notFound, nil, false
+		return r.notFound, p, false
 	}
 
-	p = make(Params, 0, r.maxParams)
 	var endpoint = r.rm[idx].find(url, &p)
 	if endpoint == nil {
 		return r.notFound, p, false
@@ -75,6 +78,7 @@ func (r *Router) match(method, url string, p *Params) Handler {
 	var endpoint = r.rm[idx].find(url, p)
 	if endpoint == nil {
 		if r.rm[idx].count > 0 {
+			clear(*p)
 			*p = (*p)[:0]
 		}
 
@@ -94,6 +98,8 @@ func (r *Router) SetPanic(h PanicHandler) {
 	r.panic = h
 }
 
+// SetOnError sets the error callback. A nil callback restores default logging.
+// Configure the callback before serving requests.
 func (r *Router) SetOnError(onError func(error)) {
 	r.errorFn = onError
 }
@@ -113,17 +119,6 @@ func (r *Router) Handle(method, url string, h Handler) (err error) {
 	var parts []string
 	if parts, err = getParts(url); err != nil {
 		return fmt.Errorf("error creating route for [%s] \"%s\": %v", method, url, err)
-	}
-
-	var numParams int
-	for _, part := range parts {
-		if part[0] == colon {
-			numParams++
-		}
-	}
-
-	if numParams > r.maxParams {
-		r.maxParams = numParams
 	}
 
 	r.rm[idx].add(parts, h)
@@ -157,7 +152,10 @@ func (r *Router) OPTIONS(url string, h Handler) error {
 
 func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	ctx := acquireContext(rw, req)
-	ctx.errorFn = r.onError
+	ctx.errorFn = r.errorFn
+	if ctx.errorFn == nil {
+		ctx.errorFn = defaultRouterError
+	}
 
 	h := r.match(req.Method, req.URL.Path, &ctx.Params)
 
@@ -170,8 +168,10 @@ func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 			if r.panic != nil {
 				r.panic(v)
 			}
+
 			rw.WriteHeader(500)
 		}
+
 		releaseContext(ctx)
 	}()
 

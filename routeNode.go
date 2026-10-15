@@ -50,21 +50,23 @@ func (n *routeNode) insertStatic(prefix string) *routeNode {
 	return child.insertStatic(prefix[shared:])
 }
 
-func (n *routeNode) find(url string, params *Params) *routeEndpoint {
+// find defers capture writes until an endpoint wins. Each parameter frame fills
+// its slot while returning, so failed branches neither allocate nor retain URLs.
+func (n *routeNode) find(url string, params *Params, captureIndex int) *routeEndpoint {
 	if !strings.HasPrefix(url, n.prefix) {
 		return nil
 	}
 
 	url = url[len(n.prefix):]
 	if len(url) == 0 {
-		return n.endpoint
+		return n.endpoint.prepareParams(params, captureIndex)
 	}
 
 	// At the end of a static part, the original matcher requires a slash
 	// boundary. Radix splits inside a static part do not impose that boundary
 	// on static children; only parameter and wildcard continuations need it.
 	if index := strings.IndexByte(n.indices, url[0]); index >= 0 {
-		if endpoint := n.children[index].find(url, params); endpoint != nil {
+		if endpoint := n.children[index].find(url, params, captureIndex); endpoint != nil {
 			return endpoint
 		}
 	}
@@ -74,23 +76,16 @@ func (n *routeNode) find(url string, params *Params) *routeEndpoint {
 	}
 
 	if n.param != nil {
-		var (
-			start = len(*params)
-			end   = strings.IndexByte(url[1:], '/')
-		)
+		var end = strings.IndexByte(url[1:], '/')
 		if end < 0 {
 			end = len(url) - 1
 		}
 
-		*params = append(*params, Param{Value: url[1 : end+1]})
-		if endpoint := n.param.find(url[end+1:], params); endpoint != nil {
+		if endpoint := n.param.find(url[end+1:], params, captureIndex+1); endpoint != nil {
+			(*params)[captureIndex].Value = url[1 : end+1]
 			return endpoint
 		}
-
-		// A failed parameter branch must not contaminate a wildcard or a
-		// less specific ancestor branch. Retain any grown backing storage.
-		*params = (*params)[:start]
 	}
 
-	return n.wildcard
+	return n.wildcard.prepareParams(params, captureIndex)
 }

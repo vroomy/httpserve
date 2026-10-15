@@ -30,29 +30,17 @@ var ctxPool = sync.Pool{
 	},
 }
 
-// acquireContext retrieves a Context from the pool and resets it for reuse.
+// acquireContext attaches a writer and request to a clean pooled Context.
 func acquireContext(w http.ResponseWriter, r *http.Request) *Context {
 	c := ctxPool.Get().(*Context)
 	c.writer = w
 	c.request = r
-	c.completed = false
-	c.statusCode = 0
-	c.errorFn = nil
-	// Clear storage without re-allocating the map.
-	for k := range c.s {
-		delete(c.s, k)
-	}
-	// Reset slices to zero length while keeping backing arrays.
-	c.hooks = c.hooks[:0]
-	c.Params = c.Params[:0]
 	return c
 }
 
 // releaseContext clears held references and returns the Context to the pool.
 func releaseContext(c *Context) {
-	c.writer = nil
-	c.request = nil
-	c.errorFn = nil
+	c.reset()
 	ctxPool.Put(c)
 }
 
@@ -66,7 +54,8 @@ func newContext(w http.ResponseWriter, r *http.Request, p Params) *Context {
 	return &c
 }
 
-// Context is the request context
+// Context is the request context. It and its Params are valid only for the
+// duration of the handler; copy values that must outlive the request.
 type Context struct {
 	errorFn func(error)
 
@@ -86,6 +75,20 @@ type Context struct {
 	request *http.Request
 
 	Params Params
+}
+
+// reset releases request references before the Context becomes idle in the pool.
+func (c *Context) reset() {
+	c.writer = nil
+	c.request = nil
+	c.errorFn = nil
+	c.completed = false
+	c.statusCode = 0
+	clear(c.s)
+	clear(c.hooks[:cap(c.hooks)])
+	c.hooks = c.hooks[:0]
+	clear(c.Params[:cap(c.Params)])
+	c.Params = c.Params[:0]
 }
 
 // Bind is a helper function which binds the request body to a provided value to be parsed as the inbound content type

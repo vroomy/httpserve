@@ -2,6 +2,7 @@ package httpserve
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -22,11 +23,13 @@ func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 func getParts(url string) (parts []string, err error) {
 	if url == "/" {
 		parts = []string{"/"}
-		return
+		return parts, nil
 	}
 
 	var buf []byte
-	for _, part := range strings.Split(url, "/") {
+	for len(url) > 0 {
+		var part string
+		part, url, _ = strings.Cut(url, "/")
 		if len(part) == 0 {
 			continue
 		}
@@ -50,14 +53,18 @@ func getParts(url string) (parts []string, err error) {
 	}
 
 	if len(buf) == 0 {
-		return
+		return parts, nil
 	}
 
 	parts = append(parts, string(buf))
 
-	return
+	return parts, nil
 }
 
 func notFoundHandler(ctx *Context) {
 	ctx.WriteString(404, "text/plain", "404, not found")
+}
+
+func defaultRouterError(err error) {
+	log.Println("Error encountered:", err)
 }

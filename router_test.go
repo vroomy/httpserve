@@ -1,9 +1,109 @@
 package httpserve
 
 import (
+	"bytes"
+	"log"
+	"net/http"
+	"net/http/httptest"
+	"strings"
 	"sync"
 	"testing"
 )
+
+func TestRouterErrorCallbacks(t *testing.T) {
+	var (
+		output   bytes.Buffer
+		previous = log.Writer()
+	)
+	log.SetOutput(&output)
+	t.Cleanup(func() { log.SetOutput(previous) })
+	for _, mode := range []string{"default", "custom", "reset"} {
+		t.Run(mode, func(t *testing.T) {
+			output.Reset()
+			var (
+				router   = newRouter()
+				received error
+			)
+			if mode != "default" {
+				router.SetOnError(func(err error) { received = err })
+			}
+
+			if mode == "reset" {
+				router.SetOnError(nil)
+			}
+
+			if err := router.GET("/", func(ctx *Context) {
+				ctx.WriteNoContent()
+				ctx.WriteNoContent()
+			}); err != nil {
+				t.Fatal(err)
+			}
+
+			router.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/", nil))
+			if mode == "custom" {
+				if received != ErrContextIsClosed || output.Len() != 0 {
+					t.Fatalf("callback = %v, log = %q", received, output.String())
+				}
+			} else if received != nil || !strings.Contains(output.String(), ErrContextIsClosed.Error()) {
+				t.Fatalf("callback = %v, log = %q", received, output.String())
+			}
+		})
+	}
+}
+
+func TestRouterReleasesContext(t *testing.T) {
+	for _, mode := range []string{"success", "panic", "panic_without_callback"} {
+		t.Run(mode, func(t *testing.T) {
+			var (
+				router     = newRouter()
+				writer     = httptest.NewRecorder()
+				retained   *Context
+				backing    Params
+				panicValue interface{}
+				wantStatus = http.StatusNoContent
+			)
+			if mode == "panic_without_callback" {
+				router.SetPanic(nil)
+			} else {
+				router.SetPanic(func(value interface{}) { panicValue = value })
+			}
+
+			if mode != "success" {
+				wantStatus = http.StatusInternalServerError
+			}
+
+			if err := router.GET("/users/:id", func(ctx *Context) {
+				// Inspect release synchronously before another request can reuse it.
+				retained = ctx
+				backing = ctx.Params[:cap(ctx.Params)]
+				ctx.Put("value", ctx.Param("id"))
+				ctx.AddHook(func(int, *Context) {})
+				if mode != "success" {
+					panic("handler panic")
+				}
+
+				ctx.WriteNoContent()
+			}); err != nil {
+				t.Fatal(err)
+			}
+
+			router.ServeHTTP(writer, httptest.NewRequest(http.MethodGet, "/users/42", nil))
+			if writer.Code != wantStatus || (mode == "panic" && panicValue != "handler panic") {
+				t.Fatalf("response/panic = %d/%v, want status %d", writer.Code, panicValue, wantStatus)
+			}
+
+			if retained == nil || retained.request != nil || retained.writer != nil || retained.errorFn != nil || len(retained.Params) != 0 || len(retained.hooks) != 0 || len(retained.s) != 0 {
+				t.Fatal("request state was not released")
+			}
+
+			for _, param := range backing {
+				if param != (Param{}) {
+					t.Fatalf("released Context retained a capture: %v", param)
+				}
+			}
+		})
+	}
+}
 
 var (
 	handlerSink Handler

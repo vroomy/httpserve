@@ -15,9 +15,22 @@ the match, the router tries the next branch. For example, `/users/current` takes
 precedence over `/users/:id` regardless of registration order. Duplicate patterns
 keep their first registered handler.
 
-The trie captures parameter values during traversal and assigns names from the
-selected endpoint. Each endpoint stores its handler and parameter names; the
-same trie traversal handles routing and parameter extraction.
+The trie reserves parameter storage only after a complete match, then fills
+values as traversal returns and assigns names from the selected endpoint. Failed
+branches neither allocate capture storage nor retain captured strings.
+
+`Router.Match` returns caller-owned parameters with space for exactly the winning
+route's captures. Static matches, parameter-free wildcard matches, and misses
+need no parameter allocation. `Router.MatchInto(method, path, params)` accepts
+reusable storage and returns the handler, updated parameters, and match status.
+Pass its returned slice into the next call; the previous values are cleared and
+overwritten. Concurrent callers must use separate backing arrays.
+
+`ServeHTTP` reuses a pooled Context and clears parameter, hook, and storage
+references before returning it to the pool. The Context and its parameter slice
+are valid only during the handler. Warmed dispatch with sufficient capacity uses
+zero allocations in the routing benchmarks; cold pools, response generation,
+and application work can still allocate.
 
 ## Benchmarks
 For reproducible router comparisons across short (9-byte), medium (39-byte), and

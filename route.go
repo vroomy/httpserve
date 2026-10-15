@@ -10,13 +10,13 @@ type route struct {
 func (t *route) add(parts []string, handler Handler) {
 	t.count++
 	var (
-		node       = &t.root
-		paramNames []string
+		node      = &t.root
+		numParams int
 	)
 	for _, part := range parts {
 		switch part[0] {
 		case colon:
-			paramNames = append(paramNames, part[1:])
+			numParams++
 			if node.param == nil {
 				node.param = &routeNode{}
 			}
@@ -25,7 +25,7 @@ func (t *route) add(parts []string, handler Handler) {
 		case '*':
 			// The existing matcher ignores everything following a wildcard.
 			if node.wildcard == nil {
-				node.wildcard = &routeEndpoint{handler: handler, paramNames: paramNames}
+				node.wildcard = newRouteEndpoint(handler, parts, numParams)
 			}
 
 			return
@@ -35,12 +35,12 @@ func (t *route) add(parts []string, handler Handler) {
 	}
 
 	if node.endpoint == nil {
-		node.endpoint = &routeEndpoint{handler: handler, paramNames: paramNames}
+		node.endpoint = newRouteEndpoint(handler, parts, numParams)
 	}
 }
 
-// find appends captured parameters to borrowed storage. A miss restores its
-// original length; successful captures get the selected endpoint's names.
+// find appends captured parameters to borrowed storage only after a complete
+// match. A miss leaves the storage unchanged, including its backing array.
 func (t *route) find(url string, params *Params) *routeEndpoint {
 	if t.count == 0 {
 		return nil
@@ -48,7 +48,7 @@ func (t *route) find(url string, params *Params) *routeEndpoint {
 
 	var (
 		start    = len(*params)
-		endpoint = t.root.find(url, params)
+		endpoint = t.root.find(url, params, start)
 	)
 	if endpoint == nil {
 		return nil

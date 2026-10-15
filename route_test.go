@@ -78,7 +78,19 @@ func TestRouterTrieMatching(t *testing.T) {
 				t.Fatalf("Match = %t, %v; want %t, %v", ok, params, test.wantRoute >= 0, test.want)
 			}
 
+			var reused = make(Params, 1, 8)
+			reused[0] = Param{Key: "previous", Value: "discarded"}
+			var reusedHandler, reusedParams, reusedOK = router.MatchInto(http.MethodGet, test.path, reused)
+			if reusedOK != ok || !slices.Equal(reusedParams, params) {
+				t.Fatalf("MatchInto = %t/%v, want %t/%v", reusedOK, reusedParams, ok, params)
+			}
+
 			var request = httptest.NewRequest(http.MethodGet, test.path, nil)
+			reusedHandler(newContext(httptest.NewRecorder(), request, reusedParams))
+			if selected != test.wantRoute {
+				t.Fatalf("MatchInto selected route %d, want %d", selected, test.wantRoute)
+			}
+
 			handler(newContext(httptest.NewRecorder(), request, params))
 			if selected != test.wantRoute {
 				t.Fatalf("Match selected route %d, want %d", selected, test.wantRoute)
@@ -98,8 +110,8 @@ func TestRouterTrieParameterStorage(t *testing.T) {
 		router = newRouter()
 		want   = Params{{Key: "first", Value: "a"}, {Key: "second", Value: "b"}, {Key: "third", Value: "c"}, {Key: "fourth", Value: "d"}, {Key: "fifth", Value: "e"}}
 	)
-	// The static branch captures five parameters, then fails on its suffix.
-	// The parameter branch must reuse grown storage and supply its own names.
+	// The static branch fails after five parameters. Only the successful fallback
+	// may grow storage, and it must preserve the prefix and supply its own names.
 	if err := router.GET("/users/:a/:b/:c/:d/:e/details", func(ctx *Context) {}); err != nil {
 		t.Fatal(err)
 	}
@@ -325,7 +337,33 @@ func FuzzRouterTrie(f *testing.F) {
 		if selected != wantRoute || !slices.Equal(pooled, params) {
 			t.Fatalf("pooled lookup selected %d/%v, want %d/%v", selected, pooled, wantRoute, params)
 		}
+
+		handler, pooled, ok = router.MatchInto(http.MethodGet, path, pooled)
+		handler(newContext(nil, nil, pooled))
+		if ok != wantOK || selected != wantRoute || !slices.Equal(pooled, params) {
+			t.Fatalf("MatchInto selected %t/%d/%v, want %t/%d/%v", ok, selected, pooled, wantOK, wantRoute, params)
+		}
 	})
+}
+
+func TestRouteFindMissPreservesStorage(t *testing.T) {
+	var router = newRouter()
+	if err := router.GET("/deep/:a/:b/:c/:d/:e/end", func(ctx *Context) {}); err != nil {
+		t.Fatal(err)
+	}
+
+	var (
+		backing = Params{{Key: "prefix", Value: "kept"}, {Key: "spare", Value: "untouched"}}
+		params  = backing[:1]
+		before  = slices.Clone(backing)
+	)
+	if endpoint := router.rm[methodGET].find("/deep/1/2/3/4/5/missing", &params); endpoint != nil {
+		t.Fatal("unexpected match")
+	}
+
+	if len(params) != 1 || cap(params) != 2 || &params[0] != &backing[0] || !slices.Equal(backing, before) {
+		t.Fatalf("miss changed borrowed storage: %v", params[:cap(params)])
+	}
 }
 
 func TestRouteCheck(t *testing.T) {
