@@ -1,0 +1,16 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterUsers/Routes=40/MiddleHit         	14086993	        75.27 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterUsers/Routes=40/MiddleHit         	16252280	        77.95 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterUsers/Routes=40/MiddleHit         	16443668	        75.34 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterUsers/Routes=40/MiddleHit         	16655398	        75.41 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterUsers/Routes=40/MiddleHit         	15916614	        76.38 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterUsers/Routes=40/MiddleHit         	15914635	        77.69 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterUsers/Routes=40/MiddleHit         	15364974	        79.24 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterUsers/Routes=40/MiddleHit         	15988212	        79.44 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterUsers/Routes=40/MiddleHit         	15167193	        78.04 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterUsers/Routes=40/MiddleHit         	16307652	        77.29 ns/op	      16 B/op	       1 allocs/op
+PASS
+ok  	github.com/vroomy/httpserve	13.286s

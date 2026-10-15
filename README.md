@@ -20,7 +20,15 @@ selected endpoint. Each endpoint stores its handler and parameter names; the
 same trie traversal handles routing and parameter extraction.
 
 ## Benchmarks
+For reproducible router comparisons across short (9-byte), medium (39-byte), and
+long (172-byte) URLs, see [the router benchmark guide](benchmarks/README.md).
+It includes list-versus-trie and standard-library comparisons, route-count and
+hit/miss coverage, allocation measurements, and commands for comparing
+implementations with `benchstat`.
+
 ### Routing
+Historical routing results:
+
 ```
 # httpserve's router
 BenchmarkRouter-4             20000000      55.0 ns/op      48 B/op        1 allocs/op

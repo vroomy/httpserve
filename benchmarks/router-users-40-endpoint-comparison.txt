@@ -1,0 +1,17 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+                                │ benchmarks/router-users-40-endpoint-before.txt │ benchmarks/router-users-40-endpoint-after.txt │
+                                │                     sec/op                     │        sec/op          vs base                │
+RouterUsers/Routes=40/MiddleHit                                      79.90n ± 3%             71.24n ± 2%  -10.84% (p=0.000 n=10)
+
+                                │ benchmarks/router-users-40-endpoint-before.txt │ benchmarks/router-users-40-endpoint-after.txt │
+                                │                      B/op                      │           B/op             vs base            │
+RouterUsers/Routes=40/MiddleHit                                       16.00 ± 0%                  16.00 ± 0%  ~ (p=1.000 n=10) ¹
+¹ all samples are equal
+
+                                │ benchmarks/router-users-40-endpoint-before.txt │ benchmarks/router-users-40-endpoint-after.txt │
+                                │                   allocs/op                    │         allocs/op          vs base            │
+RouterUsers/Routes=40/MiddleHit                                       1.000 ± 0%                  1.000 ± 0%  ~ (p=1.000 n=10) ¹
+¹ all samples are equal
