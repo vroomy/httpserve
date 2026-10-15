@@ -7,6 +7,18 @@ HTTPServe is a simple and lightweight HTTP framework. It's intended to make HTTP
 - Middleware support
 - Simple TLS configuration (http2 by default)
 
+## Routing
+
+Routes use a compressed prefix trie for each HTTP method. Matching tries static
+branches first, then named parameters, then wildcards. If a branch cannot complete
+the match, the router tries the next branch. For example, `/users/current` takes
+precedence over `/users/:id` regardless of registration order. Duplicate patterns
+keep their first registered handler.
+
+The trie captures parameter values during traversal and assigns names from the
+selected endpoint. Each endpoint stores its handler and parameter names; the
+same trie traversal handles routing and parameter extraction.
+
 ## Benchmarks
 ### Routing
 ```

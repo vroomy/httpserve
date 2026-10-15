@@ -58,31 +58,6 @@ func getParts(url string) (parts []string, err error) {
 	return
 }
 
-func isPartMatch(url, part string) (match bool) {
-	if len(url) < len(part) {
-		// Remaining URL is less than our part, return
-		return
-	}
-
-	if url == part {
-		return true
-	}
-
-	if url[:len(part)] != part {
-		return
-	}
-
-	remaining := url[len(part):]
-	return len(remaining) == 0 || remaining[0] == '/'
-}
-
-func shiftStr(str string, n int) string {
-	if n > len(str) {
-		return str
-	}
-	return str[n:]
-}
-
 func notFoundHandler(ctx *Context) {
 	ctx.WriteString(404, "text/plain", "404, not found")
 }

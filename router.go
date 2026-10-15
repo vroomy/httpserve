@@ -6,10 +6,7 @@ import (
 	"net/http"
 )
 
-const (
-	colon        = ':'
-	forwardSlash = "/"
-)
+const colon = ':'
 
 func newRouter() *Router {
 	var r Router
@@ -18,10 +15,13 @@ func newRouter() *Router {
 	return &r
 }
 
-// Router handles routes
+// Router handles routes using a compressed prefix trie for each HTTP method.
+// Static branches take precedence over parameters, followed by wildcards.
+// Register routes and configure handlers before serving requests; lookups can
+// then run concurrently.
 type Router struct {
 	// rm is indexed by methodIndex for O(1) array access instead of map hashing.
-	rm [numMethods]routes
+	rm [numMethods]route
 
 	notFound Handler
 	panic    PanicHandler
@@ -44,46 +44,44 @@ func (r *Router) onError(err error) {
 	log.Println("Error encountered:", err)
 }
 
-// Match will check a url for a matching Handler, and return any associated handler and its parameters
+// Match returns a matching handler and its parameters, preferring static branches
+// over parameters and parameters over wildcards. Failed branches fall back to
+// less specific matches. Duplicate patterns retain their first handler.
+// The returned Params belong to the caller. A miss returns the not-found handler.
 func (r *Router) Match(method, url string) (h Handler, p Params, ok bool) {
-	idx := methodToIndex(method)
+	var idx = methodToIndex(method)
 	if idx == methodUnknown {
-		h = r.notFound
-		return
+		return r.notFound, nil, false
 	}
 
-	rs := r.rm[idx]
 	p = make(Params, 0, r.maxParams)
-	for _, rt := range rs {
-		if p, ok = rt.check(p, url); ok {
-			h = rt.h
-			return
-		}
-		p = p[:0]
+	var endpoint = r.rm[idx].find(url, &p)
+	if endpoint == nil {
+		return r.notFound, p, false
 	}
 
-	h = r.notFound
-	return
+	return endpoint.handler, p, true
 }
 
 // match is the hot-path route matcher used by ServeHTTP. It fills the provided
 // Params slice in-place (from the pooled Context) instead of allocating a new
 // one, eliminating a per-request heap allocation.
 func (r *Router) match(method, url string, p *Params) Handler {
-	idx := methodToIndex(method)
+	var idx = methodToIndex(method)
 	if idx == methodUnknown {
 		return r.notFound
 	}
 
-	var ok bool
-	for _, rt := range r.rm[idx] {
-		if *p, ok = rt.check(*p, url); ok {
-			return rt.h
+	var endpoint = r.rm[idx].find(url, p)
+	if endpoint == nil {
+		if r.rm[idx].count > 0 {
+			*p = (*p)[:0]
 		}
-		*p = (*p)[:0]
+
+		return r.notFound
 	}
 
-	return r.notFound
+	return endpoint.handler
 }
 
 // SetNotFound will set the not found handler (404)
@@ -100,24 +98,36 @@ func (r *Router) SetOnError(onError func(error)) {
 	r.errorFn = onError
 }
 
-// Handle will create a route for any method
+// Handle registers a route for a supported HTTP method. The path must be
+// nonempty and start with "/". Patterns are parsed only during registration.
 func (r *Router) Handle(method, url string, h Handler) (err error) {
-	idx := methodToIndex(method)
+	var idx = methodToIndex(method)
 	if idx == methodUnknown {
 		return fmt.Errorf("unsupported HTTP method: %s", method)
 	}
 
-	var rt *route
-	if rt, err = newRoute(url, h, method); err != nil {
+	if len(url) == 0 || url[0] != '/' {
+		return fmt.Errorf("error creating route for [%s] \"%s\": %v", method, url, ErrMissingLeadSlash)
+	}
+
+	var parts []string
+	if parts, err = getParts(url); err != nil {
 		return fmt.Errorf("error creating route for [%s] \"%s\": %v", method, url, err)
 	}
 
-	if n := rt.numParams(); n > r.maxParams {
-		r.maxParams = n
+	var numParams int
+	for _, part := range parts {
+		if part[0] == colon {
+			numParams++
+		}
 	}
 
-	r.rm[idx] = append(r.rm[idx], rt)
-	return
+	if numParams > r.maxParams {
+		r.maxParams = numParams
+	}
+
+	r.rm[idx].add(parts, h)
+	return nil
 }
 
 // GET will create a GET route

@@ -1,73 +1,62 @@
 package httpserve
 
-func newRoute(url string, h Handler, method string) (rp *route, err error) {
-	if url[0] != '/' {
-		err = ErrMissingLeadSlash
-		return
-	}
-
-	var r route
-	if r.s, err = getParts(url); err != nil {
-		return
-	}
-
-	r.method = method
-	r.h = h
-	rp = &r
-	return
-}
-
+// route shares static prefixes and parameter branches for one HTTP method.
+// Static branches take precedence over parameters, followed by wildcards.
 type route struct {
-	s []string
-	h Handler
-
-	method string
+	root  routeNode
+	count int
 }
 
-func (r *route) numParams() (n int) {
-	for _, part := range r.s {
-		if part[0] != colon {
-			continue
-		}
+func (t *route) add(parts []string, handler Handler) {
+	t.count++
+	var (
+		node       = &t.root
+		paramNames []string
+	)
+	for _, part := range parts {
+		switch part[0] {
+		case colon:
+			paramNames = append(paramNames, part[1:])
+			if node.param == nil {
+				node.param = &routeNode{}
+			}
 
-		n++
-	}
+			node = node.param
+		case '*':
+			// The existing matcher ignores everything following a wildcard.
+			if node.wildcard == nil {
+				node.wildcard = &routeEndpoint{handler: handler, paramNames: paramNames}
+			}
 
-	return
-}
-
-// check will check a url for a match, it will also return any associated parameters
-func (r *route) check(p Params, url string) (out Params, ok bool) {
-	out = p
-	for _, part := range r.s {
-		switch {
-		case len(url) == 0:
 			return
-
-		case part[0] == colon:
-			// Skip forward to avoid slash
-			param, n := newParam(part, url[1:])
-			// Increment N to account for skipping
-			n++
-			out = append(out, param)
-			url = shiftStr(url, n)
-
-		case part[0] == '*':
-			ok = true
-			return
-
-		case isPartMatch(url, part):
-			// Part matches, increment and move on
-			url = shiftStr(url, len(part))
-
 		default:
-			// We do not have a match, return
-			return
+			node = node.insertStatic(part)
 		}
 	}
 
-	ok = len(url) == 0
-	return
+	if node.endpoint == nil {
+		node.endpoint = &routeEndpoint{handler: handler, paramNames: paramNames}
+	}
 }
 
-type routes []*route
+// find appends captured parameters to borrowed storage. A miss restores its
+// original length; successful captures get the selected endpoint's names.
+func (t *route) find(url string, params *Params) *routeEndpoint {
+	if t.count == 0 {
+		return nil
+	}
+
+	var (
+		start    = len(*params)
+		endpoint = t.root.find(url, params)
+	)
+	if endpoint == nil {
+		return nil
+	}
+
+	for index, name := range endpoint.paramNames {
+		(*params)[start+index].Key = name
+	}
+
+	return endpoint
+}
