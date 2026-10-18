@@ -68,7 +68,7 @@ func (n *routeNode) find(url string, params *Params, captureIndex int) *routeEnd
 	// Keep the size dispatch here so the short-search wrapper can inline.
 	// Bulk searches retain the standard library's streaming implementation.
 	var index int
-	if useRouteIndexByteNEON && len(n.indices) < 32 {
+	if useRouteIndexByteSIMD && len(n.indices) < 32 {
 		index = routeIndexByte(n.indices, url[0])
 	} else {
 		index = strings.IndexByte(n.indices, url[0])
@@ -86,7 +86,7 @@ func (n *routeNode) find(url string, params *Params, captureIndex int) *routeEnd
 
 	if n.param != nil {
 		var end int
-		if useRouteIndexByteNEON && len(url)-1 < 32 {
+		if useRouteIndexByteSIMD && len(url)-1 < 32 {
 			end = routeIndexByte(url[1:], '/')
 		} else {
 			end = strings.IndexByte(url[1:], '/')

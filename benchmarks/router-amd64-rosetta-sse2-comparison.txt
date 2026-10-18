@@ -1,0 +1,96 @@
+execution: Rosetta 2 on Apple M3 (not native AMD64)
+goamd64: v1
+goos: darwin
+goarch: amd64
+pkg: github.com/vroomy/httpserve
+cpu: VirtualApple @ 2.50GHz
+                                        │ benchmarks/router-amd64-rosetta-fastpaths.txt │ benchmarks/router-amd64-rosetta-after.txt │
+                                        │                    sec/op                     │       sec/op         vs base              │
+RouterByteSearch/Bytes=2/Terminal                                         43.60n ±   6%          43.74n ±  5%       ~ (p=0.818 n=6)
+RouterByteSearch/Bytes=2/Nested                                           49.33n ±   6%          51.08n ±  4%       ~ (p=0.180 n=6)
+RouterByteSearch/Bytes=8/Terminal                                         43.37n ±   7%          44.47n ±  5%       ~ (p=0.589 n=6)
+RouterByteSearch/Bytes=8/Nested                                           49.99n ±   5%          50.62n ±  4%       ~ (p=0.818 n=6)
+RouterByteSearch/Bytes=16/Terminal                                        43.35n ±   6%          44.01n ±  4%       ~ (p=0.310 n=6)
+RouterByteSearch/Bytes=16/Nested                                          50.04n ±   5%          50.79n ±  3%       ~ (p=0.937 n=6)
+RouterByteSearch/Bytes=32/Terminal                                        43.37n ±   7%          44.20n ±  4%       ~ (p=0.699 n=6)
+RouterByteSearch/Bytes=32/Nested                                          50.63n ±   6%          52.15n ±  3%       ~ (p=0.223 n=6)
+RouterByteSearch/Bytes=64/Terminal                                        45.77n ±   6%          46.48n ±  4%       ~ (p=0.310 n=6)
+RouterByteSearch/Bytes=64/Nested                                          52.41n ±   4%          53.95n ±  4%       ~ (p=0.310 n=6)
+RouterByteSearch/Bytes=256/Terminal                                       56.42n ±  25%          56.46n ±  3%       ~ (p=0.974 n=6)
+RouterByteSearch/Bytes=256/Nested                                         60.64n ±   5%          62.77n ±  3%       ~ (p=0.093 n=6)
+RouterByteSearch/Bytes=1024/Terminal                                      101.0n ±   4%          102.1n ±  2%       ~ (p=0.589 n=6)
+RouterByteSearch/Bytes=1024/Nested                                        104.2n ±   2%          105.5n ±  1%       ~ (p=0.143 n=6)
+RouterFanout/Children=4                                                   46.77n ±   6%          47.58n ±  5%       ~ (p=0.485 n=6)
+RouterFanout/Children=16                                                  46.19n ±   5%          46.49n ±  8%       ~ (p=0.937 n=6)
+RouterFanout/Children=64                                                  49.48n ±  10%          53.32n ± 10%       ~ (p=0.394 n=6)
+RouterStdlib/URL=Common/Router=ServeMux                                   165.7n ±   9%          165.5n ±  4%       ~ (p=0.937 n=6)
+RouterStdlib/URL=Common/Router=Trie                                       58.63n ±   3%          54.52n ±  4%  -7.02% (p=0.002 n=6)
+RouterStdlib/URL=Short/Router=ServeMux                                    127.5n ±  12%          128.5n ±  3%       ~ (p=0.619 n=6)
+RouterStdlib/URL=Short/Router=Trie                                        63.14n ±   4%          62.95n ±  2%       ~ (p=0.699 n=6)
+RouterStdlib/URL=Medium/Router=ServeMux                                   279.1n ±   5%          278.9n ±  3%       ~ (p=0.937 n=6)
+RouterStdlib/URL=Medium/Router=Trie                                       64.05n ± 115%          63.29n ±  3%       ~ (p=0.394 n=6)
+RouterStdlib/URL=Long/Router=ServeMux                                     775.7n ±   3%          778.3n ±  3%       ~ (p=0.937 n=6)
+RouterStdlib/URL=Long/Router=Trie                                         64.82n ±   2%          63.81n ±  2%       ~ (p=0.093 n=6)
+geomean                                                                   70.20n                 70.94n        +1.05%
+
+                                        │ benchmarks/router-amd64-rosetta-fastpaths.txt │ benchmarks/router-amd64-rosetta-after.txt │
+                                        │                     B/op                      │       B/op         vs base                │
+RouterByteSearch/Bytes=2/Terminal                                          0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=2/Nested                                            0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=8/Terminal                                          0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=8/Nested                                            0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=16/Terminal                                         0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=16/Nested                                           0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=32/Terminal                                         0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=32/Nested                                           0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=64/Terminal                                         0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=64/Nested                                           0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=256/Terminal                                        0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=256/Nested                                          0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=1024/Terminal                                       0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=1024/Nested                                         0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterFanout/Children=4                                                    0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterFanout/Children=16                                                   0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterFanout/Children=64                                                   0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Common/Router=ServeMux                                    16.00 ± 0%            16.00 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Common/Router=Trie                                        0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Short/Router=ServeMux                                     16.00 ± 0%            16.00 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Short/Router=Trie                                         0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Medium/Router=ServeMux                                    16.00 ± 0%            16.00 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Medium/Router=Trie                                        0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Long/Router=ServeMux                                      16.00 ± 0%            16.00 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Long/Router=Trie                                          0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+geomean                                                                               ²                      +0.00%               ²
+¹ all samples are equal
+² summaries must be >0 to compute geomean
+
+                                        │ benchmarks/router-amd64-rosetta-fastpaths.txt │ benchmarks/router-amd64-rosetta-after.txt │
+                                        │                   allocs/op                   │     allocs/op      vs base                │
+RouterByteSearch/Bytes=2/Terminal                                          0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=2/Nested                                            0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=8/Terminal                                          0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=8/Nested                                            0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=16/Terminal                                         0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=16/Nested                                           0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=32/Terminal                                         0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=32/Nested                                           0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=64/Terminal                                         0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=64/Nested                                           0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=256/Terminal                                        0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=256/Nested                                          0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=1024/Terminal                                       0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterByteSearch/Bytes=1024/Nested                                         0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterFanout/Children=4                                                    0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterFanout/Children=16                                                   0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterFanout/Children=64                                                   0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Common/Router=ServeMux                                    1.000 ± 0%            1.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Common/Router=Trie                                        0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Short/Router=ServeMux                                     1.000 ± 0%            1.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Short/Router=Trie                                         0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Medium/Router=ServeMux                                    1.000 ± 0%            1.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Medium/Router=Trie                                        0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Long/Router=ServeMux                                      1.000 ± 0%            1.000 ± 0%       ~ (p=1.000 n=6) ¹
+RouterStdlib/URL=Long/Router=Trie                                          0.000 ± 0%            0.000 ± 0%       ~ (p=1.000 n=6) ¹
+geomean                                                                               ²                      +0.00%               ²
+¹ all samples are equal
+² summaries must be >0 to compute geomean

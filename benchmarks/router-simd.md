@@ -33,7 +33,9 @@ custom search routine as a whole, including scalar assembly and call conventions
 not just the vector instructions.
 
 [routeIndexByte_generic.go](../routeIndexByte_generic.go) uses `strings.IndexByte`
-on other architectures and with `-tags purego`. That tag disables this package's
+outside ARM64/AMD64 and with `-tags purego`. AMD64 now has a separate
+[SSE2 implementation and validation report](router-simd-amd64.md); the measurements
+below describe the ARM64 implementation. That tag disables this package's
 custom assembly; the standard library can still use its own SIMD. No experimental
 Go features, CPU detection, new dependencies, or public APIs are required.
 

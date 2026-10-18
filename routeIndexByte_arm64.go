@@ -2,7 +2,7 @@
 
 package httpserve
 
-const useRouteIndexByteNEON = true
+const useRouteIndexByteSIMD = true
 
 // routeIndexByte searches strings shorter than 32 bytes. It avoids the assembly
 // call for empty edges and first-byte hits.

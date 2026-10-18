@@ -11,6 +11,9 @@ For the ARM64 NEON implementation, its comparison with the original router and
 a control using only empty-string/first-byte shortcuts, see the
 [SIMD benchmark report](router-simd.md).
 
+For the AMD64 SSE2 implementation and its validation under Rosetta, see the
+[AMD64 report](router-simd-amd64.md). Native Intel/AMD timing has not been measured.
+
 For fresh CPU profiles and measured remaining opportunities after those changes,
 see the [ARM64 profile review](router-profile-review.md).
 

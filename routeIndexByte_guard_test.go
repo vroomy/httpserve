@@ -1,4 +1,4 @@
-//go:build arm64 && !purego && (darwin || linux)
+//go:build (arm64 || amd64) && !purego && (darwin || linux)
 
 package httpserve
 

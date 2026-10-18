@@ -1,10 +1,10 @@
-//go:build !arm64 || purego
+//go:build (!arm64 && !amd64) || purego
 
 package httpserve
 
 import "strings"
 
-const useRouteIndexByteNEON = false
+const useRouteIndexByteSIMD = false
 
 func routeIndexByte(value string, target byte) int {
 	return strings.IndexByte(value, target)

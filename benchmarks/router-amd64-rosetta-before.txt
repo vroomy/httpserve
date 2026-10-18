@@ -1,0 +1,183 @@
+execution: Rosetta 2 on Apple M3 (not native AMD64)
+goamd64: v1
+
+goos: darwin
+goarch: amd64
+pkg: github.com/vroomy/httpserve
+cpu: VirtualApple @ 2.50GHz
+BenchmarkRouterByteSearch/Bytes=2/Terminal         	 2298055	        51.70 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=2/Nested           	 2012208	        60.51 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=8/Terminal         	 2291774	        52.11 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=8/Nested           	 1967726	        61.29 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=16/Terminal        	 2323743	        52.15 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=16/Nested          	 1975268	        64.35 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=32/Terminal        	 2119120	        53.97 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=32/Nested          	 1897848	        62.72 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=64/Terminal        	 2129518	        56.75 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=64/Nested          	 1849714	        65.74 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=256/Terminal       	 1818463	        66.64 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=256/Nested         	 1577030	        76.66 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=1024/Terminal      	 1000000	       108.5 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=1024/Nested        	 1000000	       116.5 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=4                   	 2371269	        52.09 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16                  	 2274182	        53.27 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64                  	 2069820	        59.35 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=ServeMux   	  822668	       159.9 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=Trie       	 1762327	        70.30 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=ServeMux    	 1000000	       128.5 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie        	 1473246	        81.44 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=ServeMux   	  491971	       255.7 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie       	 1447191	        81.26 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=ServeMux     	  178032	       697.9 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie         	 1450842	        82.91 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: amd64
+pkg: github.com/vroomy/httpserve
+cpu: VirtualApple @ 2.50GHz
+BenchmarkRouterByteSearch/Bytes=2/Terminal         	 2258058	        52.92 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=2/Nested           	 1931611	        61.97 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=8/Terminal         	 2262889	        53.03 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=8/Nested           	 1894467	        62.09 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=16/Terminal        	 2249247	        53.25 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=16/Nested          	 1889920	        62.75 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=32/Terminal        	 2220069	        53.59 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=32/Nested          	 1892954	        63.62 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=64/Terminal        	 2153415	        56.69 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=64/Nested          	 1823947	        65.59 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=256/Terminal       	 1790851	        68.65 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=256/Nested         	 1552575	        77.50 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=1024/Terminal      	 1000000	       108.9 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=1024/Nested        	 1000000	       122.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=4                   	 2237269	        55.25 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16                  	 2142130	        56.06 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64                  	 1892299	        63.98 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=ServeMux   	  759253	       161.1 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=Trie       	 1749421	        69.02 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=ServeMux    	 1000000	       127.9 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie        	 1464374	        82.39 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=ServeMux   	  482775	       260.9 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie       	 1449534	        82.11 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=ServeMux     	  174807	       709.7 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie         	 1426332	        83.80 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: amd64
+pkg: github.com/vroomy/httpserve
+cpu: VirtualApple @ 2.50GHz
+BenchmarkRouterByteSearch/Bytes=2/Terminal         	 2041444	        59.18 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=2/Nested           	 1781779	        68.03 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=8/Terminal         	 2032960	        60.66 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=8/Nested           	 1726448	        69.59 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=16/Terminal        	 2028628	        58.67 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=16/Nested          	 1738754	        69.17 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=32/Terminal        	 2009049	        59.65 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=32/Nested          	 1706059	        70.64 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=64/Terminal        	 1937980	        61.36 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=64/Nested          	 1665775	        71.78 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=256/Terminal       	 1635123	        73.73 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=256/Nested         	 1428573	        83.68 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=1024/Terminal      	 1000000	       116.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=1024/Nested        	  941144	       132.2 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=4                   	 2274074	        53.89 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16                  	 2176729	        55.24 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64                  	 1963734	        61.70 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=ServeMux   	  832249	       156.5 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=Trie       	 1692302	        70.70 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=ServeMux    	 1000000	       122.8 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie        	 1404116	        85.28 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=ServeMux   	  463051	       257.1 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie       	 1396534	        86.64 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=ServeMux     	  168212	       707.3 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie         	 1390341	        86.60 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: amd64
+pkg: github.com/vroomy/httpserve
+cpu: VirtualApple @ 2.50GHz
+BenchmarkRouterByteSearch/Bytes=2/Terminal         	 2188888	        54.73 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=2/Nested           	 1832050	        64.74 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=8/Terminal         	 2208302	        54.22 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=8/Nested           	 1867171	        64.31 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=16/Terminal        	 2189539	        55.47 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=16/Nested          	 1832980	        65.32 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=32/Terminal        	 2140402	        56.11 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=32/Nested          	 1820702	        66.04 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=64/Terminal        	 2070994	        58.03 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=64/Nested          	 1789393	        67.20 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=256/Terminal       	 1707111	        70.78 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=256/Nested         	 1518187	        79.45 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=1024/Terminal      	 1000000	       111.9 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=1024/Nested        	  980959	       121.9 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=4                   	 2199289	        54.18 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16                  	 2152473	        55.54 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64                  	 1991019	        60.73 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=ServeMux   	  788241	       162.5 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=Trie       	 1736104	        69.65 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=ServeMux    	 1000000	       124.4 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie        	 1415676	        84.99 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=ServeMux   	  448668	       260.2 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie       	 1408634	        85.34 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=ServeMux     	  165931	       722.5 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie         	 1404685	        85.88 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: amd64
+pkg: github.com/vroomy/httpserve
+cpu: VirtualApple @ 2.50GHz
+BenchmarkRouterByteSearch/Bytes=2/Terminal         	 2219630	        54.33 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=2/Nested           	 1871026	        64.12 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=8/Terminal         	 2217132	        53.80 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=8/Nested           	 1790248	        63.82 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=16/Terminal        	 2201881	        54.30 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=16/Nested          	 1850187	        64.44 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=32/Terminal        	 2176396	        55.61 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=32/Nested          	 1826551	        65.29 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=64/Terminal        	 2085421	        57.65 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=64/Nested          	 1791127	        66.79 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=256/Terminal       	 1756200	        81.47 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=256/Nested         	 1512163	        79.22 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=1024/Terminal      	 1000000	       111.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=1024/Nested        	  982398	       125.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=4                   	 2213215	        54.70 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16                  	 2155695	        55.79 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64                  	 1894677	        63.78 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=ServeMux   	  835581	       157.8 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=Trie       	 1705575	        70.53 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=ServeMux    	 1000000	       124.0 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie        	 1426173	        85.00 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=ServeMux   	  455241	       262.8 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie       	 1414928	        85.99 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=ServeMux     	  166884	       717.4 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie         	 1377915	        86.82 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: amd64
+pkg: github.com/vroomy/httpserve
+cpu: VirtualApple @ 2.50GHz
+BenchmarkRouterByteSearch/Bytes=2/Terminal         	 2057540	        54.37 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=2/Nested           	 1867458	        63.94 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=8/Terminal         	 2227896	        54.24 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=8/Nested           	 1877224	        64.24 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=16/Terminal        	 2190493	        54.51 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=16/Nested          	 1835473	        64.94 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=32/Terminal        	 2173783	        55.26 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=32/Nested          	 1830338	        65.73 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=64/Terminal        	 2083464	        57.31 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=64/Nested          	 1791438	        67.15 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=256/Terminal       	 1741815	        68.60 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=256/Nested         	 1516528	        79.47 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=1024/Terminal      	 1000000	       111.5 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterByteSearch/Bytes=1024/Nested        	  977563	       125.5 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=4                   	 2178696	        55.39 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16                  	 2135764	        56.10 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64                  	 1905901	        62.81 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=ServeMux   	  765529	       157.6 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=Trie       	 1741650	        69.51 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=ServeMux    	 1000000	       125.8 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie        	 1439889	        83.26 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=ServeMux   	  459044	       260.0 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie       	 1438707	        83.86 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=ServeMux     	  173800	       715.0 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie         	 1410574	        85.19 ns/op	       0 B/op	       0 allocs/op
+PASS
