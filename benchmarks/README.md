@@ -11,6 +11,9 @@ For the ARM64 NEON implementation, its comparison with the original router and
 a control using only empty-string/first-byte shortcuts, see the
 [SIMD benchmark report](router-simd.md).
 
+For fresh CPU profiles and measured remaining opportunities after those changes,
+see the [ARM64 profile review](router-profile-review.md).
+
 ## Coverage
 
 Each benchmark runs the following matrix (162 cases total):
