@@ -1,0 +1,67 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+                                              │ /tmp/httpserve-profile-review/current-bench.txt │ /tmp/httpserve-profile-review/short-prefix-bench.txt │
+                                              │                     sec/op                      │            sec/op              vs base               │
+RouterStdlib/URL=Common/Router=Trie                                                39.70n ±  5%                    35.99n ±  2%   -9.37% (p=0.000 n=8)
+RouterStdlib/URL=Short/Router=Trie                                                 41.74n ±  4%                    37.87n ±  3%   -9.27% (p=0.000 n=8)
+RouterStdlib/URL=Medium/Router=Trie                                                42.15n ±  6%                    38.27n ±  2%   -9.18% (p=0.000 n=8)
+RouterStdlib/URL=Long/Router=Trie                                                  42.55n ±  1%                    38.90n ±  3%   -8.58% (p=0.000 n=8)
+RouterAllocations/Static/MatchInto                                                 12.69n ±  3%                    10.78n ±  2%  -15.02% (p=0.000 n=8)
+RouterAllocations/Static/ServeHTTP                                                 27.50n ± 33%                    31.64n ± 69%        ~ (p=0.959 n=8)
+RouterAllocations/Param/MatchInto                                                  25.12n ±  3%                    22.81n ±  2%   -9.23% (p=0.000 n=8)
+RouterAllocations/Param/ServeHTTP                                                  36.90n ±  1%                    33.70n ±  2%   -8.66% (p=0.000 n=8)
+RouterAllocations/DeepHit/MatchInto                                                89.78n ±  5%                    78.92n ±  4%  -12.10% (p=0.000 n=8)
+RouterAllocations/DeepHit/ServeHTTP                                                99.13n ±  4%                    89.32n ±  3%   -9.90% (p=0.000 n=8)
+RouterAllocations/Fallback/MatchInto                                               80.56n ±  4%                    72.61n ±  3%   -9.87% (p=0.000 n=8)
+RouterAllocations/Fallback/ServeHTTP                                               96.47n ±  3%                    86.41n ±  3%  -10.42% (p=0.010 n=8)
+RouterFanout/Children=4                                                            36.48n ± 24%                    42.27n ± 32%        ~ (p=0.721 n=8)
+RouterFanout/Children=16                                                           30.18n ±  2%                    27.50n ±  1%   -8.88% (p=0.007 n=8)
+RouterFanout/Children=64                                                           34.15n ± 46%                    30.16n ± 75%        ~ (p=0.442 n=8)
+RouterMatch/Long/Wildcard/Routes=1000/LastHit                                      39.78n ±  4%                    32.39n ±  3%  -18.59% (p=0.000 n=8)
+geomean                                                                            42.15n                          38.83n         -7.88%
+
+                                              │ /tmp/httpserve-profile-review/current-bench.txt │ /tmp/httpserve-profile-review/short-prefix-bench.txt │
+                                              │                      B/op                       │             B/op              vs base                │
+RouterStdlib/URL=Common/Router=Trie                                                0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterStdlib/URL=Short/Router=Trie                                                 0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterStdlib/URL=Medium/Router=Trie                                                0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterStdlib/URL=Long/Router=Trie                                                  0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/Static/MatchInto                                                 0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/Static/ServeHTTP                                                 0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/Param/MatchInto                                                  0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/Param/ServeHTTP                                                  0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/DeepHit/MatchInto                                                0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/DeepHit/ServeHTTP                                                0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/Fallback/MatchInto                                               0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/Fallback/ServeHTTP                                               0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterFanout/Children=4                                                            0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterFanout/Children=16                                                           0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterFanout/Children=64                                                           0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterMatch/Long/Wildcard/Routes=1000/LastHit                                      0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+geomean                                                                                       ²                                 +0.00%               ²
+¹ all samples are equal
+² summaries must be >0 to compute geomean
+
+                                              │ /tmp/httpserve-profile-review/current-bench.txt │ /tmp/httpserve-profile-review/short-prefix-bench.txt │
+                                              │                    allocs/op                    │          allocs/op            vs base                │
+RouterStdlib/URL=Common/Router=Trie                                                0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterStdlib/URL=Short/Router=Trie                                                 0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterStdlib/URL=Medium/Router=Trie                                                0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterStdlib/URL=Long/Router=Trie                                                  0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/Static/MatchInto                                                 0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/Static/ServeHTTP                                                 0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/Param/MatchInto                                                  0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/Param/ServeHTTP                                                  0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/DeepHit/MatchInto                                                0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/DeepHit/ServeHTTP                                                0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/Fallback/MatchInto                                               0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterAllocations/Fallback/ServeHTTP                                               0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterFanout/Children=4                                                            0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterFanout/Children=16                                                           0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterFanout/Children=64                                                           0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+RouterMatch/Long/Wildcard/Routes=1000/LastHit                                      0.000 ± 0%                       0.000 ± 0%       ~ (p=1.000 n=8) ¹
+geomean                                                                                       ²                                 +0.00%               ²
+¹ all samples are equal
+² summaries must be >0 to compute geomean

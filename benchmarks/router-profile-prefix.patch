@@ -1,0 +1,21 @@
+--- a/routeNode.go
++++ b/routeNode.go
+@@ -53,8 +53,16 @@
+ // find defers capture writes until an endpoint wins. Each parameter frame fills
+ // its slot while returning, so failed branches neither allocate nor retain URLs.
+ func (n *routeNode) find(url string, params *Params, captureIndex int) *routeEndpoint {
+-	if !strings.HasPrefix(url, n.prefix) {
+-		return nil
++	switch len(n.prefix) {
++	case 0:
++	case 1:
++		if len(url) == 0 || url[0] != n.prefix[0] {
++			return nil
++		}
++	default:
++		if !strings.HasPrefix(url, n.prefix) {
++			return nil
++		}
+ 	}
+ 
+ 	url = url[len(n.prefix):]

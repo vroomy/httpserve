@@ -65,7 +65,16 @@ func (n *routeNode) find(url string, params *Params, captureIndex int) *routeEnd
 	// At the end of a static part, the original matcher requires a slash
 	// boundary. Radix splits inside a static part do not impose that boundary
 	// on static children; only parameter and wildcard continuations need it.
-	if index := strings.IndexByte(n.indices, url[0]); index >= 0 {
+	// Keep the size dispatch here so the short-search wrapper can inline.
+	// Bulk searches retain the standard library's streaming implementation.
+	var index int
+	if useRouteIndexByteSIMD && len(n.indices) < 32 {
+		index = routeIndexByte(n.indices, url[0])
+	} else {
+		index = strings.IndexByte(n.indices, url[0])
+	}
+
+	if index >= 0 {
 		if endpoint := n.children[index].find(url, params, captureIndex); endpoint != nil {
 			return endpoint
 		}
@@ -76,7 +85,13 @@ func (n *routeNode) find(url string, params *Params, captureIndex int) *routeEnd
 	}
 
 	if n.param != nil {
-		var end = strings.IndexByte(url[1:], '/')
+		var end int
+		if useRouteIndexByteSIMD && len(url)-1 < 32 {
+			end = routeIndexByte(url[1:], '/')
+		} else {
+			end = strings.IndexByte(url[1:], '/')
+		}
+
 		if end < 0 {
 			end = len(url) - 1
 		}

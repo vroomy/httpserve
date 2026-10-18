@@ -7,6 +7,19 @@ code and fixtures are the same for both runs.
 For the implemented allocation improvements, before/after measurements, and
 remaining ideas, see the [trie allocation review](trie-allocation-review.md).
 
+For the ARM64 NEON implementation, its comparison with the original router and
+a control using only empty-string/first-byte shortcuts, see the
+[SIMD benchmark report](router-simd.md).
+
+For the AMD64 SSE2 implementation and its validation under Rosetta, see the
+[AMD64 report](router-simd-amd64.md). Native Intel/AMD timing has not been measured.
+
+For the final native ARM64 comparison of `main` and the SIMD branch, see the
+[main/branch benchmark report](router-pr-comparison.md).
+
+For fresh CPU profiles and measured remaining opportunities after those changes,
+see the [ARM64 profile review](router-profile-review.md).
+
 ## Coverage
 
 Each benchmark runs the following matrix (162 cases total):
@@ -345,8 +358,8 @@ status. The benchmark checks the selected handler, parameter value, and status
 before timing and after the loop.
 
 Both routers dispatch through `http.Handler`, reuse a prepared request and a
-discarding response writer, and warm up before measurement. Local Go 1.26.5
-source confirms ServeMux performs routing again on each `ServeHTTP` call;
+discarding response writer, and warm up before measurement. Local Go 1.26.5 and
+1.27.0 source confirms ServeMux performs routing again on each `ServeHTTP` call;
 reusing the request does not skip matching. Request construction, route
 registration, network I/O, response body buffering, and application work are
 excluded. The trie measurement includes its normal Context pooling and panic
@@ -435,3 +448,51 @@ advantage for these successful one-parameter GET fixtures; they do not establish
 the same speedup for complete HTTP requests, other route shapes, or the additional
 path and method behavior supported by ServeMux. No production or benchmark source
 changed for this capture.
+
+### After ARM64 SIMD (2026-10-18)
+
+This capture measures commit `4ba3dab`, including the
+[ARM64 SIMD implementation](router-simd.md), against Go 1.27.0's `http.ServeMux`.
+The prefix specialization discussed in the [profile review](router-profile-review.md)
+remains an unapplied prototype. Both routers used the unchanged 40-route fixtures
+above and ran in the same invocation on Apple M3, `darwin/arm64`,
+`GOARM64=v8.0`, with `GODEBUG` and `GOEXPERIMENT` unset, one CPU, and ten
+one-second samples per case. No other tests or benchmarks ran alongside this
+capture.
+
+```sh
+GOCACHE=/tmp/httpserve-go-build go test -run '^$' -bench '^BenchmarkRouterStdlib$' \
+  -benchmem -benchtime=1s -count=10 -cpu=1 > benchmarks/router-stdlib-simd.txt
+benchstat -row /URL -col /Router benchmarks/router-stdlib-simd.txt \
+  > benchmarks/router-stdlib-simd-comparison.txt
+```
+
+Saved data: [raw samples](router-stdlib-simd.txt) and
+[benchstat comparison](router-stdlib-simd-comparison.txt). Benchstat version:
+`golang.org/x/perf v0.0.0-20240707193131-dc66afd55b77`.
+
+Median dispatch times and ratios of the medians:
+
+| Fixture | ServeMux | HTTPServe | HTTPServe speedup |
+| --- | ---: | ---: | ---: |
+| Common (19 bytes) | 122.50 ns/op | 37.77 ns/op | **3.24×** |
+| Short (9 bytes) | 93.77 ns/op | 41.44 ns/op | **2.26×** |
+| Medium (39 bytes) | 212.75 ns/op | 41.90 ns/op | **5.08×** |
+| Long (172 bytes) | 616.20 ns/op | 42.25 ns/op | **14.58×** |
+
+HTTPServe used **0 B/op and 0 allocs/op** in every sample; ServeMux used
+**16 B/op and 1 alloc/op**. All four timing differences were statistically
+significant (`p < 0.001`, ten samples per router). The common user URL took
+69.17% less dispatch time.
+
+All eight fixtures passed their handler, parameter, and status checks before
+and after timing, across 80 samples. These measurements include warmed Context
+pooling, panic recovery, and native parameter lookup, but exclude request
+construction, network I/O, and application work. The routers have different
+path and method semantics, as described above; these ratios measure the selected
+successful GET fixtures rather than complete HTTP throughput.
+
+The older comparison used Go 1.26.5. For a same-toolchain comparison that
+isolates the routing changes, use the [SIMD report](router-simd.md). This capture
+changes only benchmark documentation and saved measurements; production and
+benchmark source are unchanged.

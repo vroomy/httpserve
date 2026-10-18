@@ -1,0 +1,516 @@
+Current ARM64 router profiling, 2026-10-17
+Go 1.27.0, darwin/arm64, Apple M3, GOARM64=v8.0, GOMAXPROCS=1
+Requested benchtime=5s per case; profiles include benchmark calibration.
+
+=== common ===
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterStdlib/URL=Common/Router=Trie         	161359593	        38.64 ns/op	       0 B/op	       0 allocs/op
+PASS
+File: httpserve-current-profile.test
+Type: cpu
+Time: 2026-10-17 15:03:35 PDT
+Duration: 10.14s, Total samples = 8220ms (81.05%)
+Showing nodes accounting for 7140ms, 86.86% of 8220ms total
+Dropped 27 nodes (cum <= 41.10ms)
+Showing top 18 nodes out of 42
+      flat  flat%   sum%        cum   cum%
+    2140ms 26.03% 26.03%     4000ms 48.66%  github.com/vroomy/httpserve.(*routeNode).find
+     740ms  9.00% 35.04%      740ms  9.00%  runtime.memequal
+     700ms  8.52% 43.55%      700ms  8.52%  github.com/vroomy/httpserve.routeIndexByteNEON
+     480ms  5.84% 49.39%     8000ms 97.32%  github.com/vroomy/httpserve.(*Router).ServeHTTP
+     380ms  4.62% 54.01%      380ms  4.62%  runtime.memclrNoHeapPointers
+     320ms  3.89% 57.91%     4320ms 52.55%  github.com/vroomy/httpserve.(*route).find
+     320ms  3.89% 61.80%      490ms  5.96%  sync.(*Pool).pin
+     270ms  3.28% 65.09%      270ms  3.28%  github.com/vroomy/httpserve.Params.ByName (inline)
+     260ms  3.16% 68.25%     1130ms 13.75%  github.com/vroomy/httpserve.(*Context).reset (inline)
+     230ms  2.80% 71.05%      510ms  6.20%  sync.(*Pool).Get
+     210ms  2.55% 73.60%     4610ms 56.08%  github.com/vroomy/httpserve.(*Router).match
+     180ms  2.19% 75.79%      510ms  6.20%  sync.(*Pool).Put
+     170ms  2.07% 77.86%      910ms 11.07%  internal/stringslite.HasPrefix (inline)
+     160ms  1.95% 79.81%      160ms  1.95%  runtime.bulkBarrierPreWrite
+     160ms  1.95% 81.75%      160ms  1.95%  runtime.procPin (inline)
+     150ms  1.82% 83.58%      150ms  1.82%  internal/runtime/maps.(*Map).Clear
+     140ms  1.70% 85.28%      290ms  3.53%  runtime.mapclear
+     130ms  1.58% 86.86%      640ms  7.79%  github.com/vroomy/httpserve.acquireContext (inline)
+
+=== long ===
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterStdlib/URL=Long/Router=Trie         	137129431	        42.39 ns/op	       0 B/op	       0 allocs/op
+PASS
+File: httpserve-current-profile.test
+Type: cpu
+Time: 2026-10-17 15:03:46 PDT
+Duration: 10.38s, Total samples = 8640ms (83.24%)
+Showing nodes accounting for 7770ms, 89.93% of 8640ms total
+Dropped 44 nodes (cum <= 43.20ms)
+Showing top 18 nodes out of 41
+      flat  flat%   sum%        cum   cum%
+    2250ms 26.04% 26.04%     4930ms 57.06%  github.com/vroomy/httpserve.(*routeNode).find
+    1440ms 16.67% 42.71%     1440ms 16.67%  runtime.memequal
+     900ms 10.42% 53.12%      900ms 10.42%  github.com/vroomy/httpserve.routeIndexByteNEON
+     480ms  5.56% 58.68%      620ms  7.18%  sync.(*Pool).pin
+     350ms  4.05% 62.73%      350ms  4.05%  runtime.memclrNoHeapPointers
+     320ms  3.70% 66.44%     8250ms 95.49%  github.com/vroomy/httpserve.(*Router).ServeHTTP
+     300ms  3.47% 69.91%     5230ms 60.53%  github.com/vroomy/httpserve.(*route).find
+     240ms  2.78% 72.69%      560ms  6.48%  sync.(*Pool).Get
+     200ms  2.31% 75.00%     1100ms 12.73%  github.com/vroomy/httpserve.routeIndexByte (inline)
+     180ms  2.08% 77.08%     5470ms 63.31%  github.com/vroomy/httpserve.(*Router).match
+     180ms  2.08% 79.17%      180ms  2.08%  runtime.procUnpin (inline)
+     150ms  1.74% 80.90%      170ms  1.97%  runtime.mapclear
+     150ms  1.74% 82.64%      640ms  7.41%  sync.(*Pool).Put
+     140ms  1.62% 84.26%      840ms  9.72%  github.com/vroomy/httpserve.(*Context).reset (inline)
+     140ms  1.62% 85.88%     8400ms 97.22%  github.com/vroomy/httpserve.benchmarkRouterStdlib
+     120ms  1.39% 87.27%      120ms  1.39%  runtime.bulkBarrierPreWrite
+     120ms  1.39% 88.66%      120ms  1.39%  runtime.procPin (inline)
+     110ms  1.27% 89.93%      110ms  1.27%  github.com/vroomy/httpserve.Params.ByName (inline)
+
+=== deep ===
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/DeepHit/ServeHTTP         	56741097	        98.79 ns/op	       0 B/op	       0 allocs/op
+PASS
+File: httpserve-current-profile.test
+Type: cpu
+Time: 2026-10-17 15:03:56 PDT
+Duration: 5.87s, Total samples = 4.82s (82.05%)
+Showing nodes accounting for 4.61s, 95.64% of 4.82s total
+Dropped 16 nodes (cum <= 0.02s)
+Showing top 18 nodes out of 32
+      flat  flat%   sum%        cum   cum%
+     1.63s 33.82% 33.82%      3.73s 77.39%  github.com/vroomy/httpserve.(*routeNode).find
+     1.33s 27.59% 61.41%      1.33s 27.59%  github.com/vroomy/httpserve.routeIndexByteNEON
+     0.33s  6.85% 68.26%      0.33s  6.85%  runtime.memequal
+     0.23s  4.77% 73.03%      0.25s  5.19%  sync.(*Pool).pin
+     0.16s  3.32% 76.35%      1.49s 30.91%  github.com/vroomy/httpserve.routeIndexByte (inline)
+     0.16s  3.32% 79.67%      0.49s 10.17%  internal/stringslite.HasPrefix (inline)
+     0.11s  2.28% 81.95%      3.84s 79.67%  github.com/vroomy/httpserve.(*route).find
+     0.10s  2.07% 84.02%      0.10s  2.07%  runtime.memclrNoHeapPointers
+     0.09s  1.87% 85.89%      0.30s  6.22%  sync.(*Pool).Put
+     0.08s  1.66% 87.55%      4.75s 98.55%  github.com/vroomy/httpserve.(*Router).ServeHTTP
+     0.08s  1.66% 89.21%      0.57s 11.83%  strings.HasPrefix (inline)
+     0.06s  1.24% 90.46%      0.30s  6.22%  github.com/vroomy/httpserve.(*Context).reset (inline)
+     0.05s  1.04% 91.49%      0.66s 13.69%  github.com/vroomy/httpserve.(*Router).ServeHTTP.func1
+     0.05s  1.04% 92.53%      0.05s  1.04%  runtime.bulkBarrierPreWrite
+     0.05s  1.04% 93.57%      0.10s  2.07%  sync.(*Pool).Get
+     0.04s  0.83% 94.40%      0.04s  0.83%  internal/runtime/maps.(*Map).Clear
+     0.03s  0.62% 95.02%      3.89s 80.71%  github.com/vroomy/httpserve.(*Router).match
+     0.03s  0.62% 95.64%      0.07s  1.45%  runtime.mapclear
+
+=== fallback ===
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/Fallback/ServeHTTP         	56301770	        95.18 ns/op	       0 B/op	       0 allocs/op
+PASS
+File: httpserve-current-profile.test
+Type: cpu
+Time: 2026-10-17 15:04:02 PDT
+Duration: 5.57s, Total samples = 4.71s (84.53%)
+Showing nodes accounting for 4.44s, 94.27% of 4.71s total
+Dropped 18 nodes (cum <= 0.02s)
+Showing top 18 nodes out of 36
+      flat  flat%   sum%        cum   cum%
+     1.68s 35.67% 35.67%      3.63s 77.07%  github.com/vroomy/httpserve.(*routeNode).find
+     1.16s 24.63% 60.30%      1.16s 24.63%  github.com/vroomy/httpserve.routeIndexByteNEON
+     0.39s  8.28% 68.58%      0.39s  8.28%  runtime.memequal
+     0.20s  4.25% 72.82%      0.28s  5.94%  sync.(*Pool).Put
+     0.14s  2.97% 75.80%      0.66s 14.01%  github.com/vroomy/httpserve.releaseContext
+     0.12s  2.55% 78.34%      1.28s 27.18%  github.com/vroomy/httpserve.routeIndexByte (inline)
+     0.10s  2.12% 80.47%      0.10s  2.12%  runtime.memclrNoHeapPointers
+     0.10s  2.12% 82.59%      0.56s 11.89%  strings.HasPrefix (inline)
+     0.08s  1.70% 84.29%      0.10s  2.12%  sync.(*Pool).pin
+     0.07s  1.49% 85.77%      4.62s 98.09%  github.com/vroomy/httpserve.(*Router).ServeHTTP
+     0.07s  1.49% 87.26%      0.46s  9.77%  internal/stringslite.HasPrefix (inline)
+     0.06s  1.27% 88.54%      3.72s 78.98%  github.com/vroomy/httpserve.(*Router).match
+     0.05s  1.06% 89.60%      0.24s  5.10%  github.com/vroomy/httpserve.(*Context).reset (inline)
+     0.05s  1.06% 90.66%      0.05s  1.06%  github.com/vroomy/httpserve.(*routeEndpoint).prepareParams (inline)
+     0.05s  1.06% 91.72%      0.06s  1.27%  runtime.casgstatus
+     0.04s  0.85% 92.57%      0.04s  0.85%  internal/runtime/maps.(*Map).Clear
+     0.04s  0.85% 93.42%      0.04s  0.85%  runtime.procUnpin (inline)
+     0.04s  0.85% 94.27%      0.10s  2.12%  sync.(*Pool).Get
+
+=== fanout16 ===
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterFanout/Children=16         	168246151	        33.56 ns/op	       0 B/op	       0 allocs/op
+PASS
+File: httpserve-current-profile.test
+Type: cpu
+Time: 2026-10-17 15:04:08 PDT
+Duration: 9.42s, Total samples = 7980ms (84.75%)
+Showing nodes accounting for 7140ms, 89.47% of 7980ms total
+Dropped 26 nodes (cum <= 39.90ms)
+Showing top 18 nodes out of 40
+      flat  flat%   sum%        cum   cum%
+    2430ms 30.45% 30.45%     3800ms 47.62%  github.com/vroomy/httpserve.(*routeNode).find
+     550ms  6.89% 37.34%     7760ms 97.24%  github.com/vroomy/httpserve.(*Router).ServeHTTP
+     540ms  6.77% 44.11%      540ms  6.77%  runtime.memequal
+     470ms  5.89% 50.00%      470ms  5.89%  github.com/vroomy/httpserve.routeIndexByteNEON
+     450ms  5.64% 55.64%      550ms  6.89%  sync.(*Pool).pin
+     340ms  4.26% 59.90%     4530ms 56.77%  github.com/vroomy/httpserve.(*Router).match
+     340ms  4.26% 64.16%     4140ms 51.88%  github.com/vroomy/httpserve.(*route).find
+     320ms  4.01% 68.17%      320ms  4.01%  runtime.memclrNoHeapPointers
+     260ms  3.26% 71.43%      500ms  6.27%  sync.(*Pool).Get
+     260ms  3.26% 74.69%      700ms  8.77%  sync.(*Pool).Put
+     170ms  2.13% 76.82%      710ms  8.90%  internal/stringslite.HasPrefix (inline)
+     160ms  2.01% 78.82%     1060ms 13.28%  github.com/vroomy/httpserve.(*Context).reset (inline)
+     160ms  2.01% 80.83%      160ms  2.01%  runtime.bulkBarrierPreWrite
+     160ms  2.01% 82.83%      320ms  4.01%  runtime.mapclear
+     150ms  1.88% 84.71%      150ms  1.88%  internal/runtime/maps.(*Map).Clear
+     130ms  1.63% 86.34%     1930ms 24.19%  github.com/vroomy/httpserve.(*Router).ServeHTTP.func1
+     130ms  1.63% 87.97%      200ms  2.51%  github.com/vroomy/httpserve.BenchmarkRouterFanout.func1.1
+     120ms  1.50% 89.47%      120ms  1.50%  runtime.procUnpin (inline)
+
+=== match-wildcard ===
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterMatch/Long/Wildcard/Routes=1000/LastHit 	152778523	        39.35 ns/op	       0 B/op	       0 allocs/op
+PASS
+File: httpserve-current-profile.test
+Type: cpu
+Time: 2026-10-17 15:04:17 PDT
+Duration: 10.12s, Total samples = 8.56s (84.57%)
+Showing nodes accounting for 8.38s, 97.90% of 8.56s total
+Dropped 18 nodes (cum <= 0.04s)
+Showing top 18 nodes out of 24
+      flat  flat%   sum%        cum   cum%
+     2.87s 33.53% 33.53%      6.76s 78.97%  github.com/vroomy/httpserve.(*routeNode).find
+     1.69s 19.74% 53.27%      1.69s 19.74%  runtime.memequal
+     1.56s 18.22% 71.50%      1.56s 18.22%  github.com/vroomy/httpserve.routeIndexByteNEON
+     0.62s  7.24% 78.74%      7.98s 93.22%  github.com/vroomy/httpserve.(*Router).MatchInto
+     0.48s  5.61% 84.35%      7.24s 84.58%  github.com/vroomy/httpserve.(*route).find
+     0.37s  4.32% 88.67%      8.35s 97.55%  github.com/vroomy/httpserve.benchmarkRouterLookup
+     0.26s  3.04% 91.71%      1.82s 21.26%  github.com/vroomy/httpserve.routeIndexByte (inline)
+     0.24s  2.80% 94.51%      1.93s 22.55%  internal/stringslite.HasPrefix (inline)
+     0.09s  1.05% 95.56%      0.09s  1.05%  github.com/vroomy/httpserve.(*routeEndpoint).prepareParams (inline)
+     0.09s  1.05% 96.61%      0.09s  1.05%  github.com/vroomy/httpserve.methodToIndex (inline)
+     0.04s  0.47% 97.08%      0.05s  0.58%  runtime.wakep
+     0.02s  0.23% 97.31%      0.25s  2.92%  runtime.newstack
+     0.02s  0.23% 97.55%      1.95s 22.78%  strings.HasPrefix (inline)
+     0.01s  0.12% 97.66%      0.06s   0.7%  runtime.(*timers).run
+     0.01s  0.12% 97.78%      0.23s  2.69%  runtime.goschedImpl
+     0.01s  0.12% 97.90%      0.14s  1.64%  runtime.schedule
+         0     0% 97.90%      7.98s 93.22%  github.com/vroomy/httpserve.(*Router).Match (inline)
+         0     0% 97.90%      8.35s 97.55%  github.com/vroomy/httpserve.runRouterBenchmarks.func1.1.1.1
+
+=== Owned Match parameter allocation ===
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/Param/Match   	139635189	        43.08 ns/op	      32 B/op	       1 allocs/op
+PASS
+File: httpserve-current-profile.test
+Type: alloc_objects
+Time: 2026-10-17 15:04:38 PDT
+Showing nodes accounting for 241278147, 100% of 241284610 total
+Dropped 31 nodes (cum <= 1206423)
+      flat  flat%   sum%        cum   cum%
+ 241278147   100%   100%  241278147   100%  github.com/vroomy/httpserve.(*routeEndpoint).prepareParams (inline)
+         0     0%   100%  241278147   100%  github.com/vroomy/httpserve.(*Router).Match (inline)
+         0     0%   100%  241278147   100%  github.com/vroomy/httpserve.(*Router).MatchInto
+         0     0%   100%  241278147   100%  github.com/vroomy/httpserve.(*route).find
+         0     0%   100%  241278147   100%  github.com/vroomy/httpserve.(*routeNode).find
+         0     0%   100%  241278147   100%  github.com/vroomy/httpserve.BenchmarkRouterAllocations.func1.1
+         0     0%   100%  241278147   100%  testing.(*B).launch
+         0     0%   100%  241278892   100%  testing.(*B).runN
+
+CPU samples for owned Match were dominated by runtime.kevent; excluded from CPU hotspot ranking.
+
+=== common source attribution ===
+Total: 8.22s
+ROUTINE ======================== github.com/vroomy/httpserve.(*routeNode).find in /Users/itsmontoya/go/src/github.com/vroomy/httpserve/routeNode.go
+     2.14s      7.79s (flat, cum) 94.77% of Total
+     190ms      210ms     55:func (n *routeNode) find(url string, params *Params, captureIndex int) *routeEndpoint {
+     260ms      1.20s     56:	if !strings.HasPrefix(url, n.prefix) {
+         .          .     57:		return nil
+         .          .     58:	}
+         .          .     59:
+     120ms      120ms     60:	url = url[len(n.prefix):]
+         .          .     61:	if len(url) == 0 {
+     100ms      210ms     62:		return n.endpoint.prepareParams(params, captureIndex)
+         .          .     63:	}
+         .          .     64:
+         .          .     65:	// At the end of a static part, the original matcher requires a slash
+         .          .     66:	// boundary. Radix splits inside a static part do not impose that boundary
+         .          .     67:	// on static children; only parameter and wildcard continuations need it.
+         .          .     68:	// Keep the size dispatch here so the short-search wrapper can inline.
+         .          .     69:	// Bulk searches retain the standard library's streaming implementation.
+         .          .     70:	var index int
+      60ms       60ms     71:	if useRouteIndexByteNEON && len(n.indices) < 32 {
+     270ms      700ms     72:		index = routeIndexByte(n.indices, url[0])
+         .          .     73:	} else {
+         .          .     74:		index = strings.IndexByte(n.indices, url[0])
+         .          .     75:	}
+         .          .     76:
+     360ms      360ms     77:	if index >= 0 {
+      70ms      3.27s     78:		if endpoint := n.children[index].find(url, params, captureIndex); endpoint != nil {
+     150ms      150ms     79:			return endpoint
+         .          .     80:		}
+         .          .     81:	}
+         .          .     82:
+     130ms      130ms     83:	if n.prefix != "" && url[0] != '/' {
+         .          .     84:		return nil
+         .          .     85:	}
+         .          .     86:
+      50ms       50ms     87:	if n.param != nil {
+         .          .     88:		var end int
+      20ms       20ms     89:		if useRouteIndexByteNEON && len(url)-1 < 32 {
+      30ms      390ms     90:			end = routeIndexByte(url[1:], '/')
+         .          .     91:		} else {
+         .          .     92:			end = strings.IndexByte(url[1:], '/')
+         .          .     93:		}
+         .          .     94:
+      10ms       10ms     95:		if end < 0 {
+         .          .     96:			end = len(url) - 1
+         .          .     97:		}
+         .          .     98:
+     180ms      770ms     99:		if endpoint := n.param.find(url[end+1:], params, captureIndex+1); endpoint != nil {
+      90ms       90ms    100:			(*params)[captureIndex].Value = url[1 : end+1]
+      50ms       50ms    101:			return endpoint
+         .          .    102:		}
+         .          .    103:	}
+         .          .    104:
+         .          .    105:	return n.wildcard.prepareParams(params, captureIndex)
+         .          .    106:}
+
+=== long source attribution ===
+Total: 8.64s
+ROUTINE ======================== github.com/vroomy/httpserve.(*routeNode).find in /Users/itsmontoya/go/src/github.com/vroomy/httpserve/routeNode.go
+     2.25s      9.87s (flat, cum) 114.24% of Total
+     250ms      270ms     55:func (n *routeNode) find(url string, params *Params, captureIndex int) *routeEndpoint {
+     140ms      1.67s     56:	if !strings.HasPrefix(url, n.prefix) {
+         .          .     57:		return nil
+         .          .     58:	}
+         .          .     59:
+     290ms      290ms     60:	url = url[len(n.prefix):]
+         .          .     61:	if len(url) == 0 {
+     100ms      130ms     62:		return n.endpoint.prepareParams(params, captureIndex)
+         .          .     63:	}
+         .          .     64:
+         .          .     65:	// At the end of a static part, the original matcher requires a slash
+         .          .     66:	// boundary. Radix splits inside a static part do not impose that boundary
+         .          .     67:	// on static children; only parameter and wildcard continuations need it.
+         .          .     68:	// Keep the size dispatch here so the short-search wrapper can inline.
+         .          .     69:	// Bulk searches retain the standard library's streaming implementation.
+         .          .     70:	var index int
+      60ms       60ms     71:	if useRouteIndexByteNEON && len(n.indices) < 32 {
+     350ms      990ms     72:		index = routeIndexByte(n.indices, url[0])
+         .          .     73:	} else {
+         .          .     74:		index = strings.IndexByte(n.indices, url[0])
+         .          .     75:	}
+         .          .     76:
+     100ms      100ms     77:	if index >= 0 {
+     110ms      4.60s     78:		if endpoint := n.children[index].find(url, params, captureIndex); endpoint != nil {
+      60ms       60ms     79:			return endpoint
+         .          .     80:		}
+         .          .     81:	}
+         .          .     82:
+     130ms      130ms     83:	if n.prefix != "" && url[0] != '/' {
+         .          .     84:		return nil
+         .          .     85:	}
+         .          .     86:
+      60ms       60ms     87:	if n.param != nil {
+         .          .     88:		var end int
+      20ms       20ms     89:		if useRouteIndexByteNEON && len(url)-1 < 32 {
+      10ms      470ms     90:			end = routeIndexByte(url[1:], '/')
+         .          .     91:		} else {
+         .          .     92:			end = strings.IndexByte(url[1:], '/')
+         .          .     93:		}
+         .          .     94:
+      40ms       40ms     95:		if end < 0 {
+         .          .     96:			end = len(url) - 1
+         .          .     97:		}
+         .          .     98:
+     140ms      590ms     99:		if endpoint := n.param.find(url[end+1:], params, captureIndex+1); endpoint != nil {
+     310ms      310ms    100:			(*params)[captureIndex].Value = url[1 : end+1]
+      80ms       80ms    101:			return endpoint
+         .          .    102:		}
+         .          .    103:	}
+         .          .    104:
+         .          .    105:	return n.wildcard.prepareParams(params, captureIndex)
+         .          .    106:}
+
+=== deep source attribution ===
+Total: 4.82s
+ROUTINE ======================== github.com/vroomy/httpserve.(*routeNode).find in /Users/itsmontoya/go/src/github.com/vroomy/httpserve/routeNode.go
+     1.63s     10.12s (flat, cum) 209.96% of Total
+     170ms      190ms     55:func (n *routeNode) find(url string, params *Params, captureIndex int) *routeEndpoint {
+     150ms      720ms     56:	if !strings.HasPrefix(url, n.prefix) {
+         .          .     57:		return nil
+         .          .     58:	}
+         .          .     59:
+     190ms      190ms     60:	url = url[len(n.prefix):]
+         .          .     61:	if len(url) == 0 {
+      10ms       30ms     62:		return n.endpoint.prepareParams(params, captureIndex)
+         .          .     63:	}
+         .          .     64:
+         .          .     65:	// At the end of a static part, the original matcher requires a slash
+         .          .     66:	// boundary. Radix splits inside a static part do not impose that boundary
+         .          .     67:	// on static children; only parameter and wildcard continuations need it.
+         .          .     68:	// Keep the size dispatch here so the short-search wrapper can inline.
+         .          .     69:	// Bulk searches retain the standard library's streaming implementation.
+         .          .     70:	var index int
+      90ms       90ms     71:	if useRouteIndexByteNEON && len(n.indices) < 32 {
+     180ms      370ms     72:		index = routeIndexByte(n.indices, url[0])
+         .          .     73:	} else {
+         .          .     74:		index = strings.IndexByte(n.indices, url[0])
+         .          .     75:	}
+         .          .     76:
+      40ms       40ms     77:	if index >= 0 {
+      50ms      3.66s     78:		if endpoint := n.children[index].find(url, params, captureIndex); endpoint != nil {
+      40ms       40ms     79:			return endpoint
+         .          .     80:		}
+         .          .     81:	}
+         .          .     82:
+      90ms       90ms     83:	if n.prefix != "" && url[0] != '/' {
+         .          .     84:		return nil
+         .          .     85:	}
+         .          .     86:
+      20ms       20ms     87:	if n.param != nil {
+         .          .     88:		var end int
+      60ms       60ms     89:		if useRouteIndexByteNEON && len(url)-1 < 32 {
+      50ms      1.35s     90:			end = routeIndexByte(url[1:], '/')
+         .          .     91:		} else {
+         .          .     92:			end = strings.IndexByte(url[1:], '/')
+         .          .     93:		}
+         .          .     94:
+     150ms      150ms     95:		if end < 0 {
+         .          .     96:			end = len(url) - 1
+         .          .     97:		}
+         .          .     98:
+      80ms      2.86s     99:		if endpoint := n.param.find(url[end+1:], params, captureIndex+1); endpoint != nil {
+     220ms      220ms    100:			(*params)[captureIndex].Value = url[1 : end+1]
+      40ms       40ms    101:			return endpoint
+         .          .    102:		}
+         .          .    103:	}
+         .          .    104:
+         .          .    105:	return n.wildcard.prepareParams(params, captureIndex)
+         .          .    106:}
+
+=== fallback source attribution ===
+Total: 4.71s
+ROUTINE ======================== github.com/vroomy/httpserve.(*routeNode).find in /Users/itsmontoya/go/src/github.com/vroomy/httpserve/routeNode.go
+     1.68s      9.52s (flat, cum) 202.12% of Total
+     210ms      270ms     55:func (n *routeNode) find(url string, params *Params, captureIndex int) *routeEndpoint {
+     330ms      890ms     56:	if !strings.HasPrefix(url, n.prefix) {
+      20ms       20ms     57:		return nil
+         .          .     58:	}
+         .          .     59:
+     150ms      150ms     60:	url = url[len(n.prefix):]
+         .          .     61:	if len(url) == 0 {
+         .          .     62:		return n.endpoint.prepareParams(params, captureIndex)
+         .          .     63:	}
+         .          .     64:
+         .          .     65:	// At the end of a static part, the original matcher requires a slash
+         .          .     66:	// boundary. Radix splits inside a static part do not impose that boundary
+         .          .     67:	// on static children; only parameter and wildcard continuations need it.
+         .          .     68:	// Keep the size dispatch here so the short-search wrapper can inline.
+         .          .     69:	// Bulk searches retain the standard library's streaming implementation.
+         .          .     70:	var index int
+     120ms      120ms     71:	if useRouteIndexByteNEON && len(n.indices) < 32 {
+     180ms      460ms     72:		index = routeIndexByte(n.indices, url[0])
+         .          .     73:	} else {
+         .          .     74:		index = strings.IndexByte(n.indices, url[0])
+         .          .     75:	}
+         .          .     76:
+     110ms      110ms     77:	if index >= 0 {
+      90ms      3.53s     78:		if endpoint := n.children[index].find(url, params, captureIndex); endpoint != nil {
+      20ms       20ms     79:			return endpoint
+         .          .     80:		}
+         .          .     81:	}
+         .          .     82:
+      90ms       90ms     83:	if n.prefix != "" && url[0] != '/' {
+         .          .     84:		return nil
+         .          .     85:	}
+         .          .     86:
+      40ms       40ms     87:	if n.param != nil {
+         .          .     88:		var end int
+      40ms       40ms     89:		if useRouteIndexByteNEON && len(url)-1 < 32 {
+      80ms      1.08s     90:			end = routeIndexByte(url[1:], '/')
+         .          .     91:		} else {
+         .          .     92:			end = strings.IndexByte(url[1:], '/')
+         .          .     93:		}
+         .          .     94:
+      30ms       30ms     95:		if end < 0 {
+         .          .     96:			end = len(url) - 1
+         .          .     97:		}
+         .          .     98:
+     110ms      2.56s     99:		if endpoint := n.param.find(url[end+1:], params, captureIndex+1); endpoint != nil {
+         .          .    100:			(*params)[captureIndex].Value = url[1 : end+1]
+         .          .    101:			return endpoint
+         .          .    102:		}
+         .          .    103:	}
+         .          .    104:
+      60ms      110ms    105:	return n.wildcard.prepareParams(params, captureIndex)
+         .          .    106:}
+
+=== match-wildcard source attribution ===
+Total: 8.56s
+ROUTINE ======================== github.com/vroomy/httpserve.(*routeNode).find in /Users/itsmontoya/go/src/github.com/vroomy/httpserve/routeNode.go
+     2.87s     12.31s (flat, cum) 143.81% of Total
+     300ms      330ms     55:func (n *routeNode) find(url string, params *Params, captureIndex int) *routeEndpoint {
+     290ms      2.24s     56:	if !strings.HasPrefix(url, n.prefix) {
+         .          .     57:		return nil
+         .          .     58:	}
+         .          .     59:
+     240ms      240ms     60:	url = url[len(n.prefix):]
+         .          .     61:	if len(url) == 0 {
+         .          .     62:		return n.endpoint.prepareParams(params, captureIndex)
+         .          .     63:	}
+         .          .     64:
+         .          .     65:	// At the end of a static part, the original matcher requires a slash
+         .          .     66:	// boundary. Radix splits inside a static part do not impose that boundary
+         .          .     67:	// on static children; only parameter and wildcard continuations need it.
+         .          .     68:	// Keep the size dispatch here so the short-search wrapper can inline.
+         .          .     69:	// Bulk searches retain the standard library's streaming implementation.
+         .          .     70:	var index int
+      70ms       70ms     71:	if useRouteIndexByteNEON && len(n.indices) < 32 {
+     350ms      2.17s     72:		index = routeIndexByte(n.indices, url[0])
+         .          .     73:	} else {
+         .          .     74:		index = strings.IndexByte(n.indices, url[0])
+         .          .     75:	}
+         .          .     76:
+     300ms      300ms     77:	if index >= 0 {
+     890ms      6.44s     78:		if endpoint := n.children[index].find(url, params, captureIndex); endpoint != nil {
+     140ms      140ms     79:			return endpoint
+         .          .     80:		}
+         .          .     81:	}
+         .          .     82:
+     130ms      130ms     83:	if n.prefix != "" && url[0] != '/' {
+         .          .     84:		return nil
+         .          .     85:	}
+         .          .     86:
+      50ms       50ms     87:	if n.param != nil {
+         .          .     88:		var end int
+         .          .     89:		if useRouteIndexByteNEON && len(url)-1 < 32 {
+         .          .     90:			end = routeIndexByte(url[1:], '/')
+         .          .     91:		} else {
+         .          .     92:			end = strings.IndexByte(url[1:], '/')
+         .          .     93:		}
+         .          .     94:
+         .          .     95:		if end < 0 {
+         .          .     96:			end = len(url) - 1
+         .          .     97:		}
+         .          .     98:
+      30ms       30ms     99:		if endpoint := n.param.find(url[end+1:], params, captureIndex+1); endpoint != nil {
+         .          .    100:			(*params)[captureIndex].Value = url[1 : end+1]
+         .          .    101:			return endpoint
+         .          .    102:		}
+         .          .    103:	}
+         .          .    104:
+      80ms      170ms    105:	return n.wildcard.prepareParams(params, captureIndex)
+         .          .    106:}

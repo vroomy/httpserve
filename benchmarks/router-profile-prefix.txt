@@ -1,0 +1,288 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterStdlib/URL=Common/Router=Trie         	 3404204	        35.25 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie          	 3185709	        36.71 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie         	 3222301	        37.59 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie           	 3153037	        37.89 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/Static/MatchInto         	11495582	        10.61 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Static/ServeHTTP         	 4557423	        26.23 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/MatchInto          	 5316016	        22.44 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/ServeHTTP          	 3629736	        32.91 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/MatchInto        	 1548480	        76.18 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP        	 1386364	        87.12 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/MatchInto       	 1706248	        70.63 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP       	 1421698	        84.30 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterFanout/Children=4         	 2932368	        51.56 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16        	 4287844	        27.45 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64        	 4238066	        65.48 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterMatch/Long/Wildcard/Routes=1000/LastHit 	 3787180	        31.47 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterStdlib/URL=Common/Router=Trie         	 3332688	        35.72 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie          	 3136021	        37.48 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie         	 3192705	        37.61 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie           	 3113274	        38.31 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/Static/MatchInto         	11476251	        10.64 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Static/ServeHTTP         	 2612460	        39.52 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/MatchInto          	 5389765	        22.73 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/ServeHTTP          	 3572668	        33.50 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/MatchInto        	 1548620	        77.60 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP        	 1356912	        87.01 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/MatchInto       	 1694882	        71.00 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP       	 1423225	        83.71 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterFanout/Children=4         	 4285069	        41.61 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16        	 4346650	        27.13 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64        	 4307160	        28.00 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterMatch/Long/Wildcard/Routes=1000/LastHit 	 3775147	        31.62 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterStdlib/URL=Common/Router=Trie         	 3321630	        36.13 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie          	 3111528	        37.73 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie         	 3137941	        38.29 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie           	 3067758	        39.29 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/Static/MatchInto         	11039431	        10.95 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Static/ServeHTTP         	 4568665	        27.36 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/MatchInto          	 5146256	        23.14 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/ServeHTTP          	 3452156	        34.63 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/MatchInto        	 1467838	        78.63 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP        	 1370762	        88.45 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/MatchInto       	 1649812	        72.16 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP       	 1397397	        86.15 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterFanout/Children=4         	 4191828	        28.57 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16        	 4367122	        27.54 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64        	 4309596	        52.85 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterMatch/Long/Wildcard/Routes=1000/LastHit 	 3623334	        32.42 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterStdlib/URL=Common/Router=Trie         	 3305769	        36.02 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie          	 3162301	        37.99 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie         	 3120056	        38.75 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie           	 3107338	        38.81 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/Static/MatchInto         	11146891	        10.78 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Static/ServeHTTP         	 4568665	        25.33 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/MatchInto          	 5212810	        22.61 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/ServeHTTP          	 3514156	        33.88 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/MatchInto        	 1502254	        79.21 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP        	 1345894	        89.38 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/MatchInto       	 1667728	        72.40 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP       	 1375935	        87.81 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterFanout/Children=4         	 4209385	        44.51 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16        	 4382907	        49.16 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64        	 3718100	        31.98 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterMatch/Long/Wildcard/Routes=1000/LastHit 	 3677822	        32.47 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterStdlib/URL=Common/Router=Trie         	 3271473	        35.95 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie          	 3134365	        38.31 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie         	 3073789	        38.53 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie           	 3077534	        38.85 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/Static/MatchInto         	11042648	        10.78 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Static/ServeHTTP         	 4748995	        53.58 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/MatchInto          	 5331684	        23.06 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/ServeHTTP          	 3482251	        34.52 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/MatchInto        	 1466482	        82.21 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP        	 1336610	        90.61 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/MatchInto       	 1637835	        74.33 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP       	 1000000	       103.0 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterFanout/Children=4         	 4041934	        42.93 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16        	 4265938	        27.39 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64        	 4184659	        28.20 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterMatch/Long/Wildcard/Routes=1000/LastHit 	 3712560	        32.38 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterStdlib/URL=Common/Router=Trie         	 3334896	        36.14 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie          	 3157035	        37.75 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie         	 3170364	        38.08 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie           	 3068503	        39.15 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/Static/MatchInto         	11059269	        10.83 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Static/ServeHTTP         	 4747406	        25.06 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/MatchInto          	 5195760	        22.85 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/ServeHTTP          	 3540384	        33.71 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/MatchInto        	 1500151	        81.89 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP        	 1296675	        89.26 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/MatchInto       	 1648848	        72.83 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP       	 1384614	        86.67 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterFanout/Children=4         	 4175094	        34.43 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16        	 4444663	        27.85 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64        	 4208150	        38.30 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterMatch/Long/Wildcard/Routes=1000/LastHit 	 3669804	        32.40 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterStdlib/URL=Common/Router=Trie         	 3247477	        36.53 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie          	 3112917	        38.01 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie         	 3144732	        38.26 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie           	 3012980	        39.26 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/Static/MatchInto         	11133919	        10.75 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Static/ServeHTTP         	 4596343	        64.75 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/MatchInto          	 5186292	        22.76 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/ServeHTTP          	 3504787	        33.66 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/MatchInto        	 1464133	        81.59 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP        	 1339315	        89.63 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/MatchInto       	 1618114	        73.73 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP       	 1341026	        86.16 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterFanout/Children=4         	 4161927	        28.82 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16        	 4386205	        27.77 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64        	 4212292	        28.35 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterMatch/Long/Wildcard/Routes=1000/LastHit 	 3714360	        32.34 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterStdlib/URL=Common/Router=Trie         	 3235082	        35.83 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie          	 3129154	        38.07 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie         	 3148930	        38.29 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie           	 3086383	        38.95 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/Static/MatchInto         	11213599	        10.87 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Static/ServeHTTP         	 4492257	        35.92 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/MatchInto          	 5199672	        24.60 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Param/ServeHTTP          	 3116002	        33.70 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/MatchInto        	 1471576	        77.85 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP        	 1328412	        91.84 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/MatchInto       	 1576447	        73.98 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP       	 1386151	        87.16 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterFanout/Children=4         	 2951251	        44.89 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=16        	 4331406	        27.29 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterFanout/Children=64        	 4235361	        28.30 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterMatch/Long/Wildcard/Routes=1000/LastHit 	 3679156	        32.65 ns/op	       0 B/op	       0 allocs/op
+PASS
