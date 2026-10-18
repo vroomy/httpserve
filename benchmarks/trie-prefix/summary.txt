@@ -1,0 +1,10 @@
+Native ARM64, valid run only (discarded overlay run excluded)
+Focused: 14 cases x 10 samples x 2 binaries = 280 samples, all PASS
+Matrix: 162 cases x 10 samples x 2 binaries = 3240 samples, all PASS
+All cases have exactly 10 samples per binary and unchanged B/op and allocs/op.
+Focused HTTPServe: 10 significant timing improvements, no significant regressions.
+Focused ServeMux controls: 4 nonsignificant timing changes, p=0.138-0.897.
+Matrix: 153 significant improvements, 0 significant regressions, 9 nonsignificant changes.
+Benchstat default alpha=0.05; individual comparisons are not adjusted for multiple testing.
+Matrix geometric mean of per-case medians: baseline 24.54803146010053 ns/op; candidate 22.85611950813439 ns/op; change -6.892251033310382%.
+Matrix allocation distribution per binary: 180 samples at 32 B/op and 1 alloc/op (18 owned parameter Match cases), 1440 samples at 0 B/op and 0 allocs/op.

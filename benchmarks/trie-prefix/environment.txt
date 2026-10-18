@@ -1,0 +1,49 @@
+Measurement date: 2026-10-18 (America/Los_Angeles)
+Baseline: clean e1b90bfc65c57878ebd8604066c3e9f3f8ce258d; completed ARM64 NEON and AMD64 SSE2
+Branch: perf/trie-prefix-fast-paths
+Baseline binary was built and preflighted before source edits.
+Candidate benchmark build: baseline source with only routeNode.go replaced in a separate physical source copy.
+Build settings: GOOS=darwin GOARCH=arm64 GOARM64=v8.0 CGO_ENABLED=0 GOFLAGS= GOEXPERIMENT= GODEBUG= GOCACHE=/tmp/httpserve-go-build
+Build command: go test -trimpath -c -o BINARY .
+Benchmark settings: -test.run ^$ -test.benchmem -test.cpu=1 -test.count=1; GODEBUG= GOEXPERIMENT=
+Focused: 10 alternating paired rounds, 1s per case
+Matrix: 10 alternating paired rounds, 100ms per case
+No builds, tests, fuzzing, or other agent benchmarks run alongside timing. External machine activity is not controlled.
+
+$ go version
+go version go1.27.0 darwin/arm64
+$ sw_vers
+ProductName:		macOS
+ProductVersion:		26.5.2
+BuildVersion:		25F84
+$ arch -x86_64 uname -m
+x86_64
+$ go version -m /Users/itsmontoya/go/bin/benchstat
+/Users/itsmontoya/go/bin/benchstat: go1.22.4
+	path	golang.org/x/perf/cmd/benchstat
+	mod	golang.org/x/perf	v0.0.0-20240707193131-dc66afd55b77	h1:xvkE6EBCdhhbdHMvqcbcE3ASNmhblKjs9ptEvSbM/Wc=
+	dep	github.com/aclements/go-moremath	v0.0.0-20210112150236-f10218a38794	h1:xlwdaKcTNVW4PtpQb8aKA4Pjy0CdJHEqvFbAnvR5m2g=
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	DefaultGODEBUG=httplaxcontentlength=1,httpmuxgo121=1,panicnil=1,tls10server=1,tlsrsakex=1,tlsunsafeekm=1
+	build	CGO_ENABLED=1
+	build	CGO_CFLAGS=
+	build	CGO_CPPFLAGS=
+	build	CGO_CXXFLAGS=
+	build	CGO_LDFLAGS=
+	build	GOARCH=arm64
+	build	GOOS=darwin
+SHA256 /tmp/httpserve-prefix.2xhsxK/baseline.test: 2701a30d887075537d3d65066fd68301159d3b08777427cbe89729e2869ea448
+SHA256 /tmp/httpserve-prefix.2xhsxK/baseline/routeNode.go: fb9e518f0186c869631326e16c475a9c7499f87002c8c9db525f0d4ddade006e
+SHA256 /Users/itsmontoya/go/src/github.com/vroomy/httpserve/routeNode.go: a5279b97fe4b6023033d1eff0fcedd274d1bbef93a9e49116440483c3ab51d01
+Baseline preflight cases: 253
+
+Benchmark fixture SHA256 (identical for both binaries):
+router_allocations_benchmark_test.go: 8a8003ae3f223620c1e28fe92879d5577c5c92d5293bec0668cf47ecdd23bec0
+router_benchmark_test.go: d6585d0d7fce4422c165d4227152ba1870b0b4c7e7f74696d9921466472909c8
+router_simd_benchmark_test.go: b9f06f140ad32f74be6b5457735b98b8e4ac0cf386548dbb40fa9085f026b80c
+router_stdlib_benchmark_test.go: e2c5d734a21e2fed2d16aa1d633d0c8804d59fe742bb1e0fd0f0fba75423f168
+router_users_benchmark_test.go: 0d2f550013a9dfab2d3a46834c900c136f1bf433f1378bfbdbe53f57b6f9aad2
+Discarded overlay candidate SHA256: 2701a30d887075537d3d65066fd68301159d3b08777427cbe89729e2869ea448 (identical to baseline; excluded from results)
+Validated physical source-copy differences: ['routeNode.go']
+Candidate SHA256: bf1f712e57af26cf2175a6bc849500f4edf3178532177f63410ee15808369075

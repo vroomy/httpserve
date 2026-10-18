@@ -1,0 +1,57 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/DeepHit/MatchInto         	13577277	        87.50 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP         	12214429	        99.89 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepMiss/MatchInto        	15740551	        75.82 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepMiss/ServeHTTP        	12609373	        97.42 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/MatchInto        	14673476	        81.18 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP        	12224517	        99.91 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=ServeMux     	 9723513	       129.7 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=Trie         	30636928	        38.95 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=ServeMux      	12067057	        98.10 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie          	27683469	        41.94 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=ServeMux     	 5461858	       219.5 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie         	28234102	        42.44 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=ServeMux       	 1877953	       642.5 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie           	27922804	        42.48 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/DeepHit/MatchInto         	13114042	        91.96 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP         	11816828	       101.0 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepMiss/MatchInto        	15418194	        77.07 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepMiss/ServeHTTP        	12604104	        96.04 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/MatchInto        	14645629	        84.42 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP        	12232701	        98.01 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=ServeMux     	 9575126	       127.3 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=Trie         	30299139	        39.52 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=ServeMux      	12337095	       104.5 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie          	28827501	        42.27 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=ServeMux     	 5484840	       223.3 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie         	27885628	        42.22 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=ServeMux       	 1841802	       640.2 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie           	27956822	        42.78 ns/op	       0 B/op	       0 allocs/op
+PASS
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+BenchmarkRouterAllocations/DeepHit/MatchInto         	13169934	        91.80 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepHit/ServeHTTP         	11774392	       101.5 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepMiss/MatchInto        	15475233	        77.72 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/DeepMiss/ServeHTTP        	12556542	        95.61 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/MatchInto        	14745327	        81.71 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterAllocations/Fallback/ServeHTTP        	12210244	       100.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=ServeMux     	 9439416	       130.7 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Common/Router=Trie         	30383913	        39.53 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=ServeMux      	12312111	        96.59 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Short/Router=Trie          	28218970	        42.11 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=ServeMux     	 5443750	       221.4 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Medium/Router=Trie         	27894732	        42.54 ns/op	       0 B/op	       0 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=ServeMux       	 1847104	       649.1 ns/op	      16 B/op	       1 allocs/op
+BenchmarkRouterStdlib/URL=Long/Router=Trie           	28173201	        44.05 ns/op	       0 B/op	       0 allocs/op
+PASS

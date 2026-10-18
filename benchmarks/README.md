@@ -454,8 +454,9 @@ changed for this capture.
 This capture measures commit `4ba3dab`, including the
 [ARM64 SIMD implementation](router-simd.md), against Go 1.27.0's `http.ServeMux`.
 The prefix specialization discussed in the [profile review](router-profile-review.md)
-remains an unapplied prototype. Both routers used the unchanged 40-route fixtures
-above and ran in the same invocation on Apple M3, `darwin/arm64`,
+was an unapplied prototype at this capture; see the [subsequent implementation
+comparison](trie-prefix/README.md) for fresh measurements. Both routers used the
+unchanged 40-route fixtures above and ran in the same invocation on Apple M3, `darwin/arm64`,
 `GOARM64=v8.0`, with `GODEBUG` and `GOEXPERIMENT` unset, one CPU, and ten
 one-second samples per case. No other tests or benchmarks ran alongside this
 capture.
@@ -496,3 +497,22 @@ The older comparison used Go 1.26.5. For a same-toolchain comparison that
 isolates the routing changes, use the [SIMD report](router-simd.md). This capture
 changes only benchmark documentation and saved measurements; production and
 benchmark source are unchanged.
+
+### After trie prefix comparisons (2026-10-18)
+
+The [implemented prefix comparison report](trie-prefix/README.md) records a fresh
+native ARM64 comparison against the completed NEON/SSE2 baseline at `e1b90bf`.
+It uses identical benchmark sources and Go 1.27.0, with ten alternating paired
+rounds and one-second focused samples. The unchanged ServeMux controls showed
+no significant change. Ordinary HTTP routing improved 7.69–8.95%, with unchanged
+zero allocations; the report includes deep hit/miss/fallback cases, the broader
+162-case matrix, correctness checks, and reproduction commands.
+The matrix geometric mean improved 6.89%, with 153 significant improvements,
+nine cases without a significant change, and no significant regressions.
+
+The [fresh ServeMux comparison](trie-prefix/stdlib-comparison.txt) supplies the
+updated README numbers: HTTPServe is 3.55× faster for the common URL, 2.53× for
+short, 5.72× for medium, and 16.55× for long in these successful GET fixtures.
+All four comparisons have `p < 0.001`. HTTPServe used 0 B/op and 0 allocs/op;
+ServeMux used 16 B/op and 1 alloc/op. The historical SIMD results above are
+preserved separately.

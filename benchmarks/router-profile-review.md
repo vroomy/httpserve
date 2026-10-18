@@ -1,23 +1,36 @@
-# ARM64 profile after the SIMD changes
+# Trie prefix comparisons: profile and implementation
 
 Re-profiled the current working tree on 2026-10-17 with Go 1.27.0,
 `darwin/arm64`, Apple M3, `GOARM64=v8.0`, and one benchmark CPU. This includes
-the [selective SIMD implementation](router-simd.md). This review adds measurements
-and an isolated prototype; it does not apply another production optimization.
+the [selective SIMD implementation](router-simd.md). That review produced an
+isolated, unapplied prototype. The prefix specialization was subsequently
+implemented on 2026-10-18; see the
+[fresh validation and measurements](trie-prefix/README.md) for the production
+change. The CPU profiles and prototype numbers below are
+historical and were not recaptured for the implementation.
+
+The fresh one-second comparisons against the completed SIMD baseline measured
+7.69–8.95% less time for ordinary HTTP routes, 9.91% for a five-parameter HTTP
+hit, and 10.34% for HTTP wildcard fallback, all at `p < 0.001`. Allocations were
+unchanged, and the ServeMux controls showed no significant timing changes.
+The fresh 162-case matrix improved its geometric mean by **6.89%**, with
+153 significant improvements and no significant regressions; this replaces
+the historical prototype's 8.02% as the implemented change's measured result.
 
 ## Findings
 
-There is still a useful, small optimization to pursue: bypass general string
-equality for empty and one-byte trie prefixes. A prototype improved the four
-ordinary HTTP fixtures by 8.6–9.4% and deep HTTP fixtures by about 10%, with
-unchanged allocations. This is the strongest **validated next step** from this
-review. It does not require additional assembly.
+The profile identified a small optimization: bypass general string
+equality for empty and one-byte trie prefixes. The historical prototype improved
+the four ordinary HTTP fixtures by 8.6–9.4% and deep HTTP fixtures by about 10%, with
+unchanged allocations. Those preliminary results motivated the implementation;
+they are separate from its fresh validation. The change requires no additional
+assembly.
 
 The remaining larger opportunities concern traversal and short parameter scans.
 They need separate experiments; a large profile share alone does not establish
 that the corresponding work can be removed.
 
-## Current CPU costs
+## Historical SIMD CPU profile (2026-10-17)
 
 Each case ran separately with `-test.benchtime=5s`, CPU and heap sampling, and
 `-test.cpu=1`. The profiles include benchmark calibration, so their total
@@ -53,22 +66,23 @@ all sampled allocation objects: one 32-byte allocation per successful
 one-parameter owned result. Callers that can reuse results already have
 `MatchInto`; warmed HTTP dispatch already reuses its storage.
 
-## Measured prefix prototype
+## Historical prefix prototype (unapplied at capture)
 
-[`routeNode.find`](../routeNode.go) currently calls `strings.HasPrefix` at every
-node, including empty root/parameter prefixes and one-byte radix edges. The
+At the time of this profile, [`routeNode.find`](../routeNode.go) called
+`strings.HasPrefix` at every node, including empty root/parameter prefixes and
+one-byte radix edges. The
 prototype switches on prefix length: empty prefixes match directly, one-byte
 prefixes check one byte after a length check, and longer prefixes retain
 `strings.HasPrefix`. The general equality routine already has short cases, but
 this avoids calling it for those nodes.
 
 The [exact prototype patch](router-profile-prefix.patch) was applied only through
-a Go source overlay in `/tmp`. Both binaries otherwise use the current source,
-including the SIMD changes. Eight paired rounds ran serially, alternating binary
+a Go source overlay in `/tmp`. Both binaries otherwise used the then-current
+source, including the SIMD changes. Eight paired rounds ran serially, alternating binary
 order, with 100 ms per fixture and one CPU. These timing runs had profiling
 disabled. No builds, fuzzing, or other benchmarks ran alongside them.
 
-| Fixture | Current median | Prefix prototype | Time reduction |
+| Fixture | SIMD baseline median | Prefix prototype | Time reduction |
 | --- | ---: | ---: | ---: |
 | Common URL HTTP | 39.70 ns | 35.99 ns | 9.37% |
 | Short URL HTTP | 41.74 ns | 37.87 ns | 9.27% |
@@ -150,10 +164,10 @@ The other selectors are `BenchmarkRouterStdlib/URL=Long/Router=Trie`,
 `BenchmarkRouterAllocations/Param/Match`. Anchor each path component as above
 to avoid matching similarly named subbenchmarks.
 
-For prototype comparisons, build the current source and a separate copy with
-the saved patch, then alternate the binaries using the existing benchmark
-fixtures. The prototype's selected router, Context, parser, allocation, SIMD
+For historical prototype comparisons, build the pre-specialization source and
+a separate copy with the saved patch, then alternate the binaries using the
+existing benchmark fixtures. The prototype's selected router, Context, parser, allocation, SIMD
 boundary, and differential seed tests passed. Ten seconds of differential
-router fuzzing passed **636,076 executions**. This is candidate validation;
-cross-platform and full integration validation remain necessary before adopting
-the prototype as a production change.
+router fuzzing passed **636,076 executions**. That was prototype validation only.
+Full integration, purego, differential fuzzing, and Rosetta AMD64 validation for
+the implementation are recorded in the [implementation report](trie-prefix/README.md).

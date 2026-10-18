@@ -26,6 +26,12 @@ reusable storage and returns the handler, updated parameters, and match status.
 Pass its returned slice into the next call; the previous values are cleared and
 overwritten. Concurrent callers must use separate backing arrays.
 
+Trie prefix comparisons accept empty prefixes directly and compare one-byte
+prefixes after checking for an empty URL. Longer prefixes use `strings.HasPrefix`.
+These paths apply on every architecture, including purego builds. See the
+[prefix comparison report](benchmarks/trie-prefix/README.md) for validation and
+measurements.
+
 `ServeHTTP` reuses a pooled Context and clears parameter, hook, and storage
 references before returning it to the pool. The Context and its parameter slice
 are valid only during the handler. Warmed dispatch with sufficient capacity uses
@@ -45,7 +51,7 @@ Intel/AMD performance measurements remain outstanding.
 ## Benchmarks
 
 For reproducible comparisons between HTTPServe and Go's `http.ServeMux`, see
-[the router benchmark guide](benchmarks/README.md#after-arm64-simd-2026-10-18).
+[the router benchmark guide](benchmarks/README.md#after-trie-prefix-comparisons-2026-10-18).
 It includes fixture details, allocation measurements, and commands for comparing
 the routers with `benchstat`.
 
@@ -56,25 +62,26 @@ shows median dispatch time; HTTPServe shows its speedup over that baseline:
 
 | URL fixture | `http.ServeMux` | HTTPServe |
 | --- | ---: | ---: |
-| Common (19 bytes): `/api/users/00000000` | 122.50 ns/op | **3.24× faster** |
-| Short (9 bytes) | 93.77 ns/op | **2.26× faster** |
-| Medium (39 bytes) | 212.75 ns/op | **5.08× faster** |
-| Long (172 bytes) | 616.20 ns/op | **14.58× faster** |
+| Common (19 bytes): `/api/users/00000000` | 127.50 ns/op | **3.55× faster** |
+| Short (9 bytes) | 96.16 ns/op | **2.53× faster** |
+| Medium (39 bytes) | 220.25 ns/op | **5.72× faster** |
+| Long (172 bytes) | 645.15 ns/op | **16.55× faster** |
 
 Across all four fixtures, HTTPServe used **0 B/op and 0 allocations/op**;
 `http.ServeMux` used **16 B/op and 1 allocation/op**.
 
 Measured on 2026-10-18 with Go 1.27.0 (`darwin/arm64`) on Apple M3, using one CPU
-and ten one-second samples per case. All timing differences were statistically
+and ten alternating rounds between the SIMD baseline and prefix implementation,
+with one-second samples per case. All timing differences were statistically
 significant in `benchstat` (`p < 0.001`). These are warmed successful-route
 benchmarks that include native parameter lookup and a minimal handler, excluding
 request construction, network I/O, and application work. They do not measure
 end-to-end HTTP throughput or compare all routing semantics.
 
 See the [benchmark source](router_stdlib_benchmark_test.go),
-[raw samples](benchmarks/router-stdlib-simd.txt), and
-[statistical comparison](benchmarks/router-stdlib-simd-comparison.txt).
-The [benchmark guide](benchmarks/README.md#after-arm64-simd-2026-10-18)
+[raw samples](benchmarks/trie-prefix/samples/focused-candidate.txt), and
+[statistical comparison](benchmarks/trie-prefix/stdlib-comparison.txt).
+The [benchmark guide](benchmarks/README.md#after-trie-prefix-comparisons-2026-10-18)
 includes the reproduction command and fixture details.
 
 ## Usage

@@ -1,0 +1,61 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+                                        │ benchmarks/trie-prefix/samples/focused-baseline.txt │ benchmarks/trie-prefix/samples/focused-candidate.txt │
+                                        │                       sec/op                        │            sec/op             vs base                │
+RouterAllocations/DeepHit/MatchInto                                               91.99n ± 1%                    82.51n ± 0%  -10.31% (p=0.000 n=10)
+RouterAllocations/DeepHit/ServeHTTP                                              101.60n ± 1%                    91.53n ± 3%   -9.91% (p=0.000 n=10)
+RouterAllocations/DeepMiss/MatchInto                                              77.57n ± 1%                    70.25n ± 1%   -9.44% (p=0.000 n=10)
+RouterAllocations/DeepMiss/ServeHTTP                                              95.89n ± 1%                    88.07n ± 1%   -8.15% (p=0.000 n=10)
+RouterAllocations/Fallback/MatchInto                                              82.23n ± 1%                    74.53n ± 1%   -9.36% (p=0.000 n=10)
+RouterAllocations/Fallback/ServeHTTP                                              98.34n ± 0%                    88.17n ± 2%  -10.34% (p=0.000 n=10)
+RouterStdlib/URL=Common/Router=ServeMux                                           127.2n ± 3%                    127.5n ± 2%        ~ (p=0.897 n=10)
+RouterStdlib/URL=Common/Router=Trie                                               38.94n ± 1%                    35.95n ± 3%   -7.69% (p=0.000 n=10)
+RouterStdlib/URL=Short/Router=ServeMux                                            96.06n ± 6%                    96.16n ± 5%        ~ (p=0.853 n=10)
+RouterStdlib/URL=Short/Router=Trie                                                41.68n ± 1%                    37.95n ± 1%   -8.95% (p=0.000 n=10)
+RouterStdlib/URL=Medium/Router=ServeMux                                           217.3n ± 1%                    220.3n ± 2%        ~ (p=0.138 n=10)
+RouterStdlib/URL=Medium/Router=Trie                                               42.21n ± 1%                    38.49n ± 1%   -8.79% (p=0.000 n=10)
+RouterStdlib/URL=Long/Router=ServeMux                                             644.0n ± 1%                    645.2n ± 2%        ~ (p=0.404 n=10)
+RouterStdlib/URL=Long/Router=Trie                                                 42.47n ± 1%                    38.99n ± 1%   -8.18% (p=0.000 n=10)
+geomean                                                                           91.30n                         85.39n        -6.48%
+
+                                        │ benchmarks/trie-prefix/samples/focused-baseline.txt │ benchmarks/trie-prefix/samples/focused-candidate.txt │
+                                        │                        B/op                         │            B/op              vs base                 │
+RouterAllocations/DeepHit/MatchInto                                              0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterAllocations/DeepHit/ServeHTTP                                              0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterAllocations/DeepMiss/MatchInto                                             0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterAllocations/DeepMiss/ServeHTTP                                             0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterAllocations/Fallback/MatchInto                                             0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterAllocations/Fallback/ServeHTTP                                             0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Common/Router=ServeMux                                          16.00 ± 0%                      16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Common/Router=Trie                                              0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Short/Router=ServeMux                                           16.00 ± 0%                      16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Short/Router=Trie                                               0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Medium/Router=ServeMux                                          16.00 ± 0%                      16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Medium/Router=Trie                                              0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Long/Router=ServeMux                                            16.00 ± 0%                      16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Long/Router=Trie                                                0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+geomean                                                                                     ²                                +0.00%                ²
+¹ all samples are equal
+² summaries must be >0 to compute geomean
+
+                                        │ benchmarks/trie-prefix/samples/focused-baseline.txt │ benchmarks/trie-prefix/samples/focused-candidate.txt │
+                                        │                      allocs/op                      │          allocs/op           vs base                 │
+RouterAllocations/DeepHit/MatchInto                                              0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterAllocations/DeepHit/ServeHTTP                                              0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterAllocations/DeepMiss/MatchInto                                             0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterAllocations/DeepMiss/ServeHTTP                                             0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterAllocations/Fallback/MatchInto                                             0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterAllocations/Fallback/ServeHTTP                                             0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Common/Router=ServeMux                                          1.000 ± 0%                      1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Common/Router=Trie                                              0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Short/Router=ServeMux                                           1.000 ± 0%                      1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Short/Router=Trie                                               0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Medium/Router=ServeMux                                          1.000 ± 0%                      1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Medium/Router=Trie                                              0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Long/Router=ServeMux                                            1.000 ± 0%                      1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Long/Router=Trie                                                0.000 ± 0%                      0.000 ± 0%       ~ (p=1.000 n=10) ¹
+geomean                                                                                     ²                                +0.00%                ²
+¹ all samples are equal
+² summaries must be >0 to compute geomean

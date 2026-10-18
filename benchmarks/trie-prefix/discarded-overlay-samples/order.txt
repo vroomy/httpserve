@@ -1,0 +1,17 @@
+2026-10-18T18:39:29.807755+00:00 focused round=1 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:39:48.476059+00:00 focused round=1 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:40:07.070375+00:00 focused round=2 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:40:25.674556+00:00 focused round=2 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:40:44.463190+00:00 focused round=3 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:41:03.197895+00:00 focused round=3 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
