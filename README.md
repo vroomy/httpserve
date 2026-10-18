@@ -32,6 +32,14 @@ are valid only during the handler. Warmed dispatch with sufficient capacity uses
 zero allocations in the routing benchmarks; cold pools, response generation,
 and application work can still allocate.
 
+On ARM64, trie child selection and parameter delimiter searches use inlined
+empty-string and first-byte checks, scalar loads for very small inputs, and
+bounded NEON searches through 31 bytes. Longer searches keep Go's standard
+library implementation. Other architectures and builds with
+`-tags purego` use `strings.IndexByte`. See the
+[ARM64 comparison](benchmarks/router-simd.md) for benchmark results, validation,
+and reproduction commands.
+
 ## Benchmarks
 
 For reproducible comparisons between HTTPServe and Go's `http.ServeMux`, see

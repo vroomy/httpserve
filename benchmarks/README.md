@@ -7,6 +7,10 @@ code and fixtures are the same for both runs.
 For the implemented allocation improvements, before/after measurements, and
 remaining ideas, see the [trie allocation review](trie-allocation-review.md).
 
+For the ARM64 NEON implementation, its comparison with the original router and
+a control using only empty-string/first-byte shortcuts, see the
+[SIMD benchmark report](router-simd.md).
+
 ## Coverage
 
 Each benchmark runs the following matrix (162 cases total):

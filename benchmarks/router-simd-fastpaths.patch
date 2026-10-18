@@ -1,0 +1,40 @@
+--- a/routeNode.go
++++ b/routeNode.go
+@@ -65,7 +65,16 @@
+ 	// At the end of a static part, the original matcher requires a slash
+ 	// boundary. Radix splits inside a static part do not impose that boundary
+ 	// on static children; only parameter and wildcard continuations need it.
+-	if index := strings.IndexByte(n.indices, url[0]); index >= 0 {
++	var index = -1
++	if len(n.indices) != 0 {
++		if n.indices[0] == url[0] {
++			index = 0
++		} else {
++			index = strings.IndexByte(n.indices, url[0])
++		}
++	}
++
++	if index >= 0 {
+ 		if endpoint := n.children[index].find(url, params, captureIndex); endpoint != nil {
+ 			return endpoint
+ 		}
+@@ -76,7 +85,18 @@
+ 	}
+ 
+ 	if n.param != nil {
+-		var end = strings.IndexByte(url[1:], '/')
++		var (
++			value = url[1:]
++			end   = -1
++		)
++		if len(value) != 0 {
++			if value[0] == '/' {
++				end = 0
++			} else {
++				end = strings.IndexByte(value, '/')
++			}
++		}
++
+ 		if end < 0 {
+ 			end = len(url) - 1
+ 		}
