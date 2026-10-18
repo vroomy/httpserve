@@ -43,7 +43,7 @@ and reproduction commands.
 ## Benchmarks
 
 For reproducible comparisons between HTTPServe and Go's `http.ServeMux`, see
-[the router benchmark guide](benchmarks/README.md#after-allocation-improvements-2026-10-15).
+[the router benchmark guide](benchmarks/README.md#after-arm64-simd-2026-10-18).
 It includes fixture details, allocation measurements, and commands for comparing
 the routers with `benchstat`.
 
@@ -54,15 +54,15 @@ shows median dispatch time; HTTPServe shows its speedup over that baseline:
 
 | URL fixture | `http.ServeMux` | HTTPServe |
 | --- | ---: | ---: |
-| Common (19 bytes): `/api/users/00000000` | 129.90 ns/op | **2.75× faster** |
-| Short (9 bytes) | 99.52 ns/op | **1.71× faster** |
-| Medium (39 bytes) | 224.95 ns/op | **3.88× faster** |
-| Long (172 bytes) | 645.45 ns/op | **10.97× faster** |
+| Common (19 bytes): `/api/users/00000000` | 122.50 ns/op | **3.24× faster** |
+| Short (9 bytes) | 93.77 ns/op | **2.26× faster** |
+| Medium (39 bytes) | 212.75 ns/op | **5.08× faster** |
+| Long (172 bytes) | 616.20 ns/op | **14.58× faster** |
 
 Across all four fixtures, HTTPServe used **0 B/op and 0 allocations/op**;
 `http.ServeMux` used **16 B/op and 1 allocation/op**.
 
-Measured on 2026-10-15 with Go 1.26.5 (`darwin/arm64`) on Apple M3, using one CPU
+Measured on 2026-10-18 with Go 1.27.0 (`darwin/arm64`) on Apple M3, using one CPU
 and ten one-second samples per case. All timing differences were statistically
 significant in `benchstat` (`p < 0.001`). These are warmed successful-route
 benchmarks that include native parameter lookup and a minimal handler, excluding
@@ -70,9 +70,9 @@ request construction, network I/O, and application work. They do not measure
 end-to-end HTTP throughput or compare all routing semantics.
 
 See the [benchmark source](router_stdlib_benchmark_test.go),
-[raw samples](benchmarks/router-stdlib-allocations.txt), and
-[statistical comparison](benchmarks/router-stdlib-allocations-comparison.txt).
-The [benchmark guide](benchmarks/README.md#after-allocation-improvements-2026-10-15)
+[raw samples](benchmarks/router-stdlib-simd.txt), and
+[statistical comparison](benchmarks/router-stdlib-simd-comparison.txt).
+The [benchmark guide](benchmarks/README.md#after-arm64-simd-2026-10-18)
 includes the reproduction command and fixture details.
 
 ## Usage
