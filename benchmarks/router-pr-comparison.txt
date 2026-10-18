@@ -1,0 +1,43 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+                                        │ benchmarks/router-pr-main.txt │   benchmarks/router-pr-branch.txt   │
+                                        │            sec/op             │   sec/op     vs base                │
+RouterStdlib/URL=Common/Router=ServeMux                     127.8n ± 1%   127.2n ± 2%        ~ (p=0.590 n=10)
+RouterStdlib/URL=Common/Router=Trie                         47.26n ± 2%   38.98n ± 1%  -17.52% (p=0.000 n=10)
+RouterStdlib/URL=Short/Router=ServeMux                      95.89n ± 1%   95.50n ± 1%        ~ (p=0.481 n=10)
+RouterStdlib/URL=Short/Router=Trie                          57.99n ± 2%   41.75n ± 1%  -28.00% (p=0.000 n=10)
+RouterStdlib/URL=Medium/Router=ServeMux                     217.6n ± 3%   216.7n ± 2%        ~ (p=0.447 n=10)
+RouterStdlib/URL=Medium/Router=Trie                         57.71n ± 2%   42.16n ± 1%  -26.95% (p=0.000 n=10)
+RouterStdlib/URL=Long/Router=ServeMux                       637.1n ± 2%   632.4n ± 1%        ~ (p=0.183 n=10)
+RouterStdlib/URL=Long/Router=Trie                           57.41n ± 1%   42.40n ± 1%  -26.15% (p=0.000 n=10)
+geomean                                                     105.6n        91.33n       -13.49%
+
+                                        │ benchmarks/router-pr-main.txt │   benchmarks/router-pr-branch.txt   │
+                                        │             B/op              │    B/op     vs base                 │
+RouterStdlib/URL=Common/Router=ServeMux                    16.00 ± 0%     16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Common/Router=Trie                        0.000 ± 0%     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Short/Router=ServeMux                     16.00 ± 0%     16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Short/Router=Trie                         0.000 ± 0%     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Medium/Router=ServeMux                    16.00 ± 0%     16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Medium/Router=Trie                        0.000 ± 0%     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Long/Router=ServeMux                      16.00 ± 0%     16.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Long/Router=Trie                          0.000 ± 0%     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+geomean                                                               ²               +0.00%                ²
+¹ all samples are equal
+² summaries must be >0 to compute geomean
+
+                                        │ benchmarks/router-pr-main.txt │   benchmarks/router-pr-branch.txt   │
+                                        │           allocs/op           │ allocs/op   vs base                 │
+RouterStdlib/URL=Common/Router=ServeMux                    1.000 ± 0%     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Common/Router=Trie                        0.000 ± 0%     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Short/Router=ServeMux                     1.000 ± 0%     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Short/Router=Trie                         0.000 ± 0%     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Medium/Router=ServeMux                    1.000 ± 0%     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Medium/Router=Trie                        0.000 ± 0%     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Long/Router=ServeMux                      1.000 ± 0%     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterStdlib/URL=Long/Router=Trie                          0.000 ± 0%     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+geomean                                                               ²               +0.00%                ²
+¹ all samples are equal
+² summaries must be >0 to compute geomean

@@ -14,6 +14,9 @@ a control using only empty-string/first-byte shortcuts, see the
 For the AMD64 SSE2 implementation and its validation under Rosetta, see the
 [AMD64 report](router-simd-amd64.md). Native Intel/AMD timing has not been measured.
 
+For the final native ARM64 comparison of `main` and the SIMD branch, see the
+[main/branch benchmark report](router-pr-comparison.md).
+
 For fresh CPU profiles and measured remaining opportunities after those changes,
 see the [ARM64 profile review](router-profile-review.md).
 
