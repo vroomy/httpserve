@@ -1,0 +1,8 @@
+PASS: 160 timed samples; exactly ten samples for each of eight cases in each binary.
+PASS: every sample passed the fixture handler, parameter, and status checks.
+PASS: HTTPServe uses 0 B/op, 0 allocs/op in every main and branch sample.
+PASS: ServeMux uses 16 B/op, 1 alloc/op in every main and branch sample.
+PASS: 16 single-iteration preflight cases.
+PASS: 20 benchmark invocations in the expected alternating order.
+PASS: changed documentation links and anchors, runner syntax, and git diff --check.
+Full suite, vet, and build were not repeated for this documentation-only follow-up; prior implementation validation is linked in the report.

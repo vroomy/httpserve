@@ -1,0 +1,60 @@
+2026-10-18T19:02:59.767428+00:00 round=1 main
+/private/tmp/httpserve-prefix-pr.btAGym/main.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:03:10.679131+00:00 round=1 branch
+/private/tmp/httpserve-prefix-pr.btAGym/branch.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:03:21.537988+00:00 round=2 branch
+/private/tmp/httpserve-prefix-pr.btAGym/branch.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:03:32.455889+00:00 round=2 main
+/private/tmp/httpserve-prefix-pr.btAGym/main.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:03:43.349929+00:00 round=3 main
+/private/tmp/httpserve-prefix-pr.btAGym/main.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:03:54.280238+00:00 round=3 branch
+/private/tmp/httpserve-prefix-pr.btAGym/branch.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:04:05.091216+00:00 round=4 branch
+/private/tmp/httpserve-prefix-pr.btAGym/branch.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:04:15.955672+00:00 round=4 main
+/private/tmp/httpserve-prefix-pr.btAGym/main.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:04:26.820832+00:00 round=5 main
+/private/tmp/httpserve-prefix-pr.btAGym/main.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:04:37.809932+00:00 round=5 branch
+/private/tmp/httpserve-prefix-pr.btAGym/branch.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:04:48.656657+00:00 round=6 branch
+/private/tmp/httpserve-prefix-pr.btAGym/branch.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:04:59.478737+00:00 round=6 main
+/private/tmp/httpserve-prefix-pr.btAGym/main.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:05:10.376939+00:00 round=7 main
+/private/tmp/httpserve-prefix-pr.btAGym/main.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:05:21.226666+00:00 round=7 branch
+/private/tmp/httpserve-prefix-pr.btAGym/branch.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:05:32.081791+00:00 round=8 branch
+/private/tmp/httpserve-prefix-pr.btAGym/branch.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:05:43.004884+00:00 round=8 main
+/private/tmp/httpserve-prefix-pr.btAGym/main.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:05:54.058355+00:00 round=9 main
+/private/tmp/httpserve-prefix-pr.btAGym/main.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:06:04.994928+00:00 round=9 branch
+/private/tmp/httpserve-prefix-pr.btAGym/branch.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:06:15.808346+00:00 round=10 branch
+/private/tmp/httpserve-prefix-pr.btAGym/branch.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T19:06:26.614276+00:00 round=10 main
+/private/tmp/httpserve-prefix-pr.btAGym/main.test -test.run '^$' -test.bench '^BenchmarkRouterStdlib$' -test.benchmem -test.benchtime=1s -test.count=1 -test.cpu=1
+PASS

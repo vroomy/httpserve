@@ -1,0 +1,35 @@
+Date: 2026-10-18 America/Los_Angeles
+Main: 97491b3991bea36b8bd7d50ec3715bdcb4766bc1 (origin/main fetched before capture)
+Branch: ec85ad99cbb2247d1592d4eaf1233d7251806bb4
+Build environment: {'GOCACHE': '/tmp/httpserve-go-build', 'GOOS': 'darwin', 'GOARCH': 'arm64', 'GOARM64': 'v8.0', 'CGO_ENABLED': '0', 'GOFLAGS': '', 'GODEBUG': '', 'GOEXPERIMENT': ''}
+Build command: go test -trimpath -c -o BINARY .
+Both builds use their complete commit snapshots; no source overlays.
+Benchmark: ^BenchmarkRouterStdlib$, 10 rounds, serial alternating main/branch order; -test.cpu=1 -test.count=1 -test.benchtime=1s -test.benchmem
+No builds, tests, fuzzing, or other agent benchmarks run concurrently with timing. External machine activity is not controlled.
+$ go version
+go version go1.27.0 darwin/arm64
+$ sw_vers
+ProductName:		macOS
+ProductVersion:		26.5.2
+BuildVersion:		25F84
+$ go version -m /Users/itsmontoya/go/bin/benchstat
+/Users/itsmontoya/go/bin/benchstat: go1.22.4
+	path	golang.org/x/perf/cmd/benchstat
+	mod	golang.org/x/perf	v0.0.0-20240707193131-dc66afd55b77	h1:xvkE6EBCdhhbdHMvqcbcE3ASNmhblKjs9ptEvSbM/Wc=
+	dep	github.com/aclements/go-moremath	v0.0.0-20210112150236-f10218a38794	h1:xlwdaKcTNVW4PtpQb8aKA4Pjy0CdJHEqvFbAnvR5m2g=
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	DefaultGODEBUG=httplaxcontentlength=1,httpmuxgo121=1,panicnil=1,tls10server=1,tlsrsakex=1,tlsunsafeekm=1
+	build	CGO_ENABLED=1
+	build	CGO_CFLAGS=
+	build	CGO_CPPFLAGS=
+	build	CGO_CXXFLAGS=
+	build	CGO_LDFLAGS=
+	build	GOARCH=arm64
+	build	GOOS=darwin
+Identical go.mod: SHA256 30b99bb8bb7e218c496f931e2da98ca5d20c99ea1080a908d0df2f3a5916f684
+Identical go.sum: SHA256 6f72893fe481a2d7d51ec82a42b423fc06642bd9b15403eda02b863f496c5666
+Identical router_stdlib_benchmark_test.go: SHA256 e2c5d734a21e2fed2d16aa1d633d0c8804d59fe742bb1e0fd0f0fba75423f168
+Identical routerBenchmarkWriter_test.go: SHA256 8ad247a3e6eb26bfeeb9e68cf3af5ad43b0cf30552a8e1b06a4fec51b2a432a3
+main binary SHA256: 2701a30d887075537d3d65066fd68301159d3b08777427cbe89729e2869ea448
+branch binary SHA256: 040ae5f9f27f90681761023f055c3d9aef0efc2a8a7242b8a297bacc62e09d92
