@@ -1,5 +1,7 @@
 # Apex
 
+![Apex billboard](billboard.webp)
+
 **High-performance HTTP for Go.**
 
 Apex is the HTTP library in the Vroomy ecosystem, with zero-allocation warmed
