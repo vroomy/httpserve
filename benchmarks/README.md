@@ -510,9 +510,25 @@ zero allocations; the report includes deep hit/miss/fallback cases, the broader
 The matrix geometric mean improved 6.89%, with 153 significant improvements,
 nine cases without a significant change, and no significant regressions.
 
-The [fresh ServeMux comparison](trie-prefix/stdlib-comparison.txt) supplies the
-updated README numbers: HTTPServe is 3.55× faster for the common URL, 2.53× for
+At this stage, the [ServeMux comparison](trie-prefix/stdlib-comparison.txt)
+measured HTTPServe as 3.55× faster for the common URL, 2.53× for
 short, 5.72× for medium, and 16.55× for long in these successful GET fixtures.
 All four comparisons have `p < 0.001`. HTTPServe used 0 B/op and 0 allocs/op;
 ServeMux used 16 B/op and 1 alloc/op. The historical SIMD results above are
 preserved separately.
+
+### Prefix branch versus main and stdlib (2026-10-18)
+
+After the SIMD changes merged into main, a fresh comparison measured main
+`97491b3` against the prefix branch at `ec85ad9`. The
+[new report](trie-prefix-pr/README.md) includes separate tables for HTTPServe
+versus ServeMux and HTTPServe on main versus this branch. It uses ten serial,
+alternating rounds, one-second samples, Go 1.27.0, and native ARM64 on Apple M3.
+
+The branch takes 8.00–8.93% less time than main in the four HTTP fixtures
+(`p < 0.001`) and retains zero allocations. Two unchanged ServeMux controls
+also improved by 1.11–1.26%; the report records that variation and its limits on
+attributing the observed branch gains. The branch-versus-ServeMux comparison
+supplies the current README table with separate stdlib timing, HTTPServe timing,
+and speedup columns. All raw samples, benchstat output, and reproduction commands
+are retained in [trie-prefix-pr](trie-prefix-pr/README.md).
