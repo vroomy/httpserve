@@ -20,10 +20,10 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "stable" # Automatically grabs the latest stable version of Go
+          go-version: "stable"
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v9
         with:
-          # Optional: specify a fixed linter version, or it defaults to the latest
-          version: linter
+          # Targets the stable v2 major release track
+          version: v2.15
