@@ -1,4 +1,4 @@
-package httpserve
+package apex
 
 // newHandler will return a new Handler
 func newHandler(hs []Handler) Handler {

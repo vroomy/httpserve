@@ -3,17 +3,17 @@ package main
 import (
 	"log"
 
-	"github.com/vroomy/httpserve"
+	"github.com/vroomy/apex"
 )
 
 func main() {
 	var (
-		srv *httpserve.Serve
+		srv *apex.Serve
 		svc Service
 		err error
 	)
 
-	srv = httpserve.New()
+	srv = apex.New()
 	defer srv.Close()
 
 	srv.GET("/ping", svc.Ping)

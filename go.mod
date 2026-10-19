@@ -1,4 +1,4 @@
-module github.com/vroomy/httpserve
+module github.com/vroomy/apex
 
 go 1.27
 
