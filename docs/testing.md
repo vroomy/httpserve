@@ -10,6 +10,10 @@ go vet ./...
 go build ./...
 ```
 
+GitHub Actions runs `go test ./...` in a separate Ubuntu job alongside linting
+for pushes and pull requests targeting `main` or `master`. The test job selects
+the Go version from `go.mod`.
+
 Listener tests require local socket access. Existing tests in `engine_test.go`
 use port 8080; keep it free. New listener tests use OS-assigned ports and wait
 for startup under the engine's ownership lock, then close and join the server.
