@@ -23,7 +23,7 @@ jobs:
           go-version: "stable"
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v9
         with:
-          # Targets the stable v2 release track
+          # Targets the stable v2 major release track
           version: v2.15
