@@ -1,8 +1,9 @@
-# Apex &emsp; [![GoDoc][GoDoc Badge]][GoDoc URL] ![Coverage] [![Lint][Lint Badge]][Lint URL] [![MIT licensed][License Badge]][License URL]
+# Apex &emsp; [![GoDoc][GoDoc Badge]][GoDoc URL] [![Coverage][Coverage Badge]][Coverage URL] [![Lint][Lint Badge]][Lint URL] [![MIT licensed][License Badge]][License URL]
 
 [GoDoc Badge]: https://pkg.go.dev/badge/github.com/vroomy/apex
 [GoDoc URL]: https://pkg.go.dev/github.com/vroomy/apex
-[Coverage]: https://img.shields.io/badge/coverage-99.7%25-brightgreen
+[Coverage Badge]: https://codecov.io/gh/vroomy/apex/branch/main/graph/badge.svg
+[Coverage URL]: https://codecov.io/gh/vroomy/apex
 [License Badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [License URL]: https://github.com/vroomy/apex/blob/main/LICENSE
 [Lint Badge]: https://github.com/vroomy/apex/actions/workflows/lint.yaml/badge.svg
