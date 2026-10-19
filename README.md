@@ -1,4 +1,12 @@
-# Apex
+# Apex &emsp; [![GoDoc][GoDoc Badge]][GoDoc URL] ![Coverage] [![Lint][Lint Badge]][Lint URL] [![MIT licensed][License Badge]][License URL]
+
+[GoDoc Badge]: https://pkg.go.dev/badge/github.com/vroomy/apex
+[GoDoc URL]: https://pkg.go.dev/github.com/vroomy/apex
+[Coverage]: https://img.shields.io/badge/coverage-64.6%25-yellow
+[License Badge]: https://img.shields.io/badge/license-MIT-blue.svg
+[License URL]: https://github.com/vroomy/apex/blob/main/LICENSE
+[Lint Badge]: https://github.com/vroomy/apex/actions/workflows/lint.yaml/badge.svg
+[Lint URL]: https://github.com/vroomy/apex/actions/workflows/lint.yaml
 
 ![Apex billboard](billboard.webp)
 
