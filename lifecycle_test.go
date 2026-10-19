@@ -37,6 +37,10 @@ func TestUpgraderCloseBeforeListen(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	if err = u.Close(); err != nil {
+		t.Fatal(err)
+	}
+
 	if err := u.Listen(0); !errors.Is(err, http.ErrServerClosed) {
 		t.Fatalf("Listen() = %v, want closed server", err)
 	}
