@@ -116,11 +116,7 @@ func (r *Router) Handle(method, url string, h Handler) (err error) {
 		return fmt.Errorf("error creating route for [%s] \"%s\": %v", method, url, ErrMissingLeadSlash)
 	}
 
-	var parts []string
-	if parts, err = getParts(url); err != nil {
-		return fmt.Errorf("error creating route for [%s] \"%s\": %v", method, url, err)
-	}
-
+	var parts = getParts(url)
 	r.rm[idx].add(parts, h)
 	return nil
 }

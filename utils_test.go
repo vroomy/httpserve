@@ -20,9 +20,9 @@ func TestGetPartsNormalization(t *testing.T) {
 	}
 	for _, test := range cases {
 		t.Run(test.path, func(t *testing.T) {
-			var parts, err = getParts(test.path)
-			if err != nil || !slices.Equal(parts, test.want) {
-				t.Fatalf("getParts = %v/%v, want %v", parts, err, test.want)
+			var parts = getParts(test.path)
+			if !slices.Equal(parts, test.want) {
+				t.Fatalf("getParts = %v, want %v", parts, test.want)
 			}
 		})
 	}
@@ -47,78 +47,49 @@ var (
 )
 
 func TestGetParts_root(t *testing.T) {
-	ps, err := getParts(rootRoute)
-	if err != nil {
-		t.Fatal(err)
-	}
-
+	var ps = getParts(rootRoute)
 	fmt.Printf("Parts: %v\n", ps)
 }
 
 func TestGetParts_small(t *testing.T) {
-	ps, err := getParts(smallRoute)
-	if err != nil {
-		t.Fatal(err)
-	}
-
+	var ps = getParts(smallRoute)
 	fmt.Printf("Parts: %v\n", ps)
 }
 
 func TestGetParts_medium(t *testing.T) {
-	ps, err := getParts(mediumRoute)
-	if err != nil {
-		t.Fatal(err)
-	}
-
+	var ps = getParts(mediumRoute)
 	fmt.Printf("Parts: %v\n", ps)
 }
 
 func TestGetParts_large(t *testing.T) {
-	ps, err := getParts(largeRoute)
-	if err != nil {
-		t.Fatal(err)
-	}
-
+	var ps = getParts(largeRoute)
 	fmt.Printf("Parts: %v\n", ps)
 }
 
 func TestGetParts_param(t *testing.T) {
-	ps, err := getParts("/api/releases/hatch/:platform/:environment/latest")
-	if err != nil {
-		t.Fatal(err)
-	}
-
+	var ps = getParts("/api/releases/hatch/:platform/:environment/latest")
 	fmt.Printf("Parts: %v\n", ps)
 }
 
 func BenchmarkGetPartsSmall(b *testing.B) {
-	var err error
 	for b.Loop() {
-		if getPartsSink, err = getParts(smallRoute); err != nil {
-			b.Fatal(err)
-		}
+		getPartsSink = getParts(smallRoute)
 	}
 
 	b.ReportAllocs()
 }
 
 func BenchmarkGetPartsMedium(b *testing.B) {
-	var err error
 	for b.Loop() {
-		if getPartsSink, err = getParts(mediumRoute); err != nil {
-			b.Fatal(err)
-		}
+		getPartsSink = getParts(mediumRoute)
 	}
 
 	b.ReportAllocs()
 }
 
 func BenchmarkGetPartsLarge(b *testing.B) {
-	var err error
 	for b.Loop() {
-		if getPartsSink, err = getParts(largeRoute); err != nil {
-			b.Fatal(err)
-		}
+		getPartsSink = getParts(largeRoute)
 	}
 
 	b.ReportAllocs()
