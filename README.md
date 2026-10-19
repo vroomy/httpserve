@@ -2,7 +2,7 @@
 
 [GoDoc Badge]: https://pkg.go.dev/badge/github.com/vroomy/apex
 [GoDoc URL]: https://pkg.go.dev/github.com/vroomy/apex
-[Coverage]: https://img.shields.io/badge/coverage-64.6%25-yellow
+[Coverage]: https://img.shields.io/badge/coverage-99.7%25-brightgreen
 [License Badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [License URL]: https://github.com/vroomy/apex/blob/main/LICENSE
 [Lint Badge]: https://github.com/vroomy/apex/actions/workflows/lint.yaml/badge.svg
@@ -205,3 +205,7 @@ go test -tags purego ./...
 go vet ./...
 go build ./...
 ```
+
+For coverage commands, measurement scope, and remaining gaps, see the
+[testing guide](docs/testing.md). The coverage badge reports the root library's
+statement coverage; `form` has 100% statement coverage.
