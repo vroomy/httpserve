@@ -1,11 +1,50 @@
 package apex
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
+	"log"
+	"net/http/httptest"
 	"slices"
 	"strings"
 	"testing"
 )
+
+func TestDefaultNotFoundAndPanic(t *testing.T) {
+	var router = newRouter()
+	var recorder = httptest.NewRecorder()
+	router.ServeHTTP(recorder, httptest.NewRequest("GET", "/missing", nil))
+	if recorder.Code != 404 || recorder.Body.String() != "404, not found" || recorder.Header().Get("Content-Type") != "text/plain" {
+		t.Fatalf("default not found = %d/%q", recorder.Code, recorder.Body.String())
+	}
+
+	var output bytes.Buffer
+	var previous = log.Writer()
+	log.SetOutput(&output)
+	t.Cleanup(func() { log.SetOutput(previous) })
+	if err := router.GET("/panic", func(*Context) { panic("default panic") }); err != nil {
+		t.Fatal(err)
+	}
+
+	recorder = httptest.NewRecorder()
+	router.ServeHTTP(recorder, httptest.NewRequest("GET", "/panic", nil))
+	if recorder.Code != 500 || !strings.Contains(output.String(), "default panic") {
+		t.Fatalf("default panic = %d/%q", recorder.Code, output.String())
+	}
+}
+
+func TestCloseAndReportFailure(t *testing.T) {
+	var output bytes.Buffer
+	var previous = log.Writer()
+	log.SetOutput(&output)
+	t.Cleanup(func() { log.SetOutput(previous) })
+	var body = &trackedBody{Reader: strings.NewReader(""), err: errors.New("body close failed")}
+	closeAndReport(body)
+	if !body.closed || !strings.Contains(output.String(), "body close failed") {
+		t.Fatalf("closed = %t, log = %q", body.closed, output.String())
+	}
+}
 
 func TestGetPartsNormalization(t *testing.T) {
 	var cases = []struct {
