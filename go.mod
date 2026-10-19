@@ -6,7 +6,6 @@ require (
 	github.com/bytedance/sonic v1.15.4
 	github.com/gdbu/reflectio v0.1.5
 	golang.org/x/crypto v0.58.0
-	golang.org/x/net v0.61.0
 )
 
 require (
@@ -16,6 +15,7 @@ require (
 	github.com/klauspost/cpuid/v2 v2.4.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	golang.org/x/arch v0.32.0 // indirect
+	golang.org/x/net v0.61.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/text v0.43.0 // indirect
 )

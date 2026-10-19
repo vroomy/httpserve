@@ -59,13 +59,13 @@ func TestRouterReleasesContext(t *testing.T) {
 				writer     = httptest.NewRecorder()
 				retained   *Context
 				backing    Params
-				panicValue interface{}
+				panicValue any
 				wantStatus = http.StatusNoContent
 			)
 			if mode == "panic_without_callback" {
 				router.SetPanic(nil)
 			} else {
-				router.SetPanic(func(value interface{}) { panicValue = value })
+				router.SetPanic(func(value any) { panicValue = value })
 			}
 
 			if mode != "success" {
@@ -224,8 +224,16 @@ func TestRouter_multi_level_handlers(t *testing.T) {
 	g1 := newGroup(r, "/api", fn1, fn2, fn3)
 	g2 := g1.Group("")
 	g3 := g1.Group("/users")
-	g3.GET("/", fn5)
-	g2.GET("/logout", fn4)
+
+	var err error
+	if err = g3.GET("/", fn5); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = g2.GET("/logout", fn4); err != nil {
+		t.Fatal(err)
+	}
+
 	h, _, ok := r.Match("GET", "/api/logout")
 	if !ok {
 		t.Fatal("expected match, none found")
@@ -268,12 +276,21 @@ func TestRouterMatch(t *testing.T) {
 }
 
 func BenchmarkRouter_small(b *testing.B) {
+	var err error
 	r := newRouter()
-	r.GET(smallRoute, func(ctx *Context) {})
-	r.GET(mediumRoute, func(ctx *Context) {})
-	r.GET(largeRoute, func(ctx *Context) {})
+	if err = r.GET(smallRoute, func(ctx *Context) {}); err != nil {
+		b.Fatal(err)
+	}
 
-	for i := 0; i < b.N; i++ {
+	if err = r.GET(mediumRoute, func(ctx *Context) {}); err != nil {
+		b.Fatal(err)
+	}
+
+	if err = r.GET(largeRoute, func(ctx *Context) {}); err != nil {
+		b.Fatal(err)
+	}
+
+	for b.Loop() {
 		handlerSink, paramsSink, boolSink = r.Match("GET", smallRouteNoParam)
 	}
 
@@ -281,12 +298,21 @@ func BenchmarkRouter_small(b *testing.B) {
 }
 
 func BenchmarkRouter_medium(b *testing.B) {
+	var err error
 	r := newRouter()
-	r.GET(smallRoute, func(ctx *Context) {})
-	r.GET(mediumRoute, func(ctx *Context) {})
-	r.GET(largeRoute, func(ctx *Context) {})
+	if err = r.GET(smallRoute, func(ctx *Context) {}); err != nil {
+		b.Fatal(err)
+	}
 
-	for i := 0; i < b.N; i++ {
+	if err = r.GET(mediumRoute, func(ctx *Context) {}); err != nil {
+		b.Fatal(err)
+	}
+
+	if err = r.GET(largeRoute, func(ctx *Context) {}); err != nil {
+		b.Fatal(err)
+	}
+
+	for b.Loop() {
 		handlerSink, paramsSink, boolSink = r.Match("GET", mediumRouteNoParam)
 	}
 
@@ -294,12 +320,21 @@ func BenchmarkRouter_medium(b *testing.B) {
 }
 
 func BenchmarkRouter_large(b *testing.B) {
+	var err error
 	r := newRouter()
-	r.GET(smallRoute, func(ctx *Context) {})
-	r.GET(mediumRoute, func(ctx *Context) {})
-	r.GET(largeRoute, func(ctx *Context) {})
+	if err = r.GET(smallRoute, func(ctx *Context) {}); err != nil {
+		b.Fatal(err)
+	}
 
-	for i := 0; i < b.N; i++ {
+	if err = r.GET(mediumRoute, func(ctx *Context) {}); err != nil {
+		b.Fatal(err)
+	}
+
+	if err = r.GET(largeRoute, func(ctx *Context) {}); err != nil {
+		b.Fatal(err)
+	}
+
+	for b.Loop() {
 		handlerSink, paramsSink, boolSink = r.Match("GET", largeRouteNoParam)
 	}
 

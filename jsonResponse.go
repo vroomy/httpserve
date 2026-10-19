@@ -7,7 +7,7 @@ import (
 )
 
 // NewJSONResponse will return a new text response
-func NewJSONResponse(code int, value interface{}) *JSONResponse {
+func NewJSONResponse(code int, value any) *JSONResponse {
 	var j JSONResponse
 	j.code = code
 	j.val = value
@@ -17,7 +17,7 @@ func NewJSONResponse(code int, value interface{}) *JSONResponse {
 // JSONResponse is a basic text response
 type JSONResponse struct {
 	code int
-	val  interface{}
+	val  any
 }
 
 // ContentType returns the content type

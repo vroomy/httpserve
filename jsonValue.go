@@ -9,7 +9,7 @@ import (
 )
 
 // DecodeJSONValue will decode a JSON value
-func DecodeJSONValue(r io.Reader, val interface{}) (err error) {
+func DecodeJSONValue(r io.Reader, val any) (err error) {
 	var jv JSONValue
 	jv.Data = val
 	dec := sonic.ConfigDefault.NewDecoder(r)
@@ -21,7 +21,7 @@ func DecodeJSONValue(r io.Reader, val interface{}) (err error) {
 }
 
 // UnmarshalJSONValue will unmarshal a JSON value
-func UnmarshalJSONValue(bs []byte, val interface{}) (err error) {
+func UnmarshalJSONValue(bs []byte, val any) (err error) {
 	var jv JSONValue
 	jv.Data = val
 	if err = sonic.Unmarshal(bs, &jv); err != nil {
@@ -31,7 +31,7 @@ func UnmarshalJSONValue(bs []byte, val interface{}) (err error) {
 	return errors.Join(jv.Errors...)
 }
 
-func makeJSONValue(statusCode int, data interface{}) (val JSONValue, err error) {
+func makeJSONValue(statusCode int, data any) (val JSONValue, err error) {
 	if statusCode < 400 {
 		// Status code is not an error code, set the data as the associated value and return.
 		val.Data = data
@@ -57,8 +57,8 @@ func makeJSONValue(statusCode int, data interface{}) (val JSONValue, err error) 
 
 // JSONValue represents a basic JSON value
 type JSONValue struct {
-	Data   interface{} `json:"data,omitempty"`
-	Errors []error     `json:"errors,omitempty"`
+	Data   any     `json:"data,omitempty"`
+	Errors []error `json:"errors,omitempty"`
 }
 
 func (j *JSONValue) PushErrors(errs ...error) {

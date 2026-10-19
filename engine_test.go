@@ -1,7 +1,7 @@
 package apex
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 	"time"
@@ -26,9 +26,11 @@ func TestEngineText(t *testing.T) {
 	derp := engine.Group("/derp")
 
 	// Setup text resonse handler
-	derp.GET("hello", func(ctx *Context) {
+	if err = derp.GET("hello", func(ctx *Context) {
 		ctx.WriteString(200, "text/plain", textVal)
-	})
+	}); err != nil {
+		t.Fatal(err)
+	}
 
 	errC := make(chan error, 1)
 	// Listen within a new goroutine
@@ -52,7 +54,7 @@ func TestEngineText(t *testing.T) {
 	}
 
 	// Read body as bytes
-	if bs, err = ioutil.ReadAll(resp.Body); err != nil {
+	if bs, err = io.ReadAll(resp.Body); err != nil {
 		t.Fatal(err)
 	}
 
@@ -89,9 +91,11 @@ func TestEngineJSON(t *testing.T) {
 	derp := engine.Group("/derp")
 
 	// Setup json response handler
-	derp.GET("world", func(ctx *Context) {
+	if err = derp.GET("world", func(ctx *Context) {
 		ctx.WriteJSON(200, jsonVal)
-	})
+	}); err != nil {
+		t.Fatal(err)
+	}
 
 	errC := make(chan error, 1)
 	// Listen within a new goroutine

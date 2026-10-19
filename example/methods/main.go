@@ -14,9 +14,10 @@ func main() {
 	)
 
 	engine = apex.New()
-	defer engine.Close()
+	if err = engine.GET("/ping", svc.Ping); err != nil {
+		log.Fatal(err)
+	}
 
-	engine.GET("/ping", svc.Ping)
 	engine.Set404(svc.NotFound)
 
 	if err = engine.Listen(8080); err != nil {
