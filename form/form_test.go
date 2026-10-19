@@ -2,7 +2,7 @@ package form
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -13,6 +13,8 @@ import (
 var (
 	testQuery       = newTestQuery()
 	testQueryString = testQuery.Encode()
+
+	sink testStruct
 )
 
 func TestBind(t *testing.T) {
@@ -89,7 +91,7 @@ func TestDecode_redirect(t *testing.T) {
 
 func BenchmarkBindReader(b *testing.B) {
 	var test testStruct
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		if err := BindReader(strings.NewReader(testQueryString), &test); err != nil {
 			b.Fatal(err)
 		}
@@ -101,7 +103,7 @@ func BenchmarkBindReader(b *testing.B) {
 func BenchmarkBindReader_unmarshaler(b *testing.B) {
 	var test testUnmarshaler
 	rdr := strings.NewReader(testQueryString)
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		if err := BindReader(rdr, &test); err != nil {
 			b.Fatal(err)
 		}
@@ -118,7 +120,7 @@ func BenchmarkDecoder_Decode_unmarshaler(b *testing.B) {
 	var test testUnmarshaler
 	rdr := strings.NewReader(testQueryString)
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		if err := NewDecoder(rdr).Decode(&test); err != nil {
 			b.Fatal(err)
 		}
@@ -132,25 +134,21 @@ func BenchmarkDecoder_Decode_unmarshaler(b *testing.B) {
 }
 
 func BenchmarkStdlib(b *testing.B) {
-	var (
-		test testStruct
-		req  http.Request
-	)
-
+	var req http.Request
 	rdr := strings.NewReader(testQueryString)
-	req.Body = ioutil.NopCloser(rdr)
+	req.Body = io.NopCloser(rdr)
 	req.Method = "POST"
 	req.Header = make(http.Header)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		var err error
 		if err = req.ParseForm(); err != nil {
 			b.Fatal(err)
 		}
 
-		test.Foo = req.Form.Get("foo")
-		if test.Bar, err = strconv.ParseInt(req.Form.Get("bar"), 10, 64); err != nil {
+		sink.Foo = req.Form.Get("foo")
+		if sink.Bar, err = strconv.ParseInt(req.Form.Get("bar"), 10, 64); err != nil {
 			b.Fatal(err)
 		}
 

@@ -33,7 +33,7 @@ type Decoder struct {
 }
 
 // Decode will decode a provided value
-func (d *Decoder) Decode(value interface{}) (err error) {
+func (d *Decoder) Decode(value any) (err error) {
 	// Set value for decoder
 	d.setValue(value)
 
@@ -64,7 +64,7 @@ func (d *Decoder) Decode(value interface{}) (err error) {
 	return d.processAmpersand()
 }
 
-func (d *Decoder) setValue(value interface{}) {
+func (d *Decoder) setValue(value any) {
 	var ok bool
 	if d.u, ok = value.(Unmarshaler); ok {
 		return

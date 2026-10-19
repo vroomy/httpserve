@@ -2,6 +2,7 @@ package apex
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -67,4 +68,13 @@ func notFoundHandler(ctx *Context) {
 
 func defaultRouterError(err error) {
 	log.Println("Error encountered:", err)
+}
+
+func closeAndReport(rc io.ReadCloser) {
+	var err error
+	if err = rc.Close(); err == nil {
+		return
+	}
+
+	log.Printf("error encountered while closing: %v", err)
 }

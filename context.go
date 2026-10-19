@@ -17,13 +17,13 @@ const formContentType = "application/x-www-form-urlencoded"
 // bufPool pools byte buffers used for JSON decoding and encoding,
 // eliminating per-request allocations from json.NewDecoder / sonic.ConfigDefault.NewEncoder.
 var bufPool = sync.Pool{
-	New: func() interface{} { return new(bytes.Buffer) },
+	New: func() any { return new(bytes.Buffer) },
 }
 
 // ctxPool pools Context objects to avoid per-request heap allocation
 // of the Context struct, its Storage map, and its Params slice.
 var ctxPool = sync.Pool{
-	New: func() interface{} {
+	New: func() any {
 		c := &Context{}
 		c.Params = make(Params, 0, 4)
 		return c
@@ -92,8 +92,8 @@ func (c *Context) reset() {
 }
 
 // Bind is a helper function which binds the request body to a provided value to be parsed as the inbound content type
-func (c *Context) Bind(value interface{}) (err error) {
-	defer c.request.Body.Close()
+func (c *Context) Bind(value any) (err error) {
+	defer closeAndReport(c.request.Body)
 	contentType := c.request.Header.Get("Content-Type")
 	if strings.HasPrefix(contentType, formContentType) {
 		return form.NewDecoder(c.request.Body).Decode(value)
@@ -103,14 +103,14 @@ func (c *Context) Bind(value interface{}) (err error) {
 }
 
 // BindJSON is a helper function which binds the request body to a provided value to be parsed as JSON
-func (c *Context) BindJSON(value interface{}) (err error) {
-	defer c.request.Body.Close()
+func (c *Context) BindJSON(value any) (err error) {
+	defer closeAndReport(c.request.Body)
 	return sonic.ConfigDefault.NewDecoder(c.request.Body).Decode(value)
 }
 
 // BindForm is a helper function which binds the request body to a provided value to be parsed as an HTML form
-func (c *Context) BindForm(value interface{}) (err error) {
-	defer c.request.Body.Close()
+func (c *Context) BindForm(value any) (err error) {
+	defer closeAndReport(c.request.Body)
 	return form.NewDecoder(c.request.Body).Decode(value)
 }
 
@@ -193,7 +193,7 @@ func (c *Context) WriteReader(statusCode int, contentType string, r io.Reader) {
 }
 
 // WriteJSON will write JSON bytes to the http response body
-func (c *Context) WriteJSON(statusCode int, value interface{}) {
+func (c *Context) WriteJSON(statusCode int, value any) {
 	if c.completed {
 		c.errorFn(ErrContextIsClosed)
 		return

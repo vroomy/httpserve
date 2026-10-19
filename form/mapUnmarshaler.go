@@ -6,9 +6,9 @@ import (
 	"github.com/gdbu/reflectio"
 )
 
-func newMapUnmarshaler(value interface{}) *mapUnmarshaler {
+func newMapUnmarshaler(value any) *mapUnmarshaler {
 	var m mapUnmarshaler
-	if m.rval = reflect.ValueOf(value); m.rval.Kind() == reflect.Ptr {
+	if m.rval = reflect.ValueOf(value); m.rval.Kind() == reflect.Pointer {
 		m.rval = m.rval.Elem()
 	}
 

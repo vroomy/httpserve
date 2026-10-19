@@ -93,7 +93,7 @@ func TestGetParts_param(t *testing.T) {
 
 func BenchmarkGetPartsSmall(b *testing.B) {
 	var err error
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		if getPartsSink, err = getParts(smallRoute); err != nil {
 			b.Fatal(err)
 		}
@@ -104,7 +104,7 @@ func BenchmarkGetPartsSmall(b *testing.B) {
 
 func BenchmarkGetPartsMedium(b *testing.B) {
 	var err error
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		if getPartsSink, err = getParts(mediumRoute); err != nil {
 			b.Fatal(err)
 		}
@@ -115,7 +115,7 @@ func BenchmarkGetPartsMedium(b *testing.B) {
 
 func BenchmarkGetPartsLarge(b *testing.B) {
 	var err error
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		if getPartsSink, err = getParts(largeRoute); err != nil {
 			b.Fatal(err)
 		}
@@ -125,7 +125,7 @@ func BenchmarkGetPartsLarge(b *testing.B) {
 }
 
 func BenchmarkStringsSpitSmall(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		getPartsSink = strings.Split(smallRoute, "/")
 	}
 
@@ -133,7 +133,7 @@ func BenchmarkStringsSpitSmall(b *testing.B) {
 }
 
 func BenchmarkStringsSpitMedium(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		getPartsSink = strings.Split(mediumRoute, "/")
 	}
 
@@ -141,7 +141,7 @@ func BenchmarkStringsSpitMedium(b *testing.B) {
 }
 
 func BenchmarkStringsSpitLarge(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		getPartsSink = strings.Split(largeRoute, "/")
 	}
 

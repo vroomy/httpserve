@@ -28,12 +28,16 @@ func TestCloseRacingWithListen(t *testing.T) {
 }
 
 func TestUpgraderCloseBeforeListen(t *testing.T) {
-	upgrader := NewUpgrader(443)
-	if err := upgrader.Close(); err != nil {
+	var (
+		u   *Upgrader
+		err error
+	)
+
+	if u, err = NewUpgrader(443); err != nil {
 		t.Fatal(err)
 	}
 
-	if err := upgrader.Listen(0); !errors.Is(err, http.ErrServerClosed) {
+	if err := u.Listen(0); !errors.Is(err, http.ErrServerClosed) {
 		t.Fatalf("Listen() = %v, want closed server", err)
 	}
 }

@@ -9,7 +9,7 @@ import (
 var jsonPEnding = []byte(");\n")
 
 // NewJSONPResponse will return a new text response
-func NewJSONPResponse(callback string, value interface{}) *JSONPResponse {
+func NewJSONPResponse(callback string, value any) *JSONPResponse {
 	var j JSONPResponse
 	j.callback = callback
 	j.val = value
@@ -19,7 +19,7 @@ func NewJSONPResponse(callback string, value interface{}) *JSONPResponse {
 // JSONPResponse is a basic text response
 type JSONPResponse struct {
 	callback string
-	val      interface{}
+	val      any
 }
 
 // ContentType returns the content type
@@ -53,7 +53,8 @@ func (j *JSONPResponse) WriteTo(w io.Writer) (n int64, err error) {
 	// Initialize buffer
 	buf := bytes.NewBuffer(nil)
 	// Write callback func
-	buf.WriteString(j.callback + "(")
+	buf.WriteString(j.callback)
+	buf.WriteString("(")
 	// Initialize a new JSON value
 	value := j.newValue()
 	// Initialize a new JSON encoder

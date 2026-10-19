@@ -6,13 +6,17 @@ import (
 )
 
 // NewUpgrader will return an upgrader
-func NewUpgrader(port uint16, virtualHosts ...VirtualHost) *Upgrader {
+func NewUpgrader(port uint16, virtualHosts ...VirtualHost) (out *Upgrader, err error) {
 	var u Upgrader
 	u.s = New()
-	u.s.GET("/*", u.upgradeConn)
+	if err := u.s.GET("/*", u.upgradeConn); err != nil {
+		err = fmt.Errorf("error setting upgrader wildcard route: %v", err)
+		return nil, err
+	}
+
 	u.port = port
 	u.proxies = virtualHosts
-	return &u
+	return &u, nil
 }
 
 // Upgrader will upgrade all requests to SSL, and also handle forwarding to virtual hosts

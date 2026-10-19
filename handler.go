@@ -6,7 +6,7 @@ func newHandler(hs []Handler) Handler {
 		// Process handler funcs
 		ctx.processHandlers(hs)
 		if ctx.completed {
-			ctx.request.Body.Close()
+			closeAndReport(ctx.request.Body)
 		}
 
 		// Process context hooks

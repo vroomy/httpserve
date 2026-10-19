@@ -29,7 +29,7 @@ type Router struct {
 	errorFn func(error)
 }
 
-func (r *Router) onPanic(v interface{}) {
+func (r *Router) onPanic(v any) {
 	log.Println("Panic encountered:", v)
 }
 

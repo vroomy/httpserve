@@ -12,8 +12,6 @@ import (
 	"time"
 
 	"golang.org/x/crypto/acme/autocert"
-	"golang.org/x/net/http2"
-	"golang.org/x/net/http2/h2c"
 )
 
 var (
@@ -98,7 +96,10 @@ func (e *Engine) Listen(port uint16) (err error) {
 func (e *Engine) ListenWithConfig(port uint16, c Config) (err error) {
 	server := newHTTPServer(e.g.r, port, c)
 	if _, enabled := os.LookupEnv("USE_HTTP2_RAW"); enabled {
-		server.Handler = h2c.NewHandler(server.Handler, &http2.Server{})
+		// Enable unencrypted HTTP/2 support directly
+		server.Protocols = new(http.Protocols)
+		server.Protocols.SetHTTP1(true)
+		server.Protocols.SetUnencryptedHTTP2(true)
 	}
 
 	return e.listenServer(server, false)
