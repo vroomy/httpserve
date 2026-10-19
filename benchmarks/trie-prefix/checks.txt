@@ -1,0 +1,90 @@
+Initial sandboxed go test -count=1 ./... failed to bind :8080 (operation not permitted) in TestServeText and TestServeJSON. The following full checks run with localhost socket permission.
+
+Default environment: GOCACHE=/tmp/httpserve-go-build GOOS=darwin GOARCH=arm64 GOARM64=v8.0 CGO_ENABLED=0 GOEXPERIMENT= GODEBUG= GOFLAGS=
+
+$ go test -count=1 ./...
+ok  	github.com/vroomy/httpserve	1.267s
+?   	github.com/vroomy/httpserve/example/functions	[no test files]
+?   	github.com/vroomy/httpserve/example/methods	[no test files]
+ok  	github.com/vroomy/httpserve/form	0.385s
+exit status: 0
+
+$ go test -tags purego -count=1 ./...
+ok  	github.com/vroomy/httpserve	1.160s
+?   	github.com/vroomy/httpserve/example/functions	[no test files]
+?   	github.com/vroomy/httpserve/example/methods	[no test files]
+ok  	github.com/vroomy/httpserve/form	0.278s
+exit status: 0
+
+$ CGO_ENABLED=1 go test -race -count=1 ./...
+ok  	github.com/vroomy/httpserve	2.227s
+?   	github.com/vroomy/httpserve/example/functions	[no test files]
+?   	github.com/vroomy/httpserve/example/methods	[no test files]
+ok  	github.com/vroomy/httpserve/form	1.296s
+exit status: 0
+
+$ go vet ./...
+exit status: 0
+
+$ go build ./...
+exit status: 0
+
+$ go test -run '^$' -fuzz '^FuzzRouterTrie$' -fuzztime=30s -parallel=4
+fuzz: elapsed: 0s, gathering baseline coverage: 0/169 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 169/169 completed, now fuzzing with 4 workers
+fuzz: elapsed: 3s, execs: 187695 (62543/sec), new interesting: 0 (total: 169)
+fuzz: elapsed: 6s, execs: 381594 (64633/sec), new interesting: 0 (total: 169)
+fuzz: elapsed: 9s, execs: 582835 (67080/sec), new interesting: 0 (total: 169)
+fuzz: elapsed: 12s, execs: 774826 (64014/sec), new interesting: 0 (total: 169)
+fuzz: elapsed: 15s, execs: 972218 (65791/sec), new interesting: 0 (total: 169)
+fuzz: elapsed: 18s, execs: 1164513 (64108/sec), new interesting: 1 (total: 170)
+fuzz: elapsed: 21s, execs: 1350481 (61990/sec), new interesting: 1 (total: 170)
+fuzz: elapsed: 24s, execs: 1537993 (62498/sec), new interesting: 1 (total: 170)
+fuzz: elapsed: 27s, execs: 1728613 (63537/sec), new interesting: 1 (total: 170)
+fuzz: elapsed: 30s, execs: 1911630 (60997/sec), new interesting: 1 (total: 170)
+fuzz: elapsed: 30s, execs: 1911630 (0/sec), new interesting: 1 (total: 170)
+PASS
+ok  	github.com/vroomy/httpserve	30.419s
+exit status: 0
+
+$ GOARCH=amd64 GOAMD64=v1 go test -count=1 ./...
+ok  	github.com/vroomy/httpserve	1.741s
+?   	github.com/vroomy/httpserve/example/functions	[no test files]
+?   	github.com/vroomy/httpserve/example/methods	[no test files]
+ok  	github.com/vroomy/httpserve/form	1.013s
+exit status: 0
+
+$ GOARCH=amd64 GOAMD64=v1 go test -tags purego -count=1 ./...
+ok  	github.com/vroomy/httpserve	1.977s
+?   	github.com/vroomy/httpserve/example/functions	[no test files]
+?   	github.com/vroomy/httpserve/example/methods	[no test files]
+ok  	github.com/vroomy/httpserve/form	0.551s
+exit status: 0
+
+$ GOARCH=amd64 GOAMD64=v1 go vet ./...
+exit status: 0
+
+$ GOARCH=amd64 GOAMD64=v1 go build ./...
+exit status: 0
+
+$ GOARCH=amd64 GOAMD64=v1 go test -run '^$' -fuzz '^FuzzRouterTrie$' -fuzztime=30s -parallel=4
+fuzz: elapsed: 0s, gathering baseline coverage: 0/170 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 170/170 completed, now fuzzing with 4 workers
+fuzz: elapsed: 3s, execs: 104992 (34998/sec), new interesting: 0 (total: 170)
+fuzz: elapsed: 6s, execs: 228103 (41039/sec), new interesting: 1 (total: 171)
+fuzz: elapsed: 9s, execs: 348907 (40261/sec), new interesting: 1 (total: 171)
+fuzz: elapsed: 12s, execs: 467954 (39684/sec), new interesting: 2 (total: 172)
+fuzz: elapsed: 15s, execs: 588868 (40303/sec), new interesting: 4 (total: 174)
+
+Additional focused regression check against the original baseline via routeNode.go overlay: TestRouteNodePrefixMatching and TestRouterTrieMatching passed.
+fuzz: elapsed: 18s, execs: 703075 (38069/sec), new interesting: 4 (total: 174)
+fuzz: elapsed: 21s, execs: 817572 (38166/sec), new interesting: 4 (total: 174)
+fuzz: elapsed: 24s, execs: 932946 (38467/sec), new interesting: 4 (total: 174)
+fuzz: elapsed: 27s, execs: 1048451 (38493/sec), new interesting: 4 (total: 174)
+fuzz: elapsed: 30s, execs: 1167803 (39797/sec), new interesting: 4 (total: 174)
+fuzz: elapsed: 30s, execs: 1167803 (0/sec), new interesting: 4 (total: 174)
+PASS
+ok  	github.com/vroomy/httpserve	31.319s
+exit status: 0
+
+Final audit: gofmt -d produced no changes; git diff --check passed; changed documentation file links resolve. All 3,520 timed samples passed with exactly ten samples per case/version and unchanged allocation metrics. All 759 single-iteration router benchmark correctness cases passed. Measured routeNode.go equals the working-tree production source.

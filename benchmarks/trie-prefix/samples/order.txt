@@ -1,0 +1,120 @@
+2026-10-18T18:41:56.279888+00:00 focused round=1 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:42:15.950779+00:00 focused round=1 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:42:34.581273+00:00 focused round=2 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:42:53.136080+00:00 focused round=2 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:43:11.817070+00:00 focused round=3 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:43:30.421227+00:00 focused round=3 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:43:49.098230+00:00 focused round=4 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:44:07.790785+00:00 focused round=4 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:44:26.407482+00:00 focused round=5 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:44:45.175762+00:00 focused round=5 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:45:03.783836+00:00 focused round=6 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:45:22.217617+00:00 focused round=6 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:45:40.845859+00:00 focused round=7 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:45:59.427478+00:00 focused round=7 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:46:17.918815+00:00 focused round=8 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:46:36.406141+00:00 focused round=8 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:46:55.044088+00:00 focused round=9 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:47:13.629577+00:00 focused round=9 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:47:32.134014+00:00 focused round=10 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:47:50.614659+00:00 focused round=10 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Stdlib|Allocations)$/^(URL=(Common|Short|Medium|Long)|DeepHit|DeepMiss|Fallback)$/^(Router=(ServeMux|Trie)|MatchInto|ServeHTTP)$' -test.benchmem -test.benchtime 1s -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:48:09.086710+00:00 matrix round=1 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:48:34.414143+00:00 matrix round=1 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:48:59.344848+00:00 matrix round=2 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:49:24.038626+00:00 matrix round=2 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:49:48.988803+00:00 matrix round=3 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:50:13.692005+00:00 matrix round=3 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:50:38.059443+00:00 matrix round=4 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:51:03.303528+00:00 matrix round=4 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:51:28.189810+00:00 matrix round=5 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:51:53.284576+00:00 matrix round=5 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:52:17.794973+00:00 matrix round=6 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:52:42.845630+00:00 matrix round=6 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:53:07.465150+00:00 matrix round=7 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:53:32.757561+00:00 matrix round=7 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:53:57.037469+00:00 matrix round=8 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:54:21.366702+00:00 matrix round=8 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:54:46.838371+00:00 matrix round=9 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:55:11.367856+00:00 matrix round=9 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:55:35.970031+00:00 matrix round=10 candidate
+/private/tmp/httpserve-prefix.2xhsxK/candidate.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS
+2026-10-18T18:56:00.264977+00:00 matrix round=10 baseline
+/private/tmp/httpserve-prefix.2xhsxK/baseline.test -test.run '^$' -test.bench '^BenchmarkRouter(Match|ServeHTTP)$' -test.benchmem -test.benchtime 100ms -test.count=1 -test.cpu=1
+PASS

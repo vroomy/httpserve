@@ -1,0 +1,505 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/vroomy/httpserve
+cpu: Apple M3
+                                                     │ benchmarks/trie-prefix/samples/matrix-baseline.txt │ benchmarks/trie-prefix/samples/matrix-candidate.txt │
+                                                     │                       sec/op                       │           sec/op             vs base                │
+RouterMatch/Short/Static/Routes=1/FirstHit                                                   8.844n ±  1%                 7.426n ±   0%  -16.03% (p=0.000 n=10)
+RouterMatch/Short/Static/Routes=1/LastHit                                                    8.837n ±  0%                 7.425n ±   0%  -15.98% (p=0.000 n=10)
+RouterMatch/Short/Static/Routes=1/Miss                                                       9.355n ±  1%                 7.956n ±   0%  -14.96% (p=0.000 n=10)
+RouterMatch/Short/Static/Routes=100/FirstHit                                                 15.67n ±  3%                 14.06n ±   1%  -10.33% (p=0.000 n=10)
+RouterMatch/Short/Static/Routes=100/LastHit                                                  22.12n ±  0%                 20.75n ±   3%   -6.21% (p=0.000 n=10)
+RouterMatch/Short/Static/Routes=100/Miss                                                     9.562n ±  0%                 8.220n ±   1%  -14.04% (p=0.000 n=10)
+RouterMatch/Short/Static/Routes=1000/FirstHit                                                19.94n ±  5%                 17.71n ±   1%  -11.18% (p=0.000 n=10)
+RouterMatch/Short/Static/Routes=1000/LastHit                                                 34.12n ±  2%                 31.48n ±   1%   -7.75% (p=0.000 n=10)
+RouterMatch/Short/Static/Routes=1000/Miss                                                    9.868n ±  0%                 8.519n ±   0%  -13.67% (p=0.000 n=10)
+RouterMatch/Short/Param/Routes=1/FirstHit                                                    34.16n ±  1%                 32.71n ±   1%   -4.23% (p=0.000 n=10)
+RouterMatch/Short/Param/Routes=1/LastHit                                                     33.91n ±  1%                 32.73n ±   1%   -3.47% (p=0.000 n=10)
+RouterMatch/Short/Param/Routes=1/Miss                                                        9.563n ±  1%                 8.217n ±   0%  -14.07% (p=0.000 n=10)
+RouterMatch/Short/Param/Routes=100/FirstHit                                                  41.47n ±  1%                 39.02n ±   1%   -5.92% (p=0.000 n=10)
+RouterMatch/Short/Param/Routes=100/LastHit                                                   52.91n ±  5%                 48.53n ±   1%   -8.28% (p=0.000 n=10)
+RouterMatch/Short/Param/Routes=100/Miss                                                      9.607n ±  1%                 8.220n ±   0%  -14.44% (p=0.000 n=10)
+RouterMatch/Short/Param/Routes=1000/FirstHit                                                 45.29n ±  2%                 42.34n ±   2%   -6.50% (p=0.000 n=10)
+RouterMatch/Short/Param/Routes=1000/LastHit                                                  65.88n ±  3%                 60.78n ±   1%   -7.73% (p=0.000 n=10)
+RouterMatch/Short/Param/Routes=1000/Miss                                                     9.864n ±  1%                 8.485n ±   0%  -13.98% (p=0.000 n=10)
+RouterMatch/Short/Wildcard/Routes=1/FirstHit                                                10.620n ±  0%                 9.815n ±   0%   -7.58% (p=0.000 n=10)
+RouterMatch/Short/Wildcard/Routes=1/LastHit                                                 10.610n ±  0%                 9.815n ±   0%   -7.50% (p=0.000 n=10)
+RouterMatch/Short/Wildcard/Routes=1/Miss                                                     9.570n ±  0%                 8.219n ±   1%  -14.12% (p=0.000 n=10)
+RouterMatch/Short/Wildcard/Routes=100/FirstHit                                               17.16n ±  3%                 15.17n ±   1%  -11.60% (p=0.000 n=10)
+RouterMatch/Short/Wildcard/Routes=100/LastHit                                                24.09n ±  3%                 21.41n ±   0%  -11.09% (p=0.000 n=10)
+RouterMatch/Short/Wildcard/Routes=100/Miss                                                   9.598n ±  0%                 8.219n ±   0%  -14.37% (p=0.000 n=10)
+RouterMatch/Short/Wildcard/Routes=1000/FirstHit                                              19.44n ±  4%                 17.59n ±   3%   -9.52% (p=0.000 n=10)
+RouterMatch/Short/Wildcard/Routes=1000/LastHit                                               37.49n ±  2%                 31.97n ±   1%  -14.70% (p=0.000 n=10)
+RouterMatch/Short/Wildcard/Routes=1000/Miss                                                  9.844n ±  1%                 8.485n ±   0%  -13.80% (p=0.000 n=10)
+RouterMatch/Medium/Static/Routes=1/FirstHit                                                  9.357n ±  0%                 8.482n ±   0%   -9.35% (p=0.000 n=10)
+RouterMatch/Medium/Static/Routes=1/LastHit                                                   9.355n ±  0%                 8.486n ±   0%   -9.29% (p=0.000 n=10)
+RouterMatch/Medium/Static/Routes=1/Miss                                                      9.865n ±  1%                 8.484n ±   0%  -14.00% (p=0.000 n=10)
+RouterMatch/Medium/Static/Routes=100/FirstHit                                                17.51n ±  0%                 15.68n ±   0%  -10.45% (p=0.000 n=10)
+RouterMatch/Medium/Static/Routes=100/LastHit                                                 22.50n ±  1%                 22.13n ±   1%   -1.64% (p=0.000 n=10)
+RouterMatch/Medium/Static/Routes=100/Miss                                                   10.140n ±  1%                 8.750n ±   0%  -13.71% (p=0.000 n=10)
+RouterMatch/Medium/Static/Routes=1000/FirstHit                                               20.54n ±  1%                 18.80n ±   0%   -8.45% (p=0.000 n=10)
+RouterMatch/Medium/Static/Routes=1000/LastHit                                                33.66n ±  1%                 31.94n ±   0%   -5.10% (p=0.000 n=10)
+RouterMatch/Medium/Static/Routes=1000/Miss                                                  10.385n ±  0%                 9.013n ±   0%  -13.21% (p=0.000 n=10)
+RouterMatch/Medium/Param/Routes=1/FirstHit                                                   34.38n ±  2%                 32.93n ±   1%   -4.25% (p=0.000 n=10)
+RouterMatch/Medium/Param/Routes=1/LastHit                                                    34.09n ±  2%                 32.77n ±   2%   -3.87% (p=0.000 n=10)
+RouterMatch/Medium/Param/Routes=1/Miss                                                       9.880n ±  1%                 8.483n ±   0%  -14.14% (p=0.000 n=10)
+RouterMatch/Medium/Param/Routes=100/FirstHit                                                 41.85n ±  1%                 39.38n ±   1%   -5.93% (p=0.001 n=10)
+RouterMatch/Medium/Param/Routes=100/LastHit                                                  53.01n ±  1%                 49.25n ±   0%   -7.09% (p=0.000 n=10)
+RouterMatch/Medium/Param/Routes=100/Miss                                                    10.125n ±  0%                 8.749n ±   0%  -13.59% (p=0.000 n=10)
+RouterMatch/Medium/Param/Routes=1000/FirstHit                                                45.42n ±  1%                 43.10n ±   1%   -5.11% (p=0.000 n=10)
+RouterMatch/Medium/Param/Routes=1000/LastHit                                                 66.15n ±  3%                 62.21n ±   1%   -5.96% (p=0.000 n=10)
+RouterMatch/Medium/Param/Routes=1000/Miss                                                   10.390n ±  1%                 9.019n ±   0%  -13.19% (p=0.000 n=10)
+RouterMatch/Medium/Wildcard/Routes=1/FirstHit                                                10.89n ±  1%                 10.08n ±   1%   -7.44% (p=0.000 n=10)
+RouterMatch/Medium/Wildcard/Routes=1/LastHit                                                 10.88n ±  0%                 10.08n ±   0%   -7.35% (p=0.000 n=10)
+RouterMatch/Medium/Wildcard/Routes=1/Miss                                                    9.905n ±  1%                 8.490n ±   2%  -14.28% (p=0.000 n=10)
+RouterMatch/Medium/Wildcard/Routes=100/FirstHit                                              17.52n ±  1%                 15.75n ±   2%  -10.08% (p=0.000 n=10)
+RouterMatch/Medium/Wildcard/Routes=100/LastHit                                               24.32n ±  3%                 22.21n ±   1%   -8.64% (p=0.000 n=10)
+RouterMatch/Medium/Wildcard/Routes=100/Miss                                                 10.135n ±  1%                 8.749n ±   0%  -13.68% (p=0.000 n=10)
+RouterMatch/Medium/Wildcard/Routes=1000/FirstHit                                             19.95n ±  2%                 18.05n ±   3%   -9.50% (p=0.000 n=10)
+RouterMatch/Medium/Wildcard/Routes=1000/LastHit                                              37.49n ±  1%                 32.50n ±   1%  -13.31% (p=0.000 n=10)
+RouterMatch/Medium/Wildcard/Routes=1000/Miss                                                10.420n ±  1%                 9.014n ±   0%  -13.49% (p=0.000 n=10)
+RouterMatch/Long/Static/Routes=1/FirstHit                                                    10.40n ±  1%                 10.34n ±   0%   -0.62% (p=0.000 n=10)
+RouterMatch/Long/Static/Routes=1/LastHit                                                     10.39n ±  1%                 10.34n ±   0%   -0.48% (p=0.000 n=10)
+RouterMatch/Long/Static/Routes=1/Miss                                                        10.40n ±  1%                 10.34n ±   0%   -0.58% (p=0.000 n=10)
+RouterMatch/Long/Static/Routes=100/FirstHit                                                  17.26n ±  0%                 15.66n ±   1%   -9.27% (p=0.000 n=10)
+RouterMatch/Long/Static/Routes=100/LastHit                                                   24.85n ±  0%                 22.95n ±   1%   -7.65% (p=0.000 n=10)
+RouterMatch/Long/Static/Routes=100/Miss                                                      10.38n ±  0%                 10.34n ±   0%   -0.34% (p=0.000 n=10)
+RouterMatch/Long/Static/Routes=1000/FirstHit                                                 19.95n ±  0%                 18.56n ±   1%   -6.94% (p=0.000 n=10)
+RouterMatch/Long/Static/Routes=1000/LastHit                                                  36.72n ±  0%                 32.76n ±   1%  -10.78% (p=0.000 n=10)
+RouterMatch/Long/Static/Routes=1000/Miss                                                     10.42n ±  1%                 10.34n ±   0%   -0.82% (p=0.000 n=10)
+RouterMatch/Long/Param/Routes=1/FirstHit                                                     34.67n ±  1%                 33.94n ±   6%   -2.12% (p=0.022 n=10)
+RouterMatch/Long/Param/Routes=1/LastHit                                                      34.70n ±  1%                 33.60n ±   1%   -3.17% (p=0.000 n=10)
+RouterMatch/Long/Param/Routes=1/Miss                                                         10.40n ±  0%                 10.35n ±   0%   -0.48% (p=0.026 n=10)
+RouterMatch/Long/Param/Routes=100/FirstHit                                                   42.13n ±  0%                 40.29n ±   1%   -4.37% (p=0.001 n=10)
+RouterMatch/Long/Param/Routes=100/LastHit                                                    54.88n ±  2%                 48.33n ±   1%  -11.94% (p=0.000 n=10)
+RouterMatch/Long/Param/Routes=100/Miss                                                       10.42n ±  1%                 10.34n ±   0%   -0.82% (p=0.000 n=10)
+RouterMatch/Long/Param/Routes=1000/FirstHit                                                  46.62n ±  2%                 44.11n ±   1%   -5.37% (p=0.000 n=10)
+RouterMatch/Long/Param/Routes=1000/LastHit                                                   69.34n ±  2%                 62.15n ±   1%  -10.37% (p=0.000 n=10)
+RouterMatch/Long/Param/Routes=1000/Miss                                                      10.40n ±  1%                 10.34n ±   0%   -0.62% (p=0.001 n=10)
+RouterMatch/Long/Wildcard/Routes=1/FirstHit                                                  11.48n ±  1%                 11.40n ±   0%   -0.74% (p=0.000 n=10)
+RouterMatch/Long/Wildcard/Routes=1/LastHit                                                   11.46n ±  1%                 11.40n ±   0%   -0.52% (p=0.000 n=10)
+RouterMatch/Long/Wildcard/Routes=1/Miss                                                      10.41n ±  0%                 10.34n ±   0%   -0.67% (p=0.000 n=10)
+RouterMatch/Long/Wildcard/Routes=100/FirstHit                                                17.48n ±  1%                 16.43n ±   1%   -6.06% (p=0.000 n=10)
+RouterMatch/Long/Wildcard/Routes=100/LastHit                                                 26.81n ±  0%                 22.74n ±   1%  -15.18% (p=0.000 n=10)
+RouterMatch/Long/Wildcard/Routes=100/Miss                                                    10.40n ±  0%                 10.34n ±   0%   -0.58% (p=0.000 n=10)
+RouterMatch/Long/Wildcard/Routes=1000/FirstHit                                               20.36n ±  1%                 18.74n ±   5%   -7.93% (p=0.001 n=10)
+RouterMatch/Long/Wildcard/Routes=1000/LastHit                                                40.17n ±  1%                 32.74n ±   1%  -18.50% (p=0.000 n=10)
+RouterMatch/Long/Wildcard/Routes=1000/Miss                                                   10.39n ±  1%                 10.34n ±   0%   -0.48% (p=0.000 n=10)
+RouterServeHTTP/Short/Static/Routes=1/FirstHit                                               23.66n ±  1%                 22.27n ±   1%   -5.85% (p=0.001 n=10)
+RouterServeHTTP/Short/Static/Routes=1/LastHit                                                23.68n ± 86%                 22.27n ±  10%        ~ (p=0.071 n=10)
+RouterServeHTTP/Short/Static/Routes=1/Miss                                                   27.15n ± 77%                 25.72n ±   0%   -5.27% (p=0.000 n=10)
+RouterServeHTTP/Short/Static/Routes=100/FirstHit                                             31.55n ± 28%                 29.10n ±   1%   -7.75% (p=0.000 n=10)
+RouterServeHTTP/Short/Static/Routes=100/LastHit                                              42.37n ±  9%                 39.63n ±   2%   -6.47% (p=0.001 n=10)
+RouterServeHTTP/Short/Static/Routes=100/Miss                                                 27.39n ±  2%                 25.98n ±   5%   -5.15% (p=0.001 n=10)
+RouterServeHTTP/Short/Static/Routes=1000/FirstHit                                            34.86n ± 36%                 32.91n ±   0%   -5.58% (p=0.000 n=10)
+RouterServeHTTP/Short/Static/Routes=1000/LastHit                                             56.23n ±  0%                 52.45n ±   2%   -6.73% (p=0.000 n=10)
+RouterServeHTTP/Short/Static/Routes=1000/Miss                                                27.68n ± 54%                 26.61n ±  77%        ~ (p=0.280 n=10)
+RouterServeHTTP/Short/Param/Routes=1/FirstHit                                                30.58n ±  1%                 28.45n ±   1%   -6.98% (p=0.000 n=10)
+RouterServeHTTP/Short/Param/Routes=1/LastHit                                                 30.61n ±  0%                 28.43n ±   0%   -7.15% (p=0.000 n=10)
+RouterServeHTTP/Short/Param/Routes=1/Miss                                                    27.39n ±  5%                 26.00n ±   6%   -5.06% (p=0.006 n=10)
+RouterServeHTTP/Short/Param/Routes=100/FirstHit                                              37.77n ±  1%                 34.37n ±   0%   -9.00% (p=0.000 n=10)
+RouterServeHTTP/Short/Param/Routes=100/LastHit                                               46.85n ±  0%                 44.45n ±   1%   -5.12% (p=0.000 n=10)
+RouterServeHTTP/Short/Param/Routes=100/Miss                                                  27.41n ±  0%                 25.99n ±   5%   -5.16% (p=0.001 n=10)
+RouterServeHTTP/Short/Param/Routes=1000/FirstHit                                             39.94n ±  1%                 36.93n ±   2%   -7.52% (p=0.000 n=10)
+RouterServeHTTP/Short/Param/Routes=1000/LastHit                                              60.66n ±  2%                 55.99n ±   2%   -7.71% (p=0.000 n=10)
+RouterServeHTTP/Short/Param/Routes=1000/Miss                                                 27.71n ±  1%                 26.27n ±   5%   -5.23% (p=0.001 n=10)
+RouterServeHTTP/Short/Wildcard/Routes=1/FirstHit                                             25.61n ± 48%                 24.80n ±   1%   -3.18% (p=0.000 n=10)
+RouterServeHTTP/Short/Wildcard/Routes=1/LastHit                                              25.52n ±  0%                 24.68n ±   0%   -3.31% (p=0.000 n=10)
+RouterServeHTTP/Short/Wildcard/Routes=1/Miss                                                 27.43n ± 29%                 25.99n ±   1%   -5.27% (p=0.000 n=10)
+RouterServeHTTP/Short/Wildcard/Routes=100/FirstHit                                           31.57n ±  2%                 30.44n ±   1%   -3.58% (p=0.001 n=10)
+RouterServeHTTP/Short/Wildcard/Routes=100/LastHit                                            44.91n ±  6%                 40.89n ±  10%   -8.95% (p=0.004 n=10)
+RouterServeHTTP/Short/Wildcard/Routes=100/Miss                                               27.39n ±  0%                 26.01n ±   5%   -5.06% (p=0.001 n=10)
+RouterServeHTTP/Short/Wildcard/Routes=1000/FirstHit                                          34.56n ±  2%                 32.36n ±   1%   -6.35% (p=0.002 n=10)
+RouterServeHTTP/Short/Wildcard/Routes=1000/LastHit                                           58.60n ±  8%                 52.16n ±   8%  -11.00% (p=0.000 n=10)
+RouterServeHTTP/Short/Wildcard/Routes=1000/Miss                                              27.87n ± 22%                 26.27n ±   2%   -5.76% (p=0.000 n=10)
+RouterServeHTTP/Medium/Static/Routes=1/FirstHit                                              24.21n ±  4%                 23.04n ±   0%   -4.81% (p=0.001 n=10)
+RouterServeHTTP/Medium/Static/Routes=1/LastHit                                               24.14n ± 34%                 23.05n ±   0%   -4.49% (p=0.000 n=10)
+RouterServeHTTP/Medium/Static/Routes=1/Miss                                                  27.71n ±  0%                 26.26n ±   3%   -5.22% (p=0.001 n=10)
+RouterServeHTTP/Medium/Static/Routes=100/FirstHit                                            32.39n ± 55%                 30.71n ±  25%   -5.19% (p=0.027 n=10)
+RouterServeHTTP/Medium/Static/Routes=100/LastHit                                             42.67n ±  2%                 43.05n ±   8%        ~ (p=0.912 n=10)
+RouterServeHTTP/Medium/Static/Routes=100/Miss                                                27.90n ± 29%                 26.53n ±  16%   -4.91% (p=0.013 n=10)
+RouterServeHTTP/Medium/Static/Routes=1000/FirstHit                                           35.36n ± 11%                 33.97n ±   1%   -3.93% (p=0.000 n=10)
+RouterServeHTTP/Medium/Static/Routes=1000/LastHit                                            54.46n ±  3%                 52.19n ±   0%   -4.15% (p=0.000 n=10)
+RouterServeHTTP/Medium/Static/Routes=1000/Miss                                               28.19n ±  0%                 26.84n ±  13%        ~ (p=0.084 n=10)
+RouterServeHTTP/Medium/Param/Routes=1/FirstHit                                               30.81n ±  0%                 28.70n ±   1%   -6.86% (p=0.000 n=10)
+RouterServeHTTP/Medium/Param/Routes=1/LastHit                                                30.83n ±  0%                 28.68n ±   0%   -6.99% (p=0.000 n=10)
+RouterServeHTTP/Medium/Param/Routes=1/Miss                                                   27.73n ±  1%                 26.28n ±   3%   -5.25% (p=0.001 n=10)
+RouterServeHTTP/Medium/Param/Routes=100/FirstHit                                             38.58n ±  1%                 35.00n ±   1%   -9.28% (p=0.000 n=10)
+RouterServeHTTP/Medium/Param/Routes=100/LastHit                                              47.17n ±  2%                 45.36n ±   3%   -3.85% (p=0.000 n=10)
+RouterServeHTTP/Medium/Param/Routes=100/Miss                                                 27.95n ±  1%                 26.52n ±   4%   -5.08% (p=0.000 n=10)
+RouterServeHTTP/Medium/Param/Routes=1000/FirstHit                                            40.61n ±  1%                 37.38n ±   2%   -7.94% (p=0.000 n=10)
+RouterServeHTTP/Medium/Param/Routes=1000/LastHit                                             60.44n ±  2%                 56.48n ±   3%   -6.56% (p=0.000 n=10)
+RouterServeHTTP/Medium/Param/Routes=1000/Miss                                                28.18n ±  1%                 26.84n ±   1%   -4.74% (p=0.000 n=10)
+RouterServeHTTP/Medium/Wildcard/Routes=1/FirstHit                                            25.79n ± 39%                 25.00n ±   6%   -3.08% (p=0.011 n=10)
+RouterServeHTTP/Medium/Wildcard/Routes=1/LastHit                                             25.75n ± 69%                 24.94n ±   0%   -3.17% (p=0.001 n=10)
+RouterServeHTTP/Medium/Wildcard/Routes=1/Miss                                                27.65n ±  1%                 26.25n ±   1%   -5.06% (p=0.000 n=10)
+RouterServeHTTP/Medium/Wildcard/Routes=100/FirstHit                                          31.89n ±  1%                 30.74n ±   4%   -3.64% (p=0.009 n=10)
+RouterServeHTTP/Medium/Wildcard/Routes=100/LastHit                                           44.22n ±  3%                 42.28n ±   9%        ~ (p=0.280 n=10)
+RouterServeHTTP/Medium/Wildcard/Routes=100/Miss                                              27.89n ±  0%                 26.72n ±  28%   -4.20% (p=0.017 n=10)
+RouterServeHTTP/Medium/Wildcard/Routes=1000/FirstHit                                         34.69n ±  1%                 33.04n ±  10%   -4.76% (p=0.019 n=10)
+RouterServeHTTP/Medium/Wildcard/Routes=1000/LastHit                                          56.57n ±  2%                 52.23n ±  10%   -7.68% (p=0.015 n=10)
+RouterServeHTTP/Medium/Wildcard/Routes=1000/Miss                                             28.21n ±  2%                 27.13n ± 113%   -3.83% (p=0.014 n=10)
+RouterServeHTTP/Long/Static/Routes=1/FirstHit                                                25.45n ±  0%                 24.92n ±   0%   -2.08% (p=0.000 n=10)
+RouterServeHTTP/Long/Static/Routes=1/LastHit                                                 25.52n ±  6%                 24.92n ±   0%   -2.35% (p=0.000 n=10)
+RouterServeHTTP/Long/Static/Routes=1/Miss                                                    28.41n ± 58%                 27.83n ±   0%   -2.04% (p=0.001 n=10)
+RouterServeHTTP/Long/Static/Routes=100/FirstHit                                              32.24n ±  1%                 30.63n ±  55%        ~ (p=0.101 n=10)
+RouterServeHTTP/Long/Static/Routes=100/LastHit                                               42.30n ±  6%                 39.23n ±  15%        ~ (p=0.289 n=10)
+RouterServeHTTP/Long/Static/Routes=100/Miss                                                  28.30n ±  0%                 27.84n ±   0%   -1.64% (p=0.000 n=10)
+RouterServeHTTP/Long/Static/Routes=1000/FirstHit                                             35.28n ±  3%                 33.86n ±   0%   -4.02% (p=0.001 n=10)
+RouterServeHTTP/Long/Static/Routes=1000/LastHit                                              55.22n ±  1%                 50.96n ±  20%   -7.71% (p=0.022 n=10)
+RouterServeHTTP/Long/Static/Routes=1000/Miss                                                 28.41n ±  7%                 27.83n ±   7%        ~ (p=0.070 n=10)
+RouterServeHTTP/Long/Param/Routes=1/FirstHit                                                 31.47n ±  1%                 29.54n ±   1%   -6.13% (p=0.000 n=10)
+RouterServeHTTP/Long/Param/Routes=1/LastHit                                                  31.49n ±  0%                 29.46n ±   1%   -6.45% (p=0.000 n=10)
+RouterServeHTTP/Long/Param/Routes=1/Miss                                                     28.39n ±  3%                 27.84n ± 104%   -1.92% (p=0.022 n=10)
+RouterServeHTTP/Long/Param/Routes=100/FirstHit                                               38.48n ±  1%                 35.46n ±   1%   -7.85% (p=0.000 n=10)
+RouterServeHTTP/Long/Param/Routes=100/LastHit                                                49.10n ±  1%                 44.01n ±   0%  -10.38% (p=0.000 n=10)
+RouterServeHTTP/Long/Param/Routes=100/Miss                                                   28.45n ±  1%                 27.84n ±  32%   -2.13% (p=0.020 n=10)
+RouterServeHTTP/Long/Param/Routes=1000/FirstHit                                              41.21n ±  1%                 38.03n ±   2%   -7.73% (p=0.000 n=10)
+RouterServeHTTP/Long/Param/Routes=1000/LastHit                                               62.85n ±  2%                 55.43n ±   0%  -11.80% (p=0.000 n=10)
+RouterServeHTTP/Long/Param/Routes=1000/Miss                                                  28.36n ±  1%                 27.84n ±   0%   -1.82% (p=0.001 n=10)
+RouterServeHTTP/Long/Wildcard/Routes=1/FirstHit                                              26.34n ±  2%                 26.12n ±   3%   -0.84% (p=0.014 n=10)
+RouterServeHTTP/Long/Wildcard/Routes=1/LastHit                                               26.27n ±  1%                 26.06n ±   0%   -0.80% (p=0.000 n=10)
+RouterServeHTTP/Long/Wildcard/Routes=1/Miss                                                  28.34n ±  0%                 27.84n ±   1%   -1.76% (p=0.001 n=10)
+RouterServeHTTP/Long/Wildcard/Routes=100/FirstHit                                            32.35n ±  2%                 31.62n ±  50%        ~ (p=0.469 n=10)
+RouterServeHTTP/Long/Wildcard/Routes=100/LastHit                                             44.52n ±  4%                 39.77n ±   3%  -10.67% (p=0.000 n=10)
+RouterServeHTTP/Long/Wildcard/Routes=100/Miss                                                28.40n ±  0%                 27.84n ±  20%   -1.94% (p=0.022 n=10)
+RouterServeHTTP/Long/Wildcard/Routes=1000/FirstHit                                           35.47n ±  7%                 33.99n ±  62%   -4.19% (p=0.023 n=10)
+RouterServeHTTP/Long/Wildcard/Routes=1000/LastHit                                            57.49n ±  1%                 50.69n ±   9%  -11.84% (p=0.000 n=10)
+RouterServeHTTP/Long/Wildcard/Routes=1000/Miss                                               28.52n ±  1%                 27.84n ±   0%   -2.37% (p=0.000 n=10)
+geomean                                                                                      24.55n                       22.86n          -6.89%
+
+                                                     │ benchmarks/trie-prefix/samples/matrix-baseline.txt │ benchmarks/trie-prefix/samples/matrix-candidate.txt │
+                                                     │                        B/op                        │            B/op             vs base                 │
+RouterMatch/Short/Static/Routes=1/FirstHit                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=1/LastHit                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=1/Miss                                                       0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=100/FirstHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=100/LastHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=100/Miss                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=1000/FirstHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=1000/LastHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=1000/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=1/FirstHit                                                    32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=1/LastHit                                                     32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=1/Miss                                                        0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=100/FirstHit                                                  32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=100/LastHit                                                   32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=100/Miss                                                      0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=1000/FirstHit                                                 32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=1000/LastHit                                                  32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=1000/Miss                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=1/FirstHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=1/LastHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=1/Miss                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=100/FirstHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=100/LastHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=100/Miss                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=1000/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=1000/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=1000/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=1/FirstHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=1/LastHit                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=1/Miss                                                      0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=100/FirstHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=100/LastHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=100/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=1000/FirstHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=1000/LastHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=1000/Miss                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=1/FirstHit                                                   32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=1/LastHit                                                    32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=1/Miss                                                       0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=100/FirstHit                                                 32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=100/LastHit                                                  32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=100/Miss                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=1000/FirstHit                                                32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=1000/LastHit                                                 32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=1000/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=1/FirstHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=1/LastHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=1/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=100/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=100/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=100/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=1000/FirstHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=1000/LastHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=1000/Miss                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=1/FirstHit                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=1/LastHit                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=1/Miss                                                        0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=100/FirstHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=100/LastHit                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=100/Miss                                                      0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=1000/FirstHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=1000/LastHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=1000/Miss                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=1/FirstHit                                                     32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=1/LastHit                                                      32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=1/Miss                                                         0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=100/FirstHit                                                   32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=100/LastHit                                                    32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=100/Miss                                                       0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=1000/FirstHit                                                  32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=1000/LastHit                                                   32.00 ± 0%                     32.00 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=1000/Miss                                                      0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=1/FirstHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=1/LastHit                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=1/Miss                                                      0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=100/FirstHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=100/LastHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=100/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=1000/FirstHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=1000/LastHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=1000/Miss                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=1/FirstHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=1/LastHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=1/Miss                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=100/FirstHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=100/LastHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=100/Miss                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=1000/FirstHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=1000/LastHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=1000/Miss                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=1/FirstHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=1/LastHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=1/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=100/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=100/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=100/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=1000/FirstHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=1000/LastHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=1000/Miss                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=1/FirstHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=1/LastHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=1/Miss                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=100/FirstHit                                           0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=100/LastHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=100/Miss                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=1000/FirstHit                                          0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=1000/LastHit                                           0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=1000/Miss                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=1/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=1/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=1/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=100/FirstHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=100/LastHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=100/Miss                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=1000/FirstHit                                           0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=1000/LastHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=1000/Miss                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=1/FirstHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=1/LastHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=1/Miss                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=100/FirstHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=100/LastHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=100/Miss                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=1000/FirstHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=1000/LastHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=1000/Miss                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=1/FirstHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=1/LastHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=1/Miss                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=100/FirstHit                                          0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=100/LastHit                                           0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=100/Miss                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=1000/FirstHit                                         0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=1000/LastHit                                          0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=1000/Miss                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=1/FirstHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=1/LastHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=1/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=100/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=100/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=100/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=1000/FirstHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=1000/LastHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=1000/Miss                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=1/FirstHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=1/LastHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=1/Miss                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=100/FirstHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=100/LastHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=100/Miss                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=1000/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=1000/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=1000/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=1/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=1/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=1/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=100/FirstHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=100/LastHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=100/Miss                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=1000/FirstHit                                           0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=1000/LastHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=1000/Miss                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+geomean                                                                                                 ²                               +0.00%                ²
+¹ all samples are equal
+² summaries must be >0 to compute geomean
+
+                                                     │ benchmarks/trie-prefix/samples/matrix-baseline.txt │ benchmarks/trie-prefix/samples/matrix-candidate.txt │
+                                                     │                     allocs/op                      │         allocs/op           vs base                 │
+RouterMatch/Short/Static/Routes=1/FirstHit                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=1/LastHit                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=1/Miss                                                       0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=100/FirstHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=100/LastHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=100/Miss                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=1000/FirstHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=1000/LastHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Static/Routes=1000/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=1/FirstHit                                                    1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=1/LastHit                                                     1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=1/Miss                                                        0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=100/FirstHit                                                  1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=100/LastHit                                                   1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=100/Miss                                                      0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=1000/FirstHit                                                 1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=1000/LastHit                                                  1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Param/Routes=1000/Miss                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=1/FirstHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=1/LastHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=1/Miss                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=100/FirstHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=100/LastHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=100/Miss                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=1000/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=1000/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Short/Wildcard/Routes=1000/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=1/FirstHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=1/LastHit                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=1/Miss                                                      0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=100/FirstHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=100/LastHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=100/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=1000/FirstHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=1000/LastHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Static/Routes=1000/Miss                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=1/FirstHit                                                   1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=1/LastHit                                                    1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=1/Miss                                                       0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=100/FirstHit                                                 1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=100/LastHit                                                  1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=100/Miss                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=1000/FirstHit                                                1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=1000/LastHit                                                 1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Param/Routes=1000/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=1/FirstHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=1/LastHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=1/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=100/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=100/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=100/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=1000/FirstHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=1000/LastHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Medium/Wildcard/Routes=1000/Miss                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=1/FirstHit                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=1/LastHit                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=1/Miss                                                        0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=100/FirstHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=100/LastHit                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=100/Miss                                                      0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=1000/FirstHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=1000/LastHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Static/Routes=1000/Miss                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=1/FirstHit                                                     1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=1/LastHit                                                      1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=1/Miss                                                         0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=100/FirstHit                                                   1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=100/LastHit                                                    1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=100/Miss                                                       0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=1000/FirstHit                                                  1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=1000/LastHit                                                   1.000 ± 0%                     1.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Param/Routes=1000/Miss                                                      0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=1/FirstHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=1/LastHit                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=1/Miss                                                      0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=100/FirstHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=100/LastHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=100/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=1000/FirstHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=1000/LastHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterMatch/Long/Wildcard/Routes=1000/Miss                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=1/FirstHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=1/LastHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=1/Miss                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=100/FirstHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=100/LastHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=100/Miss                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=1000/FirstHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=1000/LastHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Static/Routes=1000/Miss                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=1/FirstHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=1/LastHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=1/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=100/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=100/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=100/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=1000/FirstHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=1000/LastHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Param/Routes=1000/Miss                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=1/FirstHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=1/LastHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=1/Miss                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=100/FirstHit                                           0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=100/LastHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=100/Miss                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=1000/FirstHit                                          0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=1000/LastHit                                           0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Short/Wildcard/Routes=1000/Miss                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=1/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=1/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=1/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=100/FirstHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=100/LastHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=100/Miss                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=1000/FirstHit                                           0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=1000/LastHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Static/Routes=1000/Miss                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=1/FirstHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=1/LastHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=1/Miss                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=100/FirstHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=100/LastHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=100/Miss                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=1000/FirstHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=1000/LastHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Param/Routes=1000/Miss                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=1/FirstHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=1/LastHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=1/Miss                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=100/FirstHit                                          0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=100/LastHit                                           0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=100/Miss                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=1000/FirstHit                                         0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=1000/LastHit                                          0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Medium/Wildcard/Routes=1000/Miss                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=1/FirstHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=1/LastHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=1/Miss                                                    0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=100/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=100/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=100/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=1000/FirstHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=1000/LastHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Static/Routes=1000/Miss                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=1/FirstHit                                                 0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=1/LastHit                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=1/Miss                                                     0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=100/FirstHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=100/LastHit                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=100/Miss                                                   0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=1000/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=1000/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Param/Routes=1000/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=1/FirstHit                                              0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=1/LastHit                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=1/Miss                                                  0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=100/FirstHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=100/LastHit                                             0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=100/Miss                                                0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=1000/FirstHit                                           0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=1000/LastHit                                            0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+RouterServeHTTP/Long/Wildcard/Routes=1000/Miss                                               0.000 ± 0%                     0.000 ± 0%       ~ (p=1.000 n=10) ¹
+geomean                                                                                                 ²                               +0.00%                ²
+¹ all samples are equal
+² summaries must be >0 to compute geomean

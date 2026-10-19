@@ -19,6 +19,9 @@ func TestRouterTrieMatching(t *testing.T) {
 		want      Params
 	}{
 		{name: "root", patterns: []string{"/"}, path: "/", wantRoute: 0},
+		{name: "empty_url", patterns: []string{"/", "/:id", "/*"}, path: "", wantRoute: -1},
+		{name: "one_byte_static_fallback", patterns: []string{"/a/x", "/a/y", "/:first/:second"}, path: "/a/z", wantRoute: 2, want: Params{{Key: "first", Value: "a"}, {Key: "second", Value: "z"}}},
+		{name: "one_byte_wildcard_boundary", patterns: []string{"/a/*", "/ab/end", "/b"}, path: "/ab/missing", wantRoute: -1},
 		{name: "exact", patterns: []string{"/api/items"}, path: "/api/items", wantRoute: 0},
 		{name: "prefix_is_not_match", patterns: []string{"/api/items"}, path: "/api/itemssuffix", wantRoute: -1},
 		{name: "trailing_slash_is_not_redirected", patterns: []string{"/api/items"}, path: "/api/items/", wantRoute: -1},
@@ -85,7 +88,9 @@ func TestRouterTrieMatching(t *testing.T) {
 				t.Fatalf("MatchInto = %t/%v, want %t/%v", reusedOK, reusedParams, ok, params)
 			}
 
-			var request = httptest.NewRequest(http.MethodGet, test.path, nil)
+			// Set Path directly because NewRequest rejects an empty request target.
+			var request = httptest.NewRequest(http.MethodGet, "/", nil)
+			request.URL.Path = test.path
 			reusedHandler(newContext(httptest.NewRecorder(), request, reusedParams))
 			if selected != test.wantRoute {
 				t.Fatalf("MatchInto selected route %d, want %d", selected, test.wantRoute)

@@ -21,7 +21,8 @@ architectures retain the same standard-library fallback. Go's standard library
 can still use SIMD in those builds. The compile-time dispatch constant was
 renamed from `useRouteIndexByteNEON` to `useRouteIndexByteSIMD`; ARM64's search
 algorithm and routing semantics are unchanged. The separate prefix-specialization
-prototype remains unapplied.
+prototype was unapplied at this capture; its subsequent implementation is covered
+in the [prefix report](trie-prefix/README.md).
 
 ## Validation environment
 
