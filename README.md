@@ -49,24 +49,24 @@ import (
 
 func main() {
 	var (
-		srv *apex.Serve
-		err error
+		engine *apex.Engine
+		err    error
 	)
 
-	srv = apex.New()
-	defer srv.Close()
+	engine = apex.New()
+	defer engine.Close()
 
-	if err = srv.GET("/ping", func(ctx *apex.Context) {
+	if err = engine.GET("/ping", func(ctx *apex.Context) {
 		ctx.WriteString(200, "text/plain", "pong")
 	}); err != nil {
 		log.Fatal(err)
 	}
 
-	srv.Set404(func(ctx *apex.Context) {
+	engine.Set404(func(ctx *apex.Context) {
 		ctx.WriteString(404, "text/plain", "Oh shoot, this page doesn't exist")
 	})
 
-	if err = srv.Listen(8080); err != nil {
+	if err = engine.Listen(8080); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -160,14 +160,19 @@ Update imports and package qualifiers:
 | `github.com/vroomy/httpserve` | `github.com/vroomy/apex` |
 | `github.com/vroomy/httpserve/form` | `github.com/vroomy/apex/form` |
 | `httpserve.New()` | `apex.New()` |
+| `*httpserve.Serve` | `*apex.Engine` |
 | `*httpserve.Context` | `*apex.Context` |
 
-Exported API names and signatures remain the same. To update the module path
-before changing qualifiers, use an explicit import alias:
+`Serve` is now `Engine`, and `New()` returns `*Engine`. Its methods and behavior
+are unchanged. An explicit import alias can preserve existing package qualifiers
+while migrating the type name:
 
 ```go
 import httpserve "github.com/vroomy/apex"
 ```
+
+With this alias, change explicit `*httpserve.Serve` declarations to
+`*httpserve.Engine`.
 
 Use an Apex version or commit whose `go.mod` declares the new module path, then
 run `go mod tidy`. Tags from before the rename still declare the old path.

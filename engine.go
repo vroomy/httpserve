@@ -36,17 +36,17 @@ var defaultConfig = Config{
 	MaxHeaderBytes: 4096,
 }
 
-var _ Group = &Serve{}
+var _ Group = &Engine{}
 
-// New will return a new instance of Serve
-func New() *Serve {
-	var s Serve
-	s.g.r = newRouter()
-	return &s
+// New constructs an Engine with an empty router.
+func New() *Engine {
+	var e Engine
+	e.g.r = newRouter()
+	return &e
 }
 
-// Serve will serve HTTP requests
-type Serve struct {
+// Engine manages routing, middleware, and HTTP/HTTPS listeners.
+type Engine struct {
 	mu     sync.Mutex
 	closed bool
 	http   *http.Server
@@ -55,62 +55,62 @@ type Serve struct {
 }
 
 // GET will set a GET endpoint
-func (s *Serve) GET(route string, hs ...Handler) (err error) {
-	return s.g.GET(route, hs...)
+func (e *Engine) GET(route string, hs ...Handler) (err error) {
+	return e.g.GET(route, hs...)
 }
 
 // PUT will set a PUT endpoint
-func (s *Serve) PUT(route string, hs ...Handler) (err error) {
-	return s.g.PUT(route, hs...)
+func (e *Engine) PUT(route string, hs ...Handler) (err error) {
+	return e.g.PUT(route, hs...)
 }
 
 // POST will set a POST endpoint
-func (s *Serve) POST(route string, hs ...Handler) (err error) {
-	return s.g.POST(route, hs...)
+func (e *Engine) POST(route string, hs ...Handler) (err error) {
+	return e.g.POST(route, hs...)
 }
 
 // DELETE will set a DELETE endpoint
-func (s *Serve) DELETE(route string, hs ...Handler) (err error) {
-	return s.g.DELETE(route, hs...)
+func (e *Engine) DELETE(route string, hs ...Handler) (err error) {
+	return e.g.DELETE(route, hs...)
 }
 
 // OPTIONS will set a OPTIONS endpoint
-func (s *Serve) OPTIONS(route string, hs ...Handler) (err error) {
-	return s.g.OPTIONS(route, hs...)
+func (e *Engine) OPTIONS(route string, hs ...Handler) (err error) {
+	return e.g.OPTIONS(route, hs...)
 }
 
 // Handle will create a route for any method
-func (s *Serve) Handle(method, route string, hs ...Handler) (err error) {
-	return s.g.Handle(method, route, hs...)
+func (e *Engine) Handle(method, route string, hs ...Handler) (err error) {
+	return e.g.Handle(method, route, hs...)
 }
 
 // Group will return a new group for a given route and handlers
-func (s *Serve) Group(route string, hs ...Handler) Group {
-	return s.g.Group(route, hs...)
+func (e *Engine) Group(route string, hs ...Handler) Group {
+	return e.g.Group(route, hs...)
 }
 
 // Listen will listen on a given port
-func (s *Serve) Listen(port uint16) (err error) {
-	return s.ListenWithConfig(port, defaultConfig)
+func (e *Engine) Listen(port uint16) (err error) {
+	return e.ListenWithConfig(port, defaultConfig)
 }
 
 // ListenWithConfig will listen on a given port using the specified configuration
-func (s *Serve) ListenWithConfig(port uint16, c Config) (err error) {
-	server := newHTTPServer(s.g.r, port, c)
+func (e *Engine) ListenWithConfig(port uint16, c Config) (err error) {
+	server := newHTTPServer(e.g.r, port, c)
 	if _, enabled := os.LookupEnv("USE_HTTP2_RAW"); enabled {
 		server.Handler = h2c.NewHandler(server.Handler, &http2.Server{})
 	}
 
-	return s.listenServer(server, false)
+	return e.listenServer(server, false)
 }
 
 // ListenTLS will listen using the TLS procol on a given port
-func (s *Serve) ListenTLS(port uint16, certificateDir string) (err error) {
-	return s.ListenTLSWithConfig(port, certificateDir, defaultConfig)
+func (e *Engine) ListenTLS(port uint16, certificateDir string) (err error) {
+	return e.ListenTLSWithConfig(port, certificateDir, defaultConfig)
 }
 
 // ListenTLSWithConfig will listen using the TLS procol on a given port using the specified configuration
-func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config) (err error) {
+func (e *Engine) ListenTLSWithConfig(port uint16, certificateDir string, c Config) (err error) {
 	var (
 		tc  tlsCerts
 		cfg tls.Config
@@ -133,19 +133,19 @@ func (s *Serve) ListenTLSWithConfig(port uint16, certificateDir string, c Config
 
 	cfg.MinVersion = tls.VersionTLS12
 	cfg.RootCAs = x509.NewCertPool()
-	server := newHTTPServer(s.g.r, port, c)
+	server := newHTTPServer(e.g.r, port, c)
 	server.TLSConfig = &cfg
-	return s.listenServer(server, true)
+	return e.listenServer(server, true)
 }
 
 // ListenAutoCertTLS will listen using the TLS procol on a given port using the certificate being provided by LetsEncrypt
-func (s *Serve) ListenAutoCertTLS(port uint16, ac AutoCertConfig) (err error) {
-	return s.ListenAutoCertTLSWithConfig(port, ac, defaultConfig)
+func (e *Engine) ListenAutoCertTLS(port uint16, ac AutoCertConfig) (err error) {
+	return e.ListenAutoCertTLSWithConfig(port, ac, defaultConfig)
 }
 
 // ListenAutoCertTLSWithConfig will listen using the TLS procol on a given port using configurations and the certificate being provided by LetsEncrypt
-func (s *Serve) ListenAutoCertTLSWithConfig(port uint16, ac AutoCertConfig, c Config) (err error) {
-	server := newHTTPServer(s.g.r, port, c)
+func (e *Engine) ListenAutoCertTLSWithConfig(port uint16, ac AutoCertConfig, c Config) (err error) {
+	server := newHTTPServer(e.g.r, port, c)
 
 	m := &autocert.Manager{
 		Cache:      autocert.DirCache(ac.DirCache),
@@ -156,30 +156,30 @@ func (s *Serve) ListenAutoCertTLSWithConfig(port uint16, ac AutoCertConfig, c Co
 	cfg := m.TLSConfig()
 	cfg.MinVersion = tls.VersionTLS12
 	server.TLSConfig = cfg
-	return s.listenServer(server, true)
+	return e.listenServer(server, true)
 }
 
 // Set404 will set the 404 handler
-func (s *Serve) Set404(h Handler) {
-	s.g.r.SetNotFound(h)
+func (e *Engine) Set404(h Handler) {
+	e.g.r.SetNotFound(h)
 }
 
 // SetPanic will set the panic handler
-func (s *Serve) SetPanic(h PanicHandler) {
-	s.g.r.SetPanic(h)
+func (e *Engine) SetPanic(h PanicHandler) {
+	e.g.r.SetPanic(h)
 }
 
 // SetPanic will set the panic handler
-func (s *Serve) SetOnError(fn func(error)) {
-	s.g.r.SetOnError(fn)
+func (e *Engine) SetOnError(fn func(error)) {
+	e.g.r.SetOnError(fn)
 }
 
 // Close closes both servers and prevents listeners from starting afterward.
-func (s *Serve) Close() error {
-	s.mu.Lock()
-	s.closed = true
-	httpServer, httpsServer := s.http, s.https
-	s.mu.Unlock()
+func (e *Engine) Close() error {
+	e.mu.Lock()
+	e.closed = true
+	httpServer, httpsServer := e.http, e.https
+	e.mu.Unlock()
 
 	var errs []error
 	if httpServer != nil {
@@ -193,12 +193,12 @@ func (s *Serve) Close() error {
 	return errors.Join(errs...)
 }
 
-func (s *Serve) listenServer(server *http.Server, secure bool) error {
+func (e *Engine) listenServer(server *http.Server, secure bool) error {
 	var (
 		listener net.Listener
 		err      error
 	)
-	if listener, err = s.openListener(server, secure); err != nil {
+	if listener, err = e.openListener(server, secure); err != nil {
 		return err
 	}
 
@@ -211,17 +211,17 @@ func (s *Serve) listenServer(server *http.Server, secure bool) error {
 
 // openListener publishes server ownership and binds under the startup/Close lock.
 // Serving begins after the lock is released; http.Server handles Close racing with Serve.
-func (s *Serve) openListener(server *http.Server, secure bool) (net.Listener, error) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+func (e *Engine) openListener(server *http.Server, secure bool) (net.Listener, error) {
+	e.mu.Lock()
+	defer e.mu.Unlock()
 
-	if s.closed {
+	if e.closed {
 		return nil, http.ErrServerClosed
 	}
 
-	destination := &s.http
+	destination := &e.http
 	if secure {
-		destination = &s.https
+		destination = &e.https
 	}
 
 	if *destination != nil {

@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestServeText(t *testing.T) {
+func TestEngineText(t *testing.T) {
 	var (
 		resp *http.Response
 		bs   []byte
@@ -15,15 +15,15 @@ func TestServeText(t *testing.T) {
 	)
 
 	textVal := "hello"
-	serve := New()
+	engine := New()
 	defer func() {
-		if err = serve.Close(); err != nil {
+		if err = engine.Close(); err != nil {
 			t.Fatal(err)
 		}
 	}()
 
 	// Create derp group
-	derp := serve.Group("/derp")
+	derp := engine.Group("/derp")
 
 	// Setup text resonse handler
 	derp.GET("hello", func(ctx *Context) {
@@ -33,14 +33,14 @@ func TestServeText(t *testing.T) {
 	errC := make(chan error, 1)
 	// Listen within a new goroutine
 	go func() {
-		if err := serve.Listen(8080); err != nil && err != http.ErrServerClosed {
+		if err := engine.Listen(8080); err != nil && err != http.ErrServerClosed {
 			errC <- err
 			return
 		}
 	}()
 
 	select {
-	// Sleep for 200 milliseconds to ensure we've given the serve instance enough time to listen
+	// Sleep for 200 milliseconds to ensure we've given the engine instance enough time to listen
 	case <-time.After(200 * time.Millisecond):
 	case err = <-errC:
 		t.Fatal(err)
@@ -67,7 +67,7 @@ func TestServeText(t *testing.T) {
 	}
 }
 
-func TestServeJSON(t *testing.T) {
+func TestEngineJSON(t *testing.T) {
 	var (
 		jsonVal TestJSONStruct
 		ts      TestJSONStruct
@@ -78,15 +78,15 @@ func TestServeJSON(t *testing.T) {
 	jsonVal.Name = "John Doe"
 	jsonVal.Age = 33
 
-	serve := New()
+	engine := New()
 	defer func() {
-		if err = serve.Close(); err != nil {
+		if err = engine.Close(); err != nil {
 			t.Fatal(err)
 		}
 	}()
 
 	// Create derp group
-	derp := serve.Group("/derp")
+	derp := engine.Group("/derp")
 
 	// Setup json response handler
 	derp.GET("world", func(ctx *Context) {
@@ -96,19 +96,19 @@ func TestServeJSON(t *testing.T) {
 	errC := make(chan error, 1)
 	// Listen within a new goroutine
 	go func() {
-		if err := serve.Listen(8080); err != nil && err != http.ErrServerClosed {
+		if err := engine.Listen(8080); err != nil && err != http.ErrServerClosed {
 			errC <- err
 		}
 	}()
 
 	select {
-	// Sleep for 200 milliseconds to ensure we've given the serve instance enough time to listen
+	// Sleep for 200 milliseconds to ensure we've given the engine instance enough time to listen
 	case <-time.After(200 * time.Millisecond):
 	case err = <-errC:
 		t.Fatal(err)
 	}
 
-	// Sleep for 200 milliseconds to ensure we've given the serve instance enough time to listen
+	// Sleep for 200 milliseconds to ensure we've given the engine instance enough time to listen
 	time.Sleep(200 * time.Millisecond)
 
 	// Perform GET request
