@@ -21,10 +21,10 @@ func newHTTPServer(h http.Handler, port uint16, c Config) *http.Server {
 }
 
 // getParts is used to split URLs into parts
-func getParts(url string) (parts []string, err error) {
+func getParts(url string) (parts []string) {
 	if url == "/" {
 		parts = []string{"/"}
-		return parts, nil
+		return parts
 	}
 
 	var buf []byte
@@ -54,12 +54,11 @@ func getParts(url string) (parts []string, err error) {
 	}
 
 	if len(buf) == 0 {
-		return parts, nil
+		return parts
 	}
 
 	parts = append(parts, string(buf))
-
-	return parts, nil
+	return parts
 }
 
 func notFoundHandler(ctx *Context) {

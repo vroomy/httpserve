@@ -27,3 +27,18 @@ jobs:
         with:
           # Targets the stable v2 major release track
           version: v2.15
+
+  test:
+    name: Go tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Run tests
+        run: go test ./...

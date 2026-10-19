@@ -9,11 +9,7 @@ func newReferenceRoute(url string) (*referenceRoute, error) {
 		return nil, ErrMissingLeadSlash
 	}
 
-	var parts, err = getParts(url)
-	if err != nil {
-		return nil, err
-	}
-
+	var parts = getParts(url)
 	return &referenceRoute{parts: parts}, nil
 }
 
