@@ -1,4 +1,4 @@
-package httpserve
+package apex
 
 import "golang.org/x/crypto/acme/autocert"
 

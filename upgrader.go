@@ -1,4 +1,4 @@
-package httpserve
+package apex
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ func NewUpgrader(port uint16, virtualHosts ...VirtualHost) *Upgrader {
 
 // Upgrader will upgrade all requests to SSL, and also handle forwarding to virtual hosts
 type Upgrader struct {
-	s    *Serve
+	s    *Engine
 	port uint16
 
 	proxies []VirtualHost

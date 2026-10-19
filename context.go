@@ -1,4 +1,4 @@
-package httpserve
+package apex
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	"github.com/bytedance/sonic"
-	"github.com/vroomy/httpserve/form"
+	"github.com/vroomy/apex/form"
 )
 
 const formContentType = "application/x-www-form-urlencoded"
@@ -318,7 +318,7 @@ func (c *Context) getRedirect(statusCode int) (redirectTo string, ok bool) {
 
 	var rq redirectQuery
 	if err := form.Unmarshal(c.request.URL.RawQuery, &rq); err != nil {
-		err = fmt.Errorf("httpserve.Context.getRedirect(): error unmarshaling form: %v", err)
+		err = fmt.Errorf("apex.Context.getRedirect(): error unmarshaling form: %v", err)
 		c.errorFn(err)
 		return
 	}

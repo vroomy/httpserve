@@ -1,6 +1,6 @@
 //go:build (!arm64 && !amd64) || purego
 
-package httpserve
+package apex
 
 import "strings"
 

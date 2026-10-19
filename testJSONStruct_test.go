@@ -1,4 +1,4 @@
-package httpserve
+package apex
 
 type TestJSONStruct struct {
 	Name string `json:"name"`

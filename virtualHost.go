@@ -1,4 +1,4 @@
-package httpserve
+package apex
 
 // VirtualHost represents a registered port to forward on the local host for a request to the given Domain
 type VirtualHost struct {

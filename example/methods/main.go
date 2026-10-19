@@ -3,23 +3,23 @@ package main
 import (
 	"log"
 
-	"github.com/vroomy/httpserve"
+	"github.com/vroomy/apex"
 )
 
 func main() {
 	var (
-		srv *httpserve.Serve
-		svc Service
-		err error
+		engine *apex.Engine
+		svc    Service
+		err    error
 	)
 
-	srv = httpserve.New()
-	defer srv.Close()
+	engine = apex.New()
+	defer engine.Close()
 
-	srv.GET("/ping", svc.Ping)
-	srv.Set404(svc.NotFound)
+	engine.GET("/ping", svc.Ping)
+	engine.Set404(svc.NotFound)
 
-	if err = srv.Listen(8080); err != nil {
+	if err = engine.Listen(8080); err != nil {
 		log.Fatal(err)
 	}
 }

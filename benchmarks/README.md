@@ -1,5 +1,11 @@
 # Router benchmarks
 
+These reports and raw samples were recorded before HTTPServe was renamed to
+Apex. Historical package paths, labels, commit IDs, and measurements are retained
+as recorded. Commands targeting those revisions use the original module path;
+when profiling the current checkout, use `github.com/vroomy/apex` for package
+filters such as `-gcflags`.
+
 The repeatable suite in [router_benchmark_test.go](../router_benchmark_test.go)
 compares the original route list with the compressed prefix trie. The benchmark
 code and fixtures are the same for both runs.

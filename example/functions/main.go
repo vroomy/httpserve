@@ -3,29 +3,29 @@ package main
 import (
 	"log"
 
-	"github.com/vroomy/httpserve"
+	"github.com/vroomy/apex"
 )
 
 func main() {
 	var (
-		srv *httpserve.Serve
-		err error
+		engine *apex.Engine
+		err    error
 	)
 
-	srv = httpserve.New()
-	defer srv.Close()
+	engine = apex.New()
+	defer engine.Close()
 
-	if err = srv.GET("/ping", func(ctx *httpserve.Context) {
+	if err = engine.GET("/ping", func(ctx *apex.Context) {
 		ctx.WriteString(200, "text/plain", "pong")
 	}); err != nil {
 		log.Fatal(err)
 	}
 
-	srv.Set404(func(ctx *httpserve.Context) {
+	engine.Set404(func(ctx *apex.Context) {
 		ctx.WriteString(404, "text/plain", "Oh shoot, this page doesn't exist")
 	})
 
-	if err = srv.Listen(8080); err != nil {
+	if err = engine.Listen(8080); err != nil {
 		log.Fatal(err)
 	}
 }

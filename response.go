@@ -1,4 +1,4 @@
-package httpserve
+package apex
 
 // NewResponse will return a new Response
 func NewResponse(statusCode int, contentType string, value interface{}) *Response {

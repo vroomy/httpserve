@@ -1,6 +1,6 @@
 //go:build !purego
 
-package httpserve
+package apex
 
 const useRouteIndexByteSIMD = true
 
